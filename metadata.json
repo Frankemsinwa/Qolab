@@ -1,0 +1,6 @@
+{
+  "name": "QOLAB Creative Agency Portfolio",
+  "description": "An immersive, narrative-driven portfolio showcase for QOLAB — a premium digital agency specializing in brand design, custom websites, mobile apps, and interactive UI/UX experiences, featuring high-end physics canvas interactions and spatial audio feedback.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
