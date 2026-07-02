@@ -1,545 +1,464 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
-
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { ViewState, CursorState, Project } from '../types';
-import { audioEngine } from '../utils/audio';
-import { 
-  ArrowRight, 
-  Sparkles, 
-  Orbit, 
-  Cpu, 
-  Laptop, 
-  Smartphone, 
-  Palette, 
-  Layers, 
-  Globe, 
-  CheckCircle2,
-  ArrowUpRight
-} from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { ArrowUpRight, Check, Send } from 'lucide-react';
 import { projectsData } from '../data';
+import { Project } from '../types';
+import heroImg1 from '../assets/hero-imgs/hero-1.jpg';
+import heroImg2 from '../assets/hero-imgs/hero-2.jpg';
+import heroImg3 from '../assets/hero-imgs/hero-3.jpg';
+import heroImg4 from '../assets/hero-imgs/hero-4.jpg';
+import heroImg5 from '../assets/hero-imgs/hero-5.jpg';
+import heroImg6 from '../assets/hero-imgs/hero-6.jpg';
+import heroImg7 from '../assets/hero-imgs/hero-7.jpg';
+import heroImg8 from '../assets/hero-imgs/hero-8.jpg';
+import heroImg9 from '../assets/hero-imgs/hero-9.jpg';
+import heroImg10 from '../assets/hero-imgs/hero-10.jpg';
+import heroImg11 from '../assets/hero-imgs/hero-11.jpg';
+import heroImg12 from '../assets/hero-imgs/hero-12.jpg';
+import heroImg14 from '../assets/hero-imgs/hero-14.jpg';
+import heroImg15 from '../assets/hero-imgs/hero-15.jpg';
+import heroImg16 from '../assets/hero-imgs/hero-16.jpg';
+import heroImg17 from '../assets/hero-imgs/hero-17.jpg';
+import heroImg18 from '../assets/hero-imgs/hero-18.jpg';
+import heroImg19 from '../assets/hero-imgs/hero-19.jpg';
+import heroImg20 from '../assets/hero-imgs/hero-20.jpg';
+import heroImg21 from '../assets/hero-imgs/hero-21.jpg';
+import heroImg22 from '../assets/hero-imgs/hero-22.jpg';
+
+gsap.registerPlugin(ScrollTrigger);
 
 interface LandingHeroProps {
-  onNavigate: (view: ViewState) => void;
   onSelectProject: (project: Project) => void;
-  selectedMode: 'fluid' | 'strings' | 'gravity';
-  onModeChange: (mode: 'fluid' | 'strings' | 'gravity') => void;
-  setCursor: (state: CursorState) => void;
-  darkMode: boolean;
+  onViewAllProjects: () => void;
 }
 
-export default function LandingHero({
-  onNavigate,
-  onSelectProject,
-  selectedMode,
-  onModeChange,
-  setCursor,
-  darkMode,
-}: LandingHeroProps) {
+export default function LandingHero({ onSelectProject, onViewAllProjects }: LandingHeroProps) {
+  const heroRef = useRef<HTMLDivElement>(null);
+  const collageRef = useRef<HTMLDivElement>(null);
+  const portfolioRef = useRef<HTMLDivElement>(null);
+  const helpRef = useRef<HTMLDivElement>(null);
+  const manifestoSubtitleRef = useRef<HTMLParagraphElement>(null);
 
-  const [formSubmitted, setFormSubmitted] = useState(false);
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    service: 'Website Development',
-    message: ''
-  });
+  // Questionnaire state
+  const [selectedServices, setSelectedServices] = useState<string[]>([]);
+  const [email, setEmail] = useState('');
+  const [submitted, setSubmitted] = useState(false);
 
-  const handleHoverElement = (e: React.MouseEvent, type: CursorState['type'] = 'magnetic', text?: string) => {
-    const rect = (e.target as HTMLElement).getBoundingClientRect();
-    const normalizedX = (e.clientX - rect.left) / rect.width;
-    audioEngine.triggerHover(normalizedX);
-    setCursor({ type, text });
-  };
-
-  const handleNavigate = (view: ViewState) => {
-    audioEngine.triggerTransition();
-    onNavigate(view);
-  };
-
-  const cycleMode = () => {
-    audioEngine.triggerClick();
-    if (selectedMode === 'fluid') onModeChange('strings');
-    else if (selectedMode === 'strings') onModeChange('gravity');
-    else onModeChange('fluid');
-  };
-
-  const handleFormSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    audioEngine.triggerClick();
-    setFormSubmitted(true);
-    setTimeout(() => {
-      setFormSubmitted(false);
-      setFormData({ name: '', email: '', service: 'Website Development', message: '' });
-    }, 4000);
-  };
-
-  const services = [
-    {
-      icon: <Laptop className="text-accent-rose" size={24} />,
-      title: "Web Design & Development",
-      description: "We build premium, lightning-fast custom websites designed to load instantly and turn your visitors into customers."
-    },
-    {
-      icon: <Smartphone className="text-accent-rose" size={24} />,
-      title: "Mobile App Development",
-      description: "Stunning iOS and Android mobile apps crafted with fluid screen transitions, offline support, and natural touch gestures."
-    },
-    {
-      icon: <Palette className="text-accent-rose" size={24} />,
-      title: "Brand Identity Design",
-      description: "Cohesive brand systems including custom logos, typography standards, and visual layouts that make your brand stand out."
-    },
-    {
-      icon: <Layers className="text-accent-rose" size={24} />,
-      title: "UI/UX Experience Design",
-      description: "User-friendly digital interfaces designed with extreme care, making complex digital tasks feel simple and effortless."
-    },
-    {
-      icon: <Globe className="text-accent-rose" size={24} />,
-      title: "Digital Growth & Marketing",
-      description: "SEO-optimized campaign landing pages and analytics integrations designed to scale your customer reach."
+  const toggleService = (service: string) => {
+    if (selectedServices.includes(service)) {
+      setSelectedServices(selectedServices.filter(s => s !== service));
+    } else {
+      setSelectedServices([...selectedServices, service]);
     }
+  };
+
+  const heroImages = [
+    // Row 1 — upper band
+    { src: heroImg1, top: '5%', left: '2%', width: 'clamp(200px, 26vw, 380px)', rotate: -8, aspect: '4/3' },
+    { src: heroImg3, top: '2%', left: '20%', width: 'clamp(180px, 24vw, 340px)', rotate: 12, aspect: '3/4' },
+    { src: heroImg7, top: '10%', left: '38%', width: 'clamp(220px, 28vw, 400px)', rotate: -5, aspect: '4/3' },
+    { src: heroImg9, top: '3%', left: '55%', width: 'clamp(190px, 25vw, 360px)', rotate: 8, aspect: '16/10' },
+    { src: heroImg11, top: '8%', left: '70%', width: 'clamp(200px, 26vw, 380px)', rotate: -12, aspect: '3/4' },
+    { src: heroImg14, top: '4%', left: '85%', width: 'clamp(180px, 23vw, 330px)', rotate: 6, aspect: '4/3' },
+    { src: heroImg17, top: '12%', left: '98%', width: 'clamp(190px, 24vw, 350px)', rotate: -10, aspect: '4/3' },
+    { src: heroImg5, top: '6%', left: '108%', width: 'clamp(200px, 25vw, 370px)', rotate: 14, aspect: '4/3' },
+    { src: heroImg22, top: '9%', left: '120%', width: 'clamp(180px, 22vw, 320px)', rotate: -6, aspect: '3/4' },
+    { src: heroImg10, top: '2%', left: '135%', width: 'clamp(210px, 27vw, 390px)', rotate: 10, aspect: '4/3' },
+    { src: heroImg20, top: '7%', left: '150%', width: 'clamp(190px, 24vw, 350px)', rotate: -8, aspect: '16/10' },
+    // Row 2 — lower band
+    { src: heroImg2, top: '42%', left: '5%', width: 'clamp(210px, 27vw, 390px)', rotate: 6, aspect: '3/4' },
+    { src: heroImg4, top: '48%', left: '22%', width: 'clamp(190px, 25vw, 360px)', rotate: 10, aspect: '4/3' },
+    { src: heroImg6, top: '40%', left: '40%', width: 'clamp(200px, 26vw, 380px)', rotate: -6, aspect: '16/10' },
+    { src: heroImg8, top: '50%', left: '55%', width: 'clamp(220px, 28vw, 400px)', rotate: 14, aspect: '4/3' },
+    { src: heroImg12, top: '44%', left: '72%', width: 'clamp(180px, 23vw, 330px)', rotate: 5, aspect: '3/4' },
+    { src: heroImg15, top: '48%', left: '88%', width: 'clamp(200px, 26vw, 380px)', rotate: -12, aspect: '16/10' },
+    { src: heroImg16, top: '42%', left: '102%', width: 'clamp(190px, 24vw, 350px)', rotate: 8, aspect: '3/4' },
+    { src: heroImg18, top: '50%', left: '118%', width: 'clamp(210px, 27vw, 390px)', rotate: -10, aspect: '4/3' },
+    { src: heroImg19, top: '46%', left: '134%', width: 'clamp(180px, 23vw, 330px)', rotate: 6, aspect: '4/3' },
+    { src: heroImg21, top: '52%', left: '150%', width: 'clamp(200px, 26vw, 380px)', rotate: -14, aspect: '3/4' },
   ];
 
+  // GSAP Animations
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // 1. Hero Text Entrance Animation
+      gsap.from('.hero-title-word', {
+        y: 80,
+        opacity: 0,
+        duration: 1.2,
+        stagger: 0.15,
+        ease: 'power4.out',
+      });
+
+      // 2. Horizontal drift — all drift left together, loop seamlessly
+      const items = gsap.utils.toArray('.hero-drift-item');
+      items.forEach((item: any) => {
+        gsap.to(item, {
+          x: -window.innerWidth,
+          duration: 180,
+          ease: 'none',
+          repeat: -1,
+        });
+      });
+
+      // 3. Reveal animations for Portfolio Cards
+      gsap.from('.portfolio-card', {
+        y: 60,
+        opacity: 0,
+        duration: 1,
+        stagger: 0.2,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: portfolioRef.current,
+          start: 'top 80%',
+        }
+      });
+
+      // 4. Manifesto heading fade-in
+      gsap.from('.manifesto-heading', {
+        y: 40,
+        opacity: 0,
+        duration: 1.2,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: '.manifesto-section',
+          start: 'top 85%',
+        }
+      });
+
+      // 5. Manifesto subtitle typewriter effect
+      const subtitleEl = manifestoSubtitleRef.current;
+      if (subtitleEl) {
+        const chars = subtitleEl.querySelectorAll('.typewriter-char');
+        gsap.set(chars, { opacity: 0 });
+        gsap.to(chars, {
+          opacity: 1,
+          duration: 0.05,
+          stagger: 0.03,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: '.manifesto-section',
+            start: 'top 75%',
+          },
+          onComplete: () => {
+            const cursor = subtitleEl.querySelector('.typewriter-cursor');
+            if (cursor) gsap.to(cursor, { opacity: 0, duration: 0.4, delay: 0.8 });
+          }
+        });
+      }
+    }, heroRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <div className="w-full flex flex-col relative z-10">
-      
-      {/* 1. HERO FOLD */}
-      <div id="landing-hero-overlay" className="min-h-screen w-full flex flex-col justify-between p-6 sm:p-12 md:p-16 select-none relative custom-gradient">
-        
-        {/* Side Info / Vertical Coordinate Rails */}
-        <div className="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 hidden xl:flex flex-col gap-32 z-20 pointer-events-none">
-          <div className={`vertical-text text-[10px] uppercase tracking-[0.5em] font-mono ${darkMode ? 'text-white/30' : 'text-bg-dark/40'}`}>
-            ESTABLISHED / 2026
+    <div ref={heroRef} className="w-full bg-[#faf7f2] pt-32 pb-16 px-6 sm:px-12 md:px-16">
+      {/* SECTION 1: HERO HEADER */}
+      <div className="max-w-6xl mx-auto text-center relative z-10">
+        <h1 className="font-display text-7xl sm:text-8xl md:text-[9.5rem] tracking-tight leading-[0.9] text-black">
+          <div className="overflow-hidden inline-block mr-4">
+            <span className="hero-title-word inline-block animate-slide-up">Forward</span>
           </div>
-          <div className={`vertical-text text-[10px] uppercase tracking-[0.5em] font-mono ${darkMode ? 'text-white/30' : 'text-bg-dark/40'}`}>
-            BERLIN / TOKYO / NYC
+          <div className="overflow-hidden inline-block mr-4">
+            <span className="hero-title-word inline-block italic font-light text-[#108a93]">through</span>
           </div>
-        </div>
+          <br className="hidden sm:inline" />
+          <div className="overflow-hidden inline-block mr-4">
+            <span className="hero-title-word inline-block">digital</span>
+          </div>
+          <div className="overflow-hidden inline-block">
+            <span className="hero-title-word inline-block font-semibold">design</span>
+          </div>
+        </h1>
+      </div>
 
-        {/* Floating Project Preview Card (Top Right) */}
-        <div 
-          onClick={() => onSelectProject(projectsData[0])}
-          onMouseEnter={(e) => handleHoverElement(e, 'view', 'OPEN')}
-          onMouseLeave={() => setCursor({ type: 'default' })}
-          className={`absolute top-28 right-8 xl:right-16 w-52 h-72 border p-4 backdrop-blur-md hidden lg:flex flex-col justify-between gap-4 group cursor-none transition-all duration-500 z-20 ${
-            darkMode 
-              ? 'bg-white/5 border-white/10 hover:bg-white/10' 
-              : 'bg-black/5 border-black/10 hover:bg-black/10'
-          }`}
-        >
-          <div className="w-full h-full bg-cover bg-center mb-2 overflow-hidden filter grayscale contrast-125 group-hover:grayscale-0 transition-all duration-700" style={{ backgroundImage: `url(${projectsData[0].heroImage})` }}>
-            <div className="w-full h-full bg-rose-950/20 mix-blend-color-burn" />
-          </div>
-          <div>
-            <p className="text-[9px] uppercase opacity-40 tracking-[0.2em] font-mono mb-1">Featured Active Project</p>
-            <p className={`text-sm font-bold tracking-tight font-sans uppercase group-hover:text-accent-rose transition-colors ${darkMode ? 'text-white' : 'text-bg-dark'}`}>{projectsData[0].title}</p>
-            <p className={`text-[10px] opacity-60 font-mono ${darkMode ? 'text-white/60' : 'text-bg-dark/60'}`}>{projectsData[0].category}</p>
-          </div>
-        </div>
-
-        {/* Top Margined Agency Info Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full text-left font-mono text-[9px] opacity-40 uppercase tracking-wider">
-          <div className="flex flex-col">
-            <span>AGENCY HUB</span>
-            <span className="font-bold text-accent-rose">BERLIN / TOKYO / NYC</span>
-          </div>
-          <div className="flex flex-col">
-            <span>CORE FOCUS</span>
-            <span className={`font-bold ${darkMode ? 'text-white' : 'text-bg-dark'}`}>WEBSITES + MOBILE APPS</span>
-          </div>
-          <div className="flex flex-col">
-            <span>DESIGN FOCUS</span>
-            <span className={`font-bold uppercase ${darkMode ? 'text-accent-lime' : 'text-emerald-700'}`}>BRANDING + UI/UX</span>
-          </div>
-          <div className="flex flex-col text-right">
-            <span>AVAILABILITY</span>
-            <span className={`font-bold uppercase ${darkMode ? 'text-accent-violet' : 'text-violet-700'}`}>BOOKING FOR Q4 2026</span>
-          </div>
-        </div>
-
-        {/* Central Typographic Massive Display Stack */}
-        <div className="flex flex-col items-start my-auto max-w-5xl py-8">
-          <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.1, ease: [0.76, 0, 0.24, 1] }}
-            className="flex flex-col w-full"
-          >
-            <span className="font-mono text-xs text-accent-rose font-bold uppercase tracking-widest mb-2">
-              // QOLAB CREATIVE DIGITAL AGENCY
-            </span>
-            
-            <h1 className="text-massive font-black uppercase tracking-tighter leading-none flex flex-col select-none">
-              <span 
-                className={`${darkMode ? 'text-outline hover:text-white' : 'text-outline-light hover:text-bg-dark'} transition-all duration-700 ease-out`} 
-                style={darkMode ? { WebkitTextStroke: '1px rgba(255,255,255,0.45)' } : { WebkitTextStroke: '1px rgba(8,8,8,0.45)' }}
-              >
-                AESTHETICS
-              </span>
-              <span className={`${darkMode ? 'text-white' : 'text-bg-dark'} hover:text-accent-rose transition-colors duration-500`}>
-                IN MOTION
-              </span>
-              <span 
-                className={`${darkMode ? 'text-outline hover:text-white' : 'text-outline-light hover:text-bg-dark'} transition-all duration-700 ease-out`} 
-                style={darkMode ? { WebkitTextStroke: '1px rgba(255,255,255,0.45)' } : { WebkitTextStroke: '1px rgba(8,8,8,0.45)' }}
-              >
-                & RESONANCE
-              </span>
-            </h1>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className="grid grid-cols-1 md:grid-cols-12 gap-6 mt-8 w-full border-t border-white/5 pt-6"
-          >
-            <p className="md:col-span-8 font-sans font-normal text-lg sm:text-xl uppercase tracking-tight leading-relaxed max-w-3xl">
-              "WE ARE QOLAB. WE DESIGN AND BUILD EXCEPTIONAL WEBSITES, MOBILE APPLICATIONS, BRAND SYSTEMS, AND UI/UX EXPERIENCES POWERED BY RADICAL INTERACTION DESIGN."
-            </p>
-
-            <div className="md:col-span-4 flex flex-col justify-end gap-4 md:items-end">
-              <div className="flex flex-wrap gap-3 md:justify-end">
-                {/* Button: Explore the Portfolio */}
-                <button
-                  onClick={() => handleNavigate('archive')}
-                  onMouseEnter={(e) => handleHoverElement(e, 'view', 'VIEW')}
-                  onMouseLeave={() => setCursor({ type: 'default' })}
-                  className="flex items-center gap-2 px-6 py-3.5 rounded-full bg-accent-rose text-white font-mono text-xs font-bold uppercase tracking-widest shadow-xl hover:scale-105 active:scale-95 transition-all duration-300 cursor-none animate-pulse"
-                >
-                  SEE OUR WORK
-                  <ArrowRight size={14} />
-                </button>
-
-                {/* Button: Contact us */}
-                <button
-                  onClick={() => handleNavigate('contact')}
-                  onMouseEnter={(e) => handleHoverElement(e, 'hover', 'HELLO')}
-                  onMouseLeave={() => setCursor({ type: 'default' })}
-                  className={`flex items-center gap-2 px-6 py-3.5 rounded-full border font-mono text-xs font-bold uppercase tracking-widest transition-all duration-300 cursor-none ${
-                    darkMode 
-                      ? 'border-white/10 hover:border-white/30 text-white bg-white/5' 
-                      : 'border-bg-dark/10 hover:border-bg-dark/30 text-bg-dark bg-bg-dark/5'
-                  }`}
-                >
-                  TALK TO US
-                  <Sparkles size={14} className="text-accent-rose animate-pulse" />
-                </button>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Bottom Layout Controller Cue */}
-        <div className={`flex flex-col sm:flex-row items-center justify-between border-t pt-6 gap-4 w-full ${
-          darkMode ? 'border-white/5' : 'border-bg-dark/10'
-        }`}>
-          {/* Simple Interactive Cue */}
+      {/* SECTION 2: FLOATING COLLAGE — full-bleed, no clipping */}
+      <div ref={collageRef} className="relative w-screen left-1/2 -translate-x-1/2 h-[480px] sm:h-[650px] mt-16 overflow-visible">
+        {heroImages.map((img, i) => (
           <div
-            onMouseEnter={(e) => handleHoverElement(e, 'drag', 'GRAB')}
-            onMouseLeave={() => setCursor({ type: 'default' })}
-            className="flex items-center gap-3 font-mono text-[10px] tracking-wider uppercase opacity-55 hover:opacity-100 transition-opacity duration-300"
+            key={i}
+            className="hero-drift-item absolute"
+            style={{
+              top: img.top,
+              left: img.left,
+              width: img.width,
+              rotate: `${img.rotate}deg`,
+            }}
           >
-            <Orbit size={16} className="text-accent-rose animate-spin-slow" />
-            <span>DRAG THE CURSOR TO INTERACT WITH OUR BACKDROP</span>
+            <div className={`w-full rounded-[1.5rem] overflow-hidden shadow-xl`} style={{ aspectRatio: img.aspect }}>
+              <img
+                src={img.src}
+                alt={`Hero image ${i + 1}`}
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+            </div>
           </div>
+        ))}
+      </div>
 
-          {/* Dynamic backdrop style switcher with clear English names */}
+      {/* SECTION 3: MANIFESTO */}
+      <div className="manifesto-section max-w-4xl mx-auto text-center py-24 sm:py-32 border-t border-black/5 mt-12">
+        <p className="manifesto-heading font-display text-4xl sm:text-5xl md:text-6xl text-black leading-tight max-w-3xl mx-auto">
+          We are <span className="font-semibold text-[#108a93]">Qolab</span>, a creative design & technology studio rooted in craft, curiosity, and care.
+        </p>
+        <p ref={manifestoSubtitleRef} className="font-sans text-lg sm:text-xl text-gray-600 mt-8 max-w-2xl mx-auto leading-relaxed">
+          {'We design and build products, brands, and digital experiences that people genuinely love, helping modern businesses grow and thrive in a vibrant world.'.split('').map((char, i) => (
+            <span key={i} className="typewriter-char inline-block" style={{ opacity: 0 }}>
+              {char === ' ' ? '\u00A0' : char}
+            </span>
+          ))}
+          <span className="typewriter-cursor inline-block w-[2px] h-[1em] bg-gray-600 ml-[1px] align-middle" />
+        </p>
+      </div>
+
+      {/* SECTION 4: PORTFOLIO GRID */}
+      <div ref={portfolioRef} id="work" className="max-w-6xl mx-auto py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+          {projectsData.map((project, idx) => {
+            return (
+              <div
+                key={project.id}
+                onClick={() => onSelectProject(project)}
+                className="portfolio-card flex flex-col gap-4"
+              >
+                <div className={`aspect-[4/3] rounded-[2rem] overflow-hidden relative group cursor-pointer shadow-md hover:shadow-xl transition-all duration-500`}>
+                  <img
+                    src={project.heroImage}
+                    alt={project.title}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent pointer-events-none" />
+                  <div className={`absolute inset-0 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out flex flex-col justify-between p-8 text-white z-10`} style={{ backgroundColor: project.accentColor }}>
+                    <div className="flex justify-between items-start">
+                      <span className="text-xs uppercase tracking-wider font-semibold">{project.category}</span>
+                      <ArrowUpRight size={24} />
+                    </div>
+                    <div>
+                      <h3 className="text-3xl font-display italic">{project.title}</h3>
+                      <p className="text-sm opacity-95 mt-2">{project.subtitle}</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex justify-between items-center px-2">
+                  <div>
+                    <h4 className="font-bold text-lg text-black">{project.title}</h4>
+                    <p className="text-sm text-gray-500">{project.subtitle}</p>
+                  </div>
+                  <span className="text-xs text-gray-400 uppercase tracking-widest font-mono">{project.year}</span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* View All Button */}
+        <div className="flex justify-center mt-16">
           <button
-            onClick={cycleMode}
-            onMouseEnter={(e) => handleHoverElement(e, 'hover')}
-            onMouseLeave={() => setCursor({ type: 'default' })}
-            className={`flex items-center gap-2.5 px-4.5 py-2 rounded-full border font-mono text-[10px] font-bold uppercase tracking-widest shadow-md cursor-none ${
-              darkMode 
-                ? 'bg-white/3 border-white/5 hover:border-white/20 text-white' 
-                : 'bg-black/5 border-black/10 hover:border-black/15 text-bg-dark'
-            }`}
+            onClick={onViewAllProjects}
+            className="flex items-center gap-3 bg-black hover:bg-gray-800 text-white font-semibold py-4 px-8 rounded-full shadow-md hover:shadow-lg transition-transform hover:scale-105 active:scale-95 group"
           >
-            <Cpu size={12} className="text-accent-rose" />
-            BACKDROP STYLE: <span className="text-accent-rose">{
-              selectedMode === 'fluid' ? 'ETH_FLOW' : selectedMode === 'strings' ? 'NET_WEB' : 'PARTICLES'
-            }</span>
+            <span>View all projects</span>
+            <div className="w-6 h-6 rounded-full bg-[#3a863f] flex items-center justify-center group-hover:translate-x-1 transition-transform">
+              <ArrowUpRight size={14} className="text-white" />
+            </div>
           </button>
         </div>
       </div>
 
-      {/* 2. SERVICES SECTION */}
-      <section id="services-section" className={`py-24 px-6 sm:px-12 md:px-16 border-t ${darkMode ? 'border-white/5 bg-[#0a0a0b]' : 'border-bg-dark/5 bg-slate-50'}`}>
-        <div className="max-w-7xl mx-auto">
-          <div className="mb-16">
-            <span className="font-mono text-xs text-accent-rose font-bold uppercase tracking-widest block mb-3">// WHAT WE DO BEST</span>
-            <h2 className="text-4xl sm:text-5xl font-black tracking-tighter uppercase leading-none mb-4">
-              OUR CORE SERVICES
-            </h2>
-            <p className="font-sans text-base sm:text-lg opacity-60 max-w-2xl uppercase">
-              Simple, powerful digital products. We build websites, apps, and brands that help your business capture attention and drive growth.
+      {/* SECTION 5: INTERACTIVE QUIZ & QUOTES */}
+      <div ref={helpRef} id="services" className="max-w-6xl mx-auto py-20 border-t border-black/5 mt-16 grid grid-cols-1 md:grid-cols-2 gap-12">
+        {/* Quote Card */}
+        <div className="bg-[#e6f3f0] rounded-[2.5rem] p-8 sm:p-12 flex flex-col justify-between shadow-sm relative overflow-hidden">
+          <span className="font-display text-[#108a93] text-9xl absolute -top-8 -left-2 opacity-15 font-bold">“</span>
+          <div className="relative z-10">
+            <p className="font-display text-2xl sm:text-3xl text-gray-800 leading-tight italic">
+              "Qolab's collaborative workflow, technical precision, and eye for detail helped us launch our platform ahead of schedule with remarkable aesthetics."
             </p>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {services.map((svc, i) => (
-              <div 
-                key={i}
-                onMouseEnter={(e) => handleHoverElement(e, 'hover', 'AGENCY')}
-                onMouseLeave={() => setCursor({ type: 'default' })}
-                className={`p-8 rounded-lg border backdrop-blur-sm flex flex-col justify-between min-h-[240px] hover:scale-[1.02] transition-all duration-300 cursor-none ${
-                  darkMode ? 'bg-white/2 hover:bg-white/5 border-white/10' : 'bg-black/2 hover:bg-black/5 border-black/10'
-                }`}
-              >
-                <div className="mb-6 flex justify-between items-start">
-                  <div className="p-3 bg-accent-rose/10 rounded-lg">
-                    {svc.icon}
-                  </div>
-                  <span className="font-mono text-xs opacity-20">0{i+1} // SERV</span>
-                </div>
-                <div>
-                  <h3 className="font-display font-black text-xl tracking-tight uppercase mb-2">
-                    {svc.title}
-                  </h3>
-                  <p className="font-sans text-xs sm:text-sm opacity-60 leading-relaxed uppercase">
-                    {svc.description}
-                  </p>
-                </div>
-              </div>
-            ))}
+          <div className="flex items-center gap-4 mt-8 relative z-10">
+            <div className="w-12 h-12 rounded-full bg-[#108a93] flex items-center justify-center text-white font-bold">CS</div>
+            <div>
+              <h5 className="font-bold text-black text-sm">Clara Solis</h5>
+              <p className="text-xs text-gray-500">VP of Design, Shorthand</p>
+            </div>
           </div>
         </div>
-      </section>
 
-      {/* 3. RECENT WORK SHOWCASE SECTION */}
-      <section id="recent-work-section" className="py-24 px-6 sm:px-12 md:px-16 border-t border-white/5 relative bg-[#080808]/90">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-16 gap-6">
-            <div>
-              <span className="font-mono text-xs text-accent-rose font-bold uppercase tracking-widest block mb-3">// CLIENT SUCCESS</span>
-              <h2 className="text-4xl sm:text-5xl font-black tracking-tighter uppercase leading-none text-white">
-                SELECTED PORTFOLIO
-              </h2>
+        {/* questionnaire Widget */}
+        <div className="bg-[#fcfaf6] border border-black/5 rounded-[2.5rem] p-8 sm:p-12 flex flex-col justify-between shadow-sm">
+          <div>
+            <h4 className="font-display text-4xl text-black leading-tight italic">How can we help you?</h4>
+            <p className="text-xs text-gray-400 mt-2 font-mono uppercase tracking-wider">Select all options that apply</p>
+            
+            <div className="flex flex-wrap gap-3 mt-6">
+              {[
+                'Rebrand my business',
+                'Build a custom website',
+                'Design a mobile app',
+                'Consult on architecture',
+                'Improve UX/UI'
+              ].map((service) => {
+                const active = selectedServices.includes(service);
+                return (
+                  <button
+                    key={service}
+                    type="button"
+                    onClick={() => toggleService(service)}
+                    className={`py-2.5 px-5 rounded-full border text-xs font-semibold transition-all duration-300 ${
+                      active
+                        ? 'bg-[#108a93] border-[#108a93] text-white'
+                        : 'bg-white border-black/5 hover:border-black/20 text-gray-800'
+                    }`}
+                  >
+                    {service}
+                  </button>
+                );
+              })}
             </div>
-            <button 
-              onClick={() => handleNavigate('archive')}
-              onMouseEnter={(e) => handleHoverElement(e, 'view', 'OPEN')}
-              onMouseLeave={() => setCursor({ type: 'default' })}
-              className="flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-widest text-accent-rose border-b border-accent-rose/35 pb-1 cursor-none hover:opacity-80 transition-opacity"
-            >
-              VIEW ALL {projectsData.length} PROJECTS
-              <ArrowUpRight size={14} />
+          </div>
+
+          <div className="mt-8 border-t border-black/5 pt-6 flex flex-col gap-4">
+            <p className="text-sm text-gray-600">Tell us where to send the proposal</p>
+            <div className="flex gap-2">
+              <input
+                type="email"
+                placeholder="name@email.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="flex-grow bg-white border border-black/5 focus:border-[#108a93] focus:outline-none rounded-full px-6 py-3 text-sm text-black shadow-sm"
+              />
+              <button
+                type="button"
+                onClick={() => setSubmitted(true)}
+                className="w-12 h-12 bg-black hover:bg-gray-800 text-white rounded-full flex items-center justify-center transition-transform hover:scale-105 active:scale-95 shadow-sm"
+              >
+                {submitted ? <Check size={18} className="text-green-400" /> : <Send size={18} />}
+              </button>
+            </div>
+            {submitted && <p className="text-xs text-green-600 font-semibold animate-fade-in">Request submitted! We will reach out within 24 hours.</p>}
+          </div>
+        </div>
+      </div>
+
+      {/* SECTION 6: TEAM SECTION */}
+      <div id="about" className="max-w-6xl mx-auto py-20 border-t border-black/5 mt-12 text-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+          <div className="flex gap-4">
+            <div className="w-1/2 aspect-[4/5] rounded-[2rem] overflow-hidden shadow-md relative">
+              <img src={heroImg1} alt="Creative Team" className="w-full h-full object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex items-end p-4">
+                <span className="text-white text-xs font-semibold">Creative Team</span>
+              </div>
+            </div>
+            <div className="w-1/2 aspect-[4/5] rounded-[2rem] overflow-hidden shadow-md relative mt-8">
+              <img src={heroImg7} alt="Coding Desk" className="w-full h-full object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex items-end p-4">
+                <span className="text-white text-xs font-semibold">Coding Desk</span>
+              </div>
+            </div>
+          </div>
+          <div className="text-left md:pl-8">
+            <h3 className="font-display text-4xl sm:text-5xl text-black italic leading-tight">
+              We're a small team of versatile creatives.
+            </h3>
+            <p className="text-gray-600 text-base sm:text-lg mt-6 leading-relaxed">
+              We operate at the convergence of beautiful interfaces and performant engineering. Fully aligned with your goals, we design with craft and code with rigor.
+            </p>
+            <button className="mt-8 flex items-center gap-2 bg-black text-white hover:bg-gray-800 px-6 py-3 rounded-full text-sm font-semibold transition-transform hover:scale-105 active:scale-95 shadow-md">
+              <span>Find out more</span>
+              <ArrowUpRight size={16} />
             </button>
           </div>
+        </div>
+      </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {projectsData.slice(0, 2).map((project) => (
-              <div 
-                key={project.id}
-                onClick={() => onSelectProject(project)}
-                onMouseEnter={(e) => handleHoverElement(e, 'view', 'VIEW')}
-                onMouseLeave={() => setCursor({ type: 'default' })}
-                className="group cursor-none border p-5 bg-white/2 backdrop-blur-md rounded-lg flex flex-col justify-between gap-6 hover:bg-white/5 transition-all duration-500 border-white/10"
-              >
-                <div className="w-full h-80 rounded overflow-hidden relative filter grayscale contrast-125 group-hover:grayscale-0 transition-all duration-700">
-                  <img 
-                    src={project.heroImage} 
-                    alt={project.title} 
-                    referrerPolicy="no-referrer"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                  />
-                  <div className="absolute inset-0 bg-rose-950/20 mix-blend-color-burn" />
-                </div>
-                <div className="flex justify-between items-end">
-                  <div>
-                    <span className="font-mono text-[10px] text-accent-rose uppercase font-bold tracking-widest">{project.category}</span>
-                    <h3 className="font-display font-black text-2xl tracking-tighter uppercase text-white mt-1 group-hover:text-accent-rose transition-colors duration-300">
-                      {project.title}
-                    </h3>
-                  </div>
-                  <div className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white group-hover:bg-white group-hover:text-black transition-all duration-300">
-                    <ArrowRight size={16} />
-                  </div>
-                </div>
-              </div>
-            ))}
+      {/* SECTION 7: VIBRANT ORANGE NEWSLETTER */}
+      <div className="max-w-6xl mx-auto py-8">
+        <div className="bg-[#f4a261] rounded-[2.5rem] p-8 sm:p-12 md:p-16 flex flex-col md:flex-row justify-between items-center gap-8 shadow-sm">
+          <h3 className="font-display text-4xl sm:text-5xl text-white leading-tight italic max-w-md text-center md:text-left">
+            Stay connected with updates, insights and inspiration.
+          </h3>
+          <div className="w-full md:w-auto flex-grow max-w-md bg-white/10 p-2 rounded-[2rem] border border-white/10 flex">
+            <input
+              type="email"
+              placeholder="Your email address"
+              className="flex-grow bg-transparent focus:outline-none px-6 py-3 text-sm text-white placeholder-white/60 font-sans"
+            />
+            <button className="bg-white text-gray-900 hover:bg-gray-100 font-semibold py-3 px-8 rounded-full text-sm transition-transform hover:scale-105 active:scale-95 shadow-md">
+              Subscribe
+            </button>
           </div>
         </div>
-      </section>
+      </div>
 
-      {/* 4. SIMPLIFIED EDITORIAL ABOUT SECTION */}
-      <section id="about-section" className={`py-24 px-6 sm:px-12 md:px-16 border-t ${darkMode ? 'border-white/5 bg-[#0a0a0b]' : 'border-bg-dark/5 bg-slate-50'}`}>
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          <div className="lg:col-span-7">
-            <span className="font-mono text-xs text-accent-rose font-bold uppercase tracking-widest block mb-3">// WHO WE ARE</span>
-            <h2 className="text-4xl sm:text-5xl font-black tracking-tighter uppercase leading-none mb-6">
-              WE ARE QOLAB DIGITAL.
-            </h2>
-            <p className={`font-sans text-lg sm:text-xl font-medium uppercase tracking-tight leading-relaxed mb-6 ${darkMode ? 'text-white/90' : 'text-bg-dark/90'}`}>
-              "We partner with businesses to build high-end websites, powerful mobile apps, and bold visual brands. We reject standard designs and complex technical jargon to give you clean, understandable, and high-converting products."
-            </p>
-            <p className="font-sans text-sm sm:text-base opacity-60 leading-relaxed uppercase mb-8">
-              Based globally, we operate with a completely unified design and engineering pipeline. We do not use bloated templates or outsource our work. Every element we build is handcrafted, tested, and optimized for maximum speed and conversions.
-            </p>
-            <div className="flex gap-12 font-mono text-xs opacity-50 uppercase">
-              <div>
-                <span className="text-accent-rose font-bold text-lg block">100%</span>
-                <span>HANDCRAFTED CODE</span>
-              </div>
-              <div>
-                <span className="text-accent-rose font-bold text-lg block">2.4x</span>
-                <span>AVERAGE VISITOR GROWTH</span>
-              </div>
-              <div>
-                <span className="text-accent-rose font-bold text-lg block">10+</span>
-                <span>GLOBAL AWARDS</span>
-              </div>
-            </div>
-          </div>
-          <div className="lg:col-span-5 flex justify-center">
-            <div className={`relative w-80 h-96 border p-4 backdrop-blur-md flex flex-col justify-between ${
-              darkMode ? 'bg-white/5 border-white/10' : 'bg-black/5 border-black/10'
-            }`}>
-              <div className="w-full h-full bg-[#111] overflow-hidden grayscale contrast-125 hover:grayscale-0 transition-all duration-700">
-                <img 
-                  src="https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=600&q=80" 
-                  alt="QOLAB Workspace"
-                  referrerPolicy="no-referrer"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="mt-4">
-                <p className="text-[10px] uppercase opacity-40 tracking-widest font-mono">AGENCY ESSENCE</p>
-                <p className={`text-sm font-bold uppercase ${darkMode ? 'text-white' : 'text-bg-dark'}`}>QOLAB STUDIO // DESIGN IN ACTION</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 5. DIRECT CONTACT FORM */}
-      <section id="contact-form-section" className="py-24 px-6 sm:px-12 md:px-16 border-t border-white/5 bg-[#080808]">
+      {/* SECTION 8: CALL TO ACTION */}
+      <div id="contact" className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] bg-[#0f0f11] text-[#faf7f2] py-28 px-6 sm:px-12 text-center mt-20">
         <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-16">
-            <span className="font-mono text-xs text-accent-rose font-bold uppercase tracking-widest block mb-3">// START YOUR PROJECT</span>
-            <h2 className="text-4xl sm:text-5xl font-black tracking-tighter uppercase leading-none mb-4 text-white">
-              LET'S CO-BUILD SOMETHING GRAND
-            </h2>
-            <p className="font-sans text-sm sm:text-base text-zinc-400 uppercase max-w-lg mx-auto">
-              Fill out this quick 1-minute form, and we'll get back to you with an actual strategy proposal within 24 hours. No sales spam. Guaranteed.
-            </p>
+          <span className="text-[#108a93] font-mono text-xs uppercase tracking-widest font-bold">Got a project?</span>
+          <h2 className="font-display text-5xl sm:text-7xl md:text-8xl text-white italic mt-6 leading-none">
+            Ready to move forward?<br className="hidden sm:inline" /> Let's work together.
+          </h2>
+          <div className="flex justify-center mt-12">
+            <button className="bg-[#108a93] hover:bg-[#159da8] text-white font-semibold py-4 px-12 rounded-full text-base tracking-wide transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg">
+              Get in touch
+            </button>
           </div>
-
-          <AnimatePresence mode="wait">
-            {formSubmitted ? (
-              <motion.div 
-                key="form-success"
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                className="hairline-border p-12 bg-accent-lime/5 border-accent-lime rounded-lg text-center flex flex-col items-center justify-center gap-4"
-              >
-                <div className="p-4 bg-accent-lime/15 text-accent-lime rounded-full">
-                  <CheckCircle2 size={40} className="animate-bounce" />
-                </div>
-                <h3 className="font-display font-black text-2xl text-accent-lime uppercase tracking-tight">
-                  SIGNAL RECEIVED SUCCESSFULLY!
-                </h3>
-                <p className="font-sans text-sm uppercase opacity-70 max-w-md">
-                  Thank you, {formData.name || 'Friend'}. Your request for <strong>{formData.service}</strong> has reached our primary queue. We will contact you at <strong>{formData.email}</strong> soon!
-                </p>
-              </motion.div>
-            ) : (
-              <motion.form 
-                key="form-fields"
-                onSubmit={handleFormSubmit}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="flex flex-col gap-8 font-mono"
-              >
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  {/* Name field */}
-                  <div className="flex flex-col gap-2">
-                    <label htmlFor="user-name-input" className="text-[10px] uppercase text-white/50 tracking-widest font-bold">YOUR NAME</label>
-                    <input 
-                      id="user-name-input"
-                      type="text" 
-                      required
-                      value={formData.name}
-                      onChange={(e) => setFormData({...formData, name: e.target.value})}
-                      placeholder="e.g. John Doe"
-                      className="w-full bg-white/3 border border-white/10 rounded-lg py-3.5 px-4 text-white text-sm focus:border-accent-rose focus:bg-white/5 transition-all duration-300 outline-none cursor-none"
-                      onMouseEnter={(e) => handleHoverElement(e, 'hover', 'WRITE')}
-                      onMouseLeave={() => setCursor({ type: 'default' })}
-                    />
-                  </div>
-
-                  {/* Email field */}
-                  <div className="flex flex-col gap-2">
-                    <label htmlFor="user-email-input" className="text-[10px] uppercase text-white/50 tracking-widest font-bold">YOUR EMAIL ADDRESS</label>
-                    <input 
-                      id="user-email-input"
-                      type="email" 
-                      required
-                      value={formData.email}
-                      onChange={(e) => setFormData({...formData, email: e.target.value})}
-                      placeholder="e.g. john@yourcompany.com"
-                      className="w-full bg-white/3 border border-white/10 rounded-lg py-3.5 px-4 text-white text-sm focus:border-accent-rose focus:bg-white/5 transition-all duration-300 outline-none cursor-none"
-                      onMouseEnter={(e) => handleHoverElement(e, 'hover', 'WRITE')}
-                      onMouseLeave={() => setCursor({ type: 'default' })}
-                    />
-                  </div>
-                </div>
-
-                <div className="flex flex-col gap-2">
-                  <label htmlFor="service-select" className="text-[10px] uppercase text-white/50 tracking-widest font-bold">WHAT DO YOU NEED HELP WITH?</label>
-                  <select 
-                    id="service-select"
-                    value={formData.service}
-                    onChange={(e) => setFormData({...formData, service: e.target.value})}
-                    className="w-full bg-white/3 border border-white/10 rounded-lg py-3.5 px-4 text-white text-sm focus:border-accent-rose focus:bg-white/5 transition-all duration-300 outline-none cursor-none appearance-none"
-                    onMouseEnter={(e) => handleHoverElement(e, 'hover', 'SELECT')}
-                    onMouseLeave={() => setCursor({ type: 'default' })}
-                  >
-                    <option value="Website Development" className="bg-[#0c0c0d] text-white">Website Development</option>
-                    <option value="Mobile App Development" className="bg-[#0c0c0d] text-white">Mobile App Development</option>
-                    <option value="Brand Identity Design" className="bg-[#0c0c0d] text-white">Brand Identity Design</option>
-                    <option value="UI/UX Experience Design" className="bg-[#0c0c0d] text-white">UI/UX Experience Design</option>
-                    <option value="Complete Digital Strategy" className="bg-[#0c0c0d] text-white">Complete Digital Strategy</option>
-                  </select>
-                </div>
-
-                <div className="flex flex-col gap-2">
-                  <label htmlFor="project-message" className="text-[10px] uppercase text-white/50 tracking-widest font-bold">TELL US ABOUT YOUR PROJECT GOALS</label>
-                  <textarea 
-                    id="project-message"
-                    required
-                    rows={4}
-                    value={formData.message}
-                    onChange={(e) => setFormData({...formData, message: e.target.value})}
-                    placeholder="Briefly describe what you're looking to build, your timeline, or any specific goals."
-                    className="w-full bg-white/3 border border-white/10 rounded-lg py-3.5 px-4 text-white text-sm focus:border-accent-rose focus:bg-white/5 transition-all duration-300 outline-none cursor-none resize-none"
-                    onMouseEnter={(e) => handleHoverElement(e, 'hover', 'WRITE')}
-                    onMouseLeave={() => setCursor({ type: 'default' })}
-                  />
-                </div>
-
-                <button 
-                  type="submit"
-                  onMouseEnter={(e) => handleHoverElement(e, 'magnetic', 'SEND')}
-                  onMouseLeave={() => setCursor({ type: 'default' })}
-                  className="w-full sm:w-auto self-start flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-accent-rose text-white text-xs font-bold uppercase tracking-widest transition-transform duration-300 hover:scale-105 active:scale-95 cursor-none"
-                >
-                  SUBMIT REQUEST
-                  <ArrowRight size={14} />
-                </button>
-              </motion.form>
-            )}
-          </AnimatePresence>
         </div>
-      </section>
+      </div>
 
+      {/* SECTION 9: FOOTER */}
+      <footer className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] bg-[#0f0f11] text-gray-400 pt-12 pb-8 px-6 sm:px-12 border-t border-white/5">
+        <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+          <div>
+            <h5 className="text-white text-xs font-mono uppercase tracking-widest mb-4">Work</h5>
+            <ul className="flex flex-col gap-2 text-sm text-gray-500">
+              <li><a href="#" className="hover:text-white transition-colors">Shorthand</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Olipop</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Outlier AI</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Kiva Platform</a></li>
+            </ul>
+          </div>
+          <div>
+            <h5 className="text-white text-xs font-mono uppercase tracking-widest mb-4">Services</h5>
+            <ul className="flex flex-col gap-2 text-sm text-gray-500">
+              <li><a href="#" className="hover:text-white transition-colors">Product Design</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Frontend Engineering</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Brand Identity</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">UX Research</a></li>
+            </ul>
+          </div>
+          <div>
+            <h5 className="text-white text-xs font-mono uppercase tracking-widest mb-4">About</h5>
+            <ul className="flex flex-col gap-2 text-sm text-gray-500">
+              <li><a href="#" className="hover:text-white transition-colors">Our Team</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Process</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Careers</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
+            </ul>
+          </div>
+          <div>
+            <h5 className="text-white text-xs font-mono uppercase tracking-widest mb-4">Connect</h5>
+            <ul className="flex flex-col gap-2 text-sm text-gray-500">
+              <li><a href="#" className="hover:text-white transition-colors">Instagram</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">LinkedIn</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Twitter</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Dribbble</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="max-w-6xl mx-auto pt-8 border-t border-white/5 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-full bg-[#108a93] flex items-center justify-center">
+              <span className="text-white font-bold text-sm">Q</span>
+            </div>
+            <span className="text-white font-bold text-base tracking-wider font-display">qolab</span>
+          </div>
+          <p className="text-gray-600">© 2026 Qolab Digital. All rights reserved.</p>
+        </div>
+      </footer>
     </div>
   );
 }
