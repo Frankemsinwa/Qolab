@@ -33,7 +33,7 @@ export default function ProjectShowcase({ onSelectProject, onBack }: ProjectShow
   }, []);
 
   return (
-    <div ref={containerRef} className="w-full bg-[#faf7f2] pt-32 pb-24 px-6 sm:px-12 md:px-16 min-h-screen">
+    <div ref={containerRef} className="w-full pt-32 pb-24 px-6 sm:px-12 md:px-16 min-h-screen">
       {/* Top Header Controls */}
       <div className="max-w-6xl mx-auto flex justify-between items-center mb-16 border-b border-black/10 pb-6">
         <button

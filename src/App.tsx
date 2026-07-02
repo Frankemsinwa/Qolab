@@ -7,7 +7,6 @@ import ProjectShowcase from './components/ProjectShowcase';
 import AboutPage from './components/AboutPage';
 import ServicesPage from './components/ServicesPage';
 import ContactPage from './components/ContactPage';
-import GridBackground from './components/GridBackground';
 import { Project } from './types';
 
 type View = 'landing' | 'projects' | 'detail' | 'about' | 'services' | 'contact';
@@ -53,15 +52,12 @@ export default function App() {
   }, []);
 
   return (
-    <div id="app-root-container" className="min-h-screen bg-cream text-[#1a1a1a] overflow-x-hidden selection:bg-accent-teal selection:text-white relative">
-      {/* Global grid background */}
-      <GridBackground />
-
+    <div id="app-root-container" className="min-h-screen bg-cream text-[#1a1a1a] overflow-x-hidden selection:bg-accent-teal selection:text-white">
       {/* Header Navigation */}
       <Navigation onNavigate={(target) => setView(target)} />
 
       {/* Main presentation grid layout routing */}
-      <main className="w-full relative z-10">
+      <main className="w-full">
         {view === 'landing' && (
           <LandingHero
             onSelectProject={handleSelectProject}

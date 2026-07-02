@@ -153,7 +153,7 @@ export default function LandingHero({ onSelectProject, onViewAllProjects }: Land
   }, []);
 
   return (
-    <div ref={heroRef} className="w-full bg-[#faf7f2] pt-32 pb-16 px-6 sm:px-12 md:px-16">
+    <div ref={heroRef} className="w-full pt-32 pb-16 px-6 sm:px-12 md:px-16">
       {/* SECTION 1: HERO HEADER */}
       <div className="max-w-6xl mx-auto text-center relative z-10">
         <h1 className="font-display text-7xl sm:text-8xl md:text-[9.5rem] tracking-tight leading-[0.9] text-black">
@@ -380,13 +380,13 @@ export default function LandingHero({ onSelectProject, onViewAllProjects }: Land
           <h3 className="font-display text-4xl sm:text-5xl text-white leading-tight italic max-w-md text-center md:text-left">
             Stay connected with updates, insights and inspiration.
           </h3>
-          <div className="w-full md:w-auto flex-grow max-w-md bg-white/10 p-2 rounded-[2rem] border border-white/10 flex">
+          <div className="w-full md:w-auto flex-grow max-w-md bg-white/10 p-2 rounded-[2rem] border border-white/10 flex flex-col sm:flex-row gap-2 sm:gap-0">
             <input
               type="email"
               placeholder="Your email address"
-              className="flex-grow bg-transparent focus:outline-none px-6 py-3 text-sm text-white placeholder-white/60 font-sans"
+              className="flex-grow bg-transparent focus:outline-none px-6 py-3 text-sm text-white placeholder-white/60 font-sans w-full sm:w-auto"
             />
-            <button className="bg-white text-gray-900 hover:bg-gray-100 font-semibold py-3 px-8 rounded-full text-sm transition-transform hover:scale-105 active:scale-95 shadow-md">
+            <button className="bg-white text-gray-900 hover:bg-gray-100 font-semibold py-3 px-8 rounded-full text-sm transition-transform hover:scale-105 active:scale-95 shadow-md w-full sm:w-auto">
               Subscribe
             </button>
           </div>

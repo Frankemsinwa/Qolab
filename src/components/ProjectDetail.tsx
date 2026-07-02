@@ -69,7 +69,7 @@ export default function ProjectDetail({ project, onBack }: ProjectDetailProps) {
   }, [project]);
 
   return (
-    <div ref={detailRef} className="w-full bg-[#faf7f2] text-[#1a1a1a] pt-32 pb-24 px-6 sm:px-12 md:px-16 overflow-hidden">
+    <div ref={detailRef} className="w-full text-[#1a1a1a] pt-32 pb-24 px-6 sm:px-12 md:px-16 overflow-hidden">
       {/* Back Button & Top Navigation Breadcrumb */}
       <div className="max-w-6xl mx-auto flex justify-between items-center mb-12">
         <button
