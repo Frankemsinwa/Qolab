@@ -5,6 +5,11 @@
 
 import { Project, LabExperiment } from './types';
 
+import proj1 from './assets/projects/project-1.jpg';
+import proj2 from './assets/projects/project-2.jpg';
+import proj3 from './assets/projects/project-3.jpg';
+import proj4 from './assets/projects/project-4.jpg';
+
 export const projectsData: Project[] = [
   {
     id: 'synapse-identity',
@@ -25,12 +30,8 @@ export const projectsData: Project[] = [
     tech: ['Brand Architecture', 'Framer Motion', 'React Native Design', 'WebGL Canvas', 'SVG Grids'],
     color: 'bg-rose-950',
     accentColor: '#e11d48',
-    heroImage: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80',
-    galleryImages: [
-      'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1618005198143-d366800e72dd?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&w=800&q=80'
-    ]
+    heroImage: proj1,
+    galleryImages: [proj1, proj2, proj3]
   },
   {
     id: 'aether-mobile',
@@ -51,12 +52,8 @@ export const projectsData: Project[] = [
     tech: ['iOS / Android Swift', 'React Native', 'Acoustic Feedback Engine', 'Gesture Physics', 'Spring Physics'],
     color: 'bg-violet-950',
     accentColor: '#8b5cf6',
-    heroImage: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80',
-    galleryImages: [
-      'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1544377193-33dcf4d68fb5?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=800&q=80'
-    ]
+    heroImage: proj2,
+    galleryImages: [proj2, proj3, proj4]
   },
   {
     id: 'muse-web',
@@ -77,12 +74,8 @@ export const projectsData: Project[] = [
     tech: ['WebGL', 'HTML5 Canvas', 'GSAP Sequencing', 'Tailwind v4', 'Custom Physics Core'],
     color: 'bg-emerald-950',
     accentColor: '#10b981',
-    heroImage: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=1200&q=80',
-    galleryImages: [
-      'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?auto=format&fit=crop&w=800&q=80'
-    ]
+    heroImage: proj3,
+    galleryImages: [proj3, proj4, proj1]
   },
   {
     id: 'apex-branding',
@@ -103,12 +96,8 @@ export const projectsData: Project[] = [
     tech: ['Brand Strategy', 'Typography Design', 'Tailwind v4', 'Asynchronous Grid API'],
     color: 'bg-zinc-950',
     accentColor: '#a1a1aa',
-    heroImage: 'https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=1200&q=80',
-    galleryImages: [
-      'https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80'
-    ]
+    heroImage: proj4,
+    galleryImages: [proj4, proj1, proj2]
   }
 ];
 

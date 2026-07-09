@@ -16,10 +16,20 @@ export interface Project {
   solution: string;
   results: string[];
   tech: string[];
-  color: string; // Tailwind bg color or hex
+  color: string;
   accentColor: string;
   heroImage: string;
   galleryImages: string[];
+}
+
+export interface Service {
+  id: string;
+  num: string;
+  title: string;
+  shortTitle: string;
+  description: string;
+  image: string;
+  accent: string;
 }
 
 export interface LabExperiment {

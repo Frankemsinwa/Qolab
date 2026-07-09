@@ -4,8 +4,9 @@
   --font-sans: "Plus Jakarta Sans", "Inter", sans-serif;
   --font-display: "Instrument Serif", Georgia, serif;
   --font-mono: "Space Grotesk", ui-monospace, monospace;
-  
-  --color-bg-cream: #faf7f2;
+
+  --color-bg-cream: #ffffff;
+  --color-bg-hero: #ffffff;
   --color-bg-dark: #0f0f11;
   --color-accent-teal: #108a93;
   --color-accent-orange: #f4a261;
@@ -13,18 +14,16 @@
   --color-accent-yellow: #fcd581;
 }
 
-/* Base custom styles */
 html, body {
   margin: 0;
   padding: 0;
-  background-color: var(--color-bg-cream);
+  background-color: #ffffff;
   color: #1a1a1a;
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Lenis smooth scrolling styles */
 html.lenis, html.lenis body {
   height: auto;
 }
@@ -41,7 +40,6 @@ html.lenis, html.lenis body {
   scroll-behavior: clip;
 }
 
-/* Hide scrollbar for premium aesthetic */
 ::-webkit-scrollbar {
   display: none;
 }
@@ -51,7 +49,6 @@ html.lenis, html.lenis body {
   -ms-overflow-style: none;
 }
 
-/* Custom fonts styling */
 .font-display {
   font-family: var(--font-display);
 }
@@ -60,28 +57,96 @@ html.lenis, html.lenis body {
   font-family: var(--font-sans);
 }
 
-/* Floating collage items hover and keyframes */
-.collage-item {
-  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-}
-
-.collage-item:hover {
-  transform: scale(1.05) rotate(1deg) z-index: 50;
-}
-
-/* Utility to match high-end layouts */
 .bg-cream {
   background-color: var(--color-bg-cream);
 }
 
-/* Typewriter cursor blink */
-.typewriter-cursor {
-  animation: cursor-blink 0.8s steps(1) infinite;
+.bg-hero {
+  background-color: var(--color-bg-hero);
 }
 
-@keyframes cursor-blink {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0; }
+/* Hero headline text animation */
+.hero-text-reveal {
+  clip-path: inset(0 0 100% 0);
+  animation: textReveal 1s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+}
+
+@keyframes textReveal {
+  to {
+    clip-path: inset(0 0 0% 0);
+  }
+}
+
+/* Silhouette canvas blending */
+.silhouette-canvas {
+  mix-blend-mode: multiply;
+  filter: drop-shadow(0 20px 60px rgba(0, 0, 0, 0.15));
+}
+
+/* Smooth fade for video background */
+.hero-video-fade {
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
+}
+
+/* Section transitions for landing page */
+.section-fade-in {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1),
+              transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.section-fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Project card hover lift */
+.project-card-lift {
+  transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1),
+              box-shadow 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.project-card-lift:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 24px 80px -12px rgba(0, 0, 0, 0.15);
+}
+
+/* Marquee animation for partners */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+
+/* Stagger children utility */
+.stagger-children > * {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: staggerIn 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.stagger-children > *:nth-child(1) { animation-delay: 0.1s; }
+.stagger-children > *:nth-child(2) { animation-delay: 0.2s; }
+.stagger-children > *:nth-child(3) { animation-delay: 0.3s; }
+.stagger-children > *:nth-child(4) { animation-delay: 0.4s; }
+.stagger-children > *:nth-child(5) { animation-delay: 0.5s; }
+
+@keyframes staggerIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile silhouette breathing animation */
+@keyframes silhouettePulse {
+  0%, 100% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.03); opacity: 1; }
 }
 
 

@@ -1,446 +1,388 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ArrowUpRight, Check, Send } from 'lucide-react';
+import { ArrowUpRight, ArrowRight, ArrowDownRight } from 'lucide-react';
+import SilhouetteSequence from './SilhouetteSequence';
+import ServicesCarousel from './ServicesCarousel';
+import ProjectGrid from './ProjectGrid';
+import ApproachSection from './ApproachSection';
 import { projectsData } from '../data';
-import { Project } from '../types';
-import heroImg1 from '../assets/hero-imgs/hero-1.jpg';
-import heroImg2 from '../assets/hero-imgs/hero-2.jpg';
-import heroImg3 from '../assets/hero-imgs/hero-3.jpg';
-import heroImg4 from '../assets/hero-imgs/hero-4.jpg';
-import heroImg5 from '../assets/hero-imgs/hero-5.jpg';
-import heroImg6 from '../assets/hero-imgs/hero-6.jpg';
-import heroImg7 from '../assets/hero-imgs/hero-7.jpg';
-import heroImg8 from '../assets/hero-imgs/hero-8.jpg';
-import heroImg9 from '../assets/hero-imgs/hero-9.jpg';
-import heroImg10 from '../assets/hero-imgs/hero-10.jpg';
-import heroImg11 from '../assets/hero-imgs/hero-11.jpg';
-import heroImg12 from '../assets/hero-imgs/hero-12.jpg';
-import heroImg14 from '../assets/hero-imgs/hero-14.jpg';
-import heroImg15 from '../assets/hero-imgs/hero-15.jpg';
-import heroImg16 from '../assets/hero-imgs/hero-16.jpg';
-import heroImg17 from '../assets/hero-imgs/hero-17.jpg';
-import heroImg18 from '../assets/hero-imgs/hero-18.jpg';
-import heroImg19 from '../assets/hero-imgs/hero-19.jpg';
-import heroImg20 from '../assets/hero-imgs/hero-20.jpg';
-import heroImg21 from '../assets/hero-imgs/hero-21.jpg';
-import heroImg22 from '../assets/hero-imgs/hero-22.jpg';
+import { Service } from '../types';
+import logoImg from '../assets/logo.png.png';
 
 gsap.registerPlugin(ScrollTrigger);
 
 interface LandingHeroProps {
-  onSelectProject: (project: Project) => void;
+  onSelectProject: (project: any) => void;
   onViewAllProjects: () => void;
+  onSelectService?: (service: Service) => void;
 }
 
-export default function LandingHero({ onSelectProject, onViewAllProjects }: LandingHeroProps) {
+export default function LandingHero({ onSelectProject, onViewAllProjects, onSelectService }: LandingHeroProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLDivElement>(null);
-  const collageRef = useRef<HTMLDivElement>(null);
-  const portfolioRef = useRef<HTMLDivElement>(null);
-  const helpRef = useRef<HTMLDivElement>(null);
-  const manifestoSubtitleRef = useRef<HTMLParagraphElement>(null);
+  const s2Ref = useRef<HTMLDivElement>(null);
+  const scrollProgress = useRef(0);
 
-  // Questionnaire state
-  const [selectedServices, setSelectedServices] = useState<string[]>([]);
-  const [email, setEmail] = useState('');
-  const [submitted, setSubmitted] = useState(false);
+  const s6Ref = useRef<HTMLDivElement>(null);
+  const s7Ref = useRef<HTMLDivElement>(null);
+  const approachRef = useRef<HTMLDivElement>(null);
+  const s8Ref = useRef<HTMLDivElement>(null);
 
-  const toggleService = (service: string) => {
-    if (selectedServices.includes(service)) {
-      setSelectedServices(selectedServices.filter(s => s !== service));
-    } else {
-      setSelectedServices([...selectedServices, service]);
-    }
-  };
-
-  const heroImages = [
-    // Row 1 — upper band
-    { src: heroImg1, top: '5%', left: '2%', width: 'clamp(200px, 26vw, 380px)', rotate: -8, aspect: '4/3' },
-    { src: heroImg3, top: '2%', left: '20%', width: 'clamp(180px, 24vw, 340px)', rotate: 12, aspect: '3/4' },
-    { src: heroImg7, top: '10%', left: '38%', width: 'clamp(220px, 28vw, 400px)', rotate: -5, aspect: '4/3' },
-    { src: heroImg9, top: '3%', left: '55%', width: 'clamp(190px, 25vw, 360px)', rotate: 8, aspect: '16/10' },
-    { src: heroImg11, top: '8%', left: '70%', width: 'clamp(200px, 26vw, 380px)', rotate: -12, aspect: '3/4' },
-    { src: heroImg14, top: '4%', left: '85%', width: 'clamp(180px, 23vw, 330px)', rotate: 6, aspect: '4/3' },
-    { src: heroImg17, top: '12%', left: '98%', width: 'clamp(190px, 24vw, 350px)', rotate: -10, aspect: '4/3' },
-    { src: heroImg5, top: '6%', left: '108%', width: 'clamp(200px, 25vw, 370px)', rotate: 14, aspect: '4/3' },
-    { src: heroImg22, top: '9%', left: '120%', width: 'clamp(180px, 22vw, 320px)', rotate: -6, aspect: '3/4' },
-    { src: heroImg10, top: '2%', left: '135%', width: 'clamp(210px, 27vw, 390px)', rotate: 10, aspect: '4/3' },
-    { src: heroImg20, top: '7%', left: '150%', width: 'clamp(190px, 24vw, 350px)', rotate: -8, aspect: '16/10' },
-    // Row 2 — lower band
-    { src: heroImg2, top: '42%', left: '5%', width: 'clamp(210px, 27vw, 390px)', rotate: 6, aspect: '3/4' },
-    { src: heroImg4, top: '48%', left: '22%', width: 'clamp(190px, 25vw, 360px)', rotate: 10, aspect: '4/3' },
-    { src: heroImg6, top: '40%', left: '40%', width: 'clamp(200px, 26vw, 380px)', rotate: -6, aspect: '16/10' },
-    { src: heroImg8, top: '50%', left: '55%', width: 'clamp(220px, 28vw, 400px)', rotate: 14, aspect: '4/3' },
-    { src: heroImg12, top: '44%', left: '72%', width: 'clamp(180px, 23vw, 330px)', rotate: 5, aspect: '3/4' },
-    { src: heroImg15, top: '48%', left: '88%', width: 'clamp(200px, 26vw, 380px)', rotate: -12, aspect: '16/10' },
-    { src: heroImg16, top: '42%', left: '102%', width: 'clamp(190px, 24vw, 350px)', rotate: 8, aspect: '3/4' },
-    { src: heroImg18, top: '50%', left: '118%', width: 'clamp(210px, 27vw, 390px)', rotate: -10, aspect: '4/3' },
-    { src: heroImg19, top: '46%', left: '134%', width: 'clamp(180px, 23vw, 330px)', rotate: 6, aspect: '4/3' },
-    { src: heroImg21, top: '52%', left: '150%', width: 'clamp(200px, 26vw, 380px)', rotate: -14, aspect: '3/4' },
-  ];
-
-  // GSAP Animations
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // 1. Hero Text Entrance Animation
-      gsap.from('.hero-title-word', {
-        y: 80,
-        opacity: 0,
-        duration: 1.2,
-        stagger: 0.15,
-        ease: 'power4.out',
+      // ===== PINNED HERO: 2x viewport, silhouette turns =====
+      ScrollTrigger.create({
+        trigger: heroRef.current,
+        start: 'top top',
+        end: () => `+=${window.innerHeight * 2}`,
+        pin: true,
+        pinSpacing: false,
+        scrub: 0.5,
+        onUpdate: (self) => {
+          scrollProgress.current = self.progress;
+        },
       });
 
-      // 2. Horizontal drift — all drift left together, loop seamlessly
-      const items = gsap.utils.toArray('.hero-drift-item');
-      items.forEach((item: any) => {
-        gsap.to(item, {
-          x: -window.innerWidth,
-          duration: 180,
-          ease: 'none',
-          repeat: -1,
+      // Hero content entrance
+      const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+      heroTl
+        .from('.hero-nav-item', { y: -20, opacity: 0, duration: 0.8, stagger: 0.06 })
+        .from('.hero-headline', { y: 60, opacity: 0, duration: 1.2 }, '-=0.4')
+        .from('.hero-subtext', { y: 30, opacity: 0, duration: 0.9 }, '-=0.7')
+        .from('.hero-cta', { y: 20, opacity: 0, duration: 0.8 }, '-=0.5')
+        .from('.hero-partners', { y: 20, opacity: 0, duration: 0.8 }, '-=0.4')
+        .from('.hero-bigtext', { y: 80, opacity: 0, duration: 1.4 }, '-=0.8');
+
+      // Section 2 scroll-triggered
+      gsap.from('.s2-inner', {
+        y: 50, opacity: 0, duration: 1, stagger: 0.15,
+        scrollTrigger: { trigger: s2Ref.current, start: 'top 75%' }
+      });
+
+      // Section 5 parallax
+      gsap.utils.toArray('.parallax-card').forEach((card: any) => {
+        gsap.fromTo(card, { y: -50 }, {
+          y: 50, ease: 'none',
+          scrollTrigger: { trigger: card, start: 'top bottom', end: 'bottom top', scrub: 1 }
         });
       });
 
-      // 3. Reveal animations for Portfolio Cards
-      gsap.from('.portfolio-card', {
-        y: 60,
-        opacity: 0,
-        duration: 1,
-        stagger: 0.2,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: portfolioRef.current,
-          start: 'top 80%',
-        }
+      // Section 6
+      gsap.from('.s6-card', {
+        y: 60, opacity: 0, duration: 1, stagger: 0.2,
+        scrollTrigger: { trigger: s6Ref.current, start: 'top 75%' }
       });
 
-      // 4. Manifesto heading fade-in
-      gsap.from('.manifesto-heading', {
-        y: 40,
-        opacity: 0,
-        duration: 1.2,
-        ease: 'power2.out',
-        scrollTrigger: {
-          trigger: '.manifesto-section',
-          start: 'top 85%',
-        }
+      // Section 7
+      gsap.from('.s7-step', {
+        y: 50, opacity: 0, duration: 0.8, stagger: 0.15,
+        scrollTrigger: { trigger: s7Ref.current, start: 'top 80%' }
       });
 
-      // 5. Manifesto subtitle typewriter effect
-      const subtitleEl = manifestoSubtitleRef.current;
-      if (subtitleEl) {
-        const chars = subtitleEl.querySelectorAll('.typewriter-char');
-        gsap.set(chars, { opacity: 0 });
-        gsap.to(chars, {
-          opacity: 1,
-          duration: 0.05,
-          stagger: 0.03,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: '.manifesto-section',
-            start: 'top 75%',
-          },
-          onComplete: () => {
-            const cursor = subtitleEl.querySelector('.typewriter-cursor');
-            if (cursor) gsap.to(cursor, { opacity: 0, duration: 0.4, delay: 0.8 });
-          }
-        });
-      }
-    }, heroRef);
+      // Section 8
+      gsap.from('.s8-content', {
+        y: 60, opacity: 0, duration: 1.2,
+        scrollTrigger: { trigger: s8Ref.current, start: 'top 75%' }
+      });
+
+      // Footer
+      gsap.from('.footer-col', {
+        y: 30, opacity: 0, duration: 0.8, stagger: 0.1,
+        scrollTrigger: { trigger: '.site-footer', start: 'top 92%' }
+      });
+
+    }, containerRef);
 
     return () => ctx.revert();
   }, []);
 
+  const partners = ['Accenture', 'Deloitte', 'KPMG', 'PwC', 'EY'];
+
+  const process = [
+    { step: '01', title: 'Discover', desc: 'We dive deep into your vision, users, and market landscape to uncover opportunities.' },
+    { step: '02', title: 'Define', desc: 'Strategy crystallizes into clear roadmaps, personas, and experience frameworks.' },
+    { step: '03', title: 'Design', desc: 'Iterative prototyping with pixel-level craft until every interaction feels effortless.' },
+    { step: '04', title: 'Develop', desc: 'Engineering with modern stacks, performance budgets, and accessibility at the core.' },
+    { step: '05', title: 'Deliver', desc: 'Launch, measure, and iterate. We stay with you beyond the deploy button.' },
+  ];
+
+  const testimonials = [
+    { quote: "Qolab's collaborative workflow, technical precision, and eye for detail helped us launch ahead of schedule with remarkable aesthetics.", name: 'Clara Solis', role: 'VP of Design, Shorthand' },
+    { quote: "They don't just build products — they craft experiences. Our platform engagement tripled within three months of relaunch.", name: 'Marcus Chen', role: 'CTO, Aether Inc.' },
+    { quote: "The team's ability to translate complex technical requirements into intuitive interfaces is unmatched. A true creative partner.", name: 'Sarah Okafor', role: 'Head of Product, Synapse Labs' },
+  ];
+
   return (
-    <div ref={heroRef} className="w-full pt-32 pb-16 px-6 sm:px-12 md:px-16">
-      {/* SECTION 1: HERO HEADER */}
-      <div className="max-w-6xl mx-auto text-center relative z-10">
-        <h1 className="font-display text-7xl sm:text-8xl md:text-[9.5rem] tracking-tight leading-[0.9] text-black">
-          <div className="overflow-hidden inline-block mr-4">
-            <span className="hero-title-word inline-block animate-slide-up">Forward</span>
-          </div>
-          <div className="overflow-hidden inline-block mr-4">
-            <span className="hero-title-word inline-block italic font-light text-[#108a93]">through</span>
-          </div>
-          <br className="hidden sm:inline" />
-          <div className="overflow-hidden inline-block mr-4">
-            <span className="hero-title-word inline-block">digital</span>
-          </div>
-          <div className="overflow-hidden inline-block">
-            <span className="hero-title-word inline-block font-semibold">design</span>
-          </div>
-        </h1>
+    <div ref={containerRef} className="w-full">
+      {/* ===== FIXED SILHOUETTE — stays on screen through hero + section 2 ===== */}
+      <div className="fixed inset-0 z-0 pointer-events-none fixed-silhouette">
+        <div className="relative w-full h-full">
+          <SilhouetteSequence progressRef={scrollProgress} />
+        </div>
       </div>
 
-      {/* SECTION 2: FLOATING COLLAGE — full-bleed, no clipping */}
-      <div ref={collageRef} className="relative w-screen left-1/2 -translate-x-1/2 h-[480px] sm:h-[650px] mt-16 overflow-visible">
-        {heroImages.map((img, i) => (
-          <div
-            key={i}
-            className="hero-drift-item absolute"
-            style={{
-              top: img.top,
-              left: img.left,
-              width: img.width,
-              rotate: `${img.rotate}deg`,
-            }}
-          >
-            <div className={`w-full rounded-[1.5rem] overflow-hidden shadow-xl`} style={{ aspectRatio: img.aspect }}>
+      {/* ===== PINNED HERO ===== */}
+      <section ref={heroRef} className="relative w-full h-screen overflow-hidden bg-transparent z-10">
+        {/* Giant QOLAB text BEHIND silhouette */}
+        <div className="hero-bigtext absolute inset-0 flex items-center justify-center z-[1] pointer-events-none select-none overflow-hidden">
+          <span className="font-display text-[22vw] leading-none tracking-tighter text-black/[0.04] font-bold whitespace-nowrap">
+            QOLAB
+          </span>
+        </div>
+
+        {/* Hero text content */}
+        <div className="hero-content-layer relative z-10 w-full h-full flex flex-col">
+          {/* Top nav */}
+          <div className="w-full flex items-center justify-between px-6 md:px-12 lg:px-16 pt-4 md:pt-6 relative z-20">
+            <div className="flex items-center gap-0">
               <img
-                src={img.src}
-                alt={`Hero image ${i + 1}`}
-                className="w-full h-full object-cover"
-                loading="lazy"
+                src={logoImg}
+                alt="Qolab"
+                className="h-20 md:h-24 w-auto"
+                style={{ mixBlendMode: 'multiply' }}
               />
             </div>
+            <nav className="hidden md:flex items-center gap-8">
+              {['Home', 'Product', 'About', 'Works', 'Career', 'Partners'].map((item) => (
+                <a key={item} className="hero-nav-item text-sm font-medium text-gray-500 hover:text-[#1a1a1a] transition-colors cursor-pointer font-sans">
+                  {item}
+                </a>
+              ))}
+            </nav>
+            <div className="flex items-center gap-5">
+              <span className="hidden lg:block text-xs text-gray-400 font-sans">Based in Abuja, Nigeria</span>
+              <span className="hero-nav-item text-sm font-semibold text-[#1a1a1a] cursor-pointer font-sans">EN . USD</span>
+            </div>
           </div>
-        ))}
-      </div>
 
-      {/* SECTION 3: MANIFESTO */}
-      <div className="manifesto-section max-w-4xl mx-auto text-center py-24 sm:py-32 border-t border-black/5 mt-12">
-        <p className="manifesto-heading font-display text-4xl sm:text-5xl md:text-6xl text-black leading-tight max-w-3xl mx-auto">
-          We are <span className="font-semibold text-[#108a93]">Qolab</span>, a creative design & technology studio rooted in craft, curiosity, and care.
-        </p>
-        <p ref={manifestoSubtitleRef} className="font-sans text-lg sm:text-xl text-gray-600 mt-8 max-w-2xl mx-auto leading-relaxed">
-          {'We design and build products, brands, and digital experiences that people genuinely love, helping modern businesses grow and thrive in a vibrant world.'.split('').map((char, i) => (
-            <span key={i} className="typewriter-char inline-block" style={{ opacity: 0 }}>
-              {char === ' ' ? '\u00A0' : char}
-            </span>
-          ))}
-          <span className="typewriter-cursor inline-block w-[2px] h-[1em] bg-gray-600 ml-[1px] align-middle" />
-        </p>
-      </div>
-
-      {/* SECTION 4: PORTFOLIO GRID */}
-      <div ref={portfolioRef} id="work" className="max-w-6xl mx-auto py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
-          {projectsData.map((project, idx) => {
-            return (
-              <div
-                key={project.id}
-                onClick={() => onSelectProject(project)}
-                className="portfolio-card flex flex-col gap-4"
-              >
-                <div className={`aspect-[4/3] rounded-[2rem] overflow-hidden relative group cursor-pointer shadow-md hover:shadow-xl transition-all duration-500`}>
-                  <img
-                    src={project.heroImage}
-                    alt={project.title}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent pointer-events-none" />
-                  <div className={`absolute inset-0 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out flex flex-col justify-between p-8 text-white z-10`} style={{ backgroundColor: project.accentColor }}>
-                    <div className="flex justify-between items-start">
-                      <span className="text-xs uppercase tracking-wider font-semibold">{project.category}</span>
-                      <ArrowUpRight size={24} />
-                    </div>
-                    <div>
-                      <h3 className="text-3xl font-display italic">{project.title}</h3>
-                      <p className="text-sm opacity-95 mt-2">{project.subtitle}</p>
-                    </div>
-                  </div>
+          {/* Hero text content */}
+          <div className="flex-1 flex flex-col lg:flex-row items-center justify-between px-6 md:px-12 lg:px-16">
+            {/* Left headline — mobile gets gradient backdrop for contrast */}
+            <div className="lg:w-[42%] pt-20 sm:pt-12 lg:pt-0 relative z-10 w-full lg:max-w-none max-w-full">
+              {/* Mobile backdrop */}
+              <div className="lg:hidden absolute inset-0 -mx-6 -mt-20 pt-20 pb-8 px-6 pointer-events-none"
+                style={{
+                  background: 'linear-gradient(to bottom, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.85) 50%, rgba(255,255,255,0.6) 80%, transparent 100%)',
+                }}
+              />
+              <p className="hero-nav-item text-xs font-semibold tracking-[0.2em] uppercase text-gray-400 mb-5 font-sans relative">
+                Creative Agency
+              </p>
+              <h1 className="hero-headline font-display text-[2.4rem] sm:text-[3.8rem] lg:text-[4.8rem] leading-[0.92] tracking-tight text-[#1a1a1a] relative">
+                We start from zero, delivering only what matters.
+              </h1>
+              <div className="hero-subtext mt-8 flex items-center gap-4 relative">
+                <div className="flex -space-x-2">
+                  {[0,1,2].map(i => (
+                    <div key={i} className="w-7 h-7 rounded-full border-2 border-white bg-gradient-to-br from-gray-400 to-gray-600" />
+                  ))}
                 </div>
-                <div className="flex justify-between items-center px-2">
-                  <div>
-                    <h4 className="font-bold text-lg text-black">{project.title}</h4>
-                    <p className="text-sm text-gray-500">{project.subtitle}</p>
-                  </div>
-                  <span className="text-xs text-gray-400 uppercase tracking-widest font-mono">{project.year}</span>
-                </div>
+                <span className="text-sm text-gray-500 font-sans">450+ Global Customers</span>
               </div>
-            );
-          })}
-        </div>
-
-        {/* View All Button */}
-        <div className="flex justify-center mt-16">
-          <button
-            onClick={onViewAllProjects}
-            className="flex items-center gap-3 bg-black hover:bg-gray-800 text-white font-semibold py-4 px-8 rounded-full shadow-md hover:shadow-lg transition-transform hover:scale-105 active:scale-95 group"
-          >
-            <span>View all projects</span>
-            <div className="w-6 h-6 rounded-full bg-[#3a863f] flex items-center justify-center group-hover:translate-x-1 transition-transform">
-              <ArrowUpRight size={14} className="text-white" />
+              <div className="hero-cta mt-10 flex items-center gap-4 relative">
+                <button
+                  onClick={onViewAllProjects}
+                  className="flex items-center gap-2.5 bg-[#1a1a1a] text-white px-7 py-3.5 rounded-full text-sm font-semibold hover:bg-black transition-all hover:scale-105 active:scale-95 font-sans"
+                >
+                  Check Our Works
+                  <ArrowUpRight size={16} />
+                </button>
+                <button
+                  onClick={onViewAllProjects}
+                  className="flex items-center gap-2 text-sm font-semibold text-[#1a1a1a] hover:text-[#108a93] transition-colors font-sans"
+                >
+                  Our Story
+                  <ArrowRight size={16} />
+                </button>
+              </div>
             </div>
-          </button>
-        </div>
-      </div>
 
-      {/* SECTION 5: INTERACTIVE QUIZ & QUOTES */}
-      <div ref={helpRef} id="services" className="max-w-6xl mx-auto py-20 border-t border-black/5 mt-16 grid grid-cols-1 md:grid-cols-2 gap-12">
-        {/* Quote Card */}
-        <div className="bg-[#e6f3f0] rounded-[2.5rem] p-8 sm:p-12 flex flex-col justify-between shadow-sm relative overflow-hidden">
-          <span className="font-display text-[#108a93] text-9xl absolute -top-8 -left-2 opacity-15 font-bold">“</span>
-          <div className="relative z-10">
-            <p className="font-display text-2xl sm:text-3xl text-gray-800 leading-tight italic">
-              "Qolab's collaborative workflow, technical precision, and eye for detail helped us launch our platform ahead of schedule with remarkable aesthetics."
-            </p>
-          </div>
-          <div className="flex items-center gap-4 mt-8 relative z-10">
-            <div className="w-12 h-12 rounded-full bg-[#108a93] flex items-center justify-center text-white font-bold">CS</div>
-            <div>
-              <h5 className="font-bold text-black text-sm">Clara Solis</h5>
-              <p className="text-xs text-gray-500">VP of Design, Shorthand</p>
+            {/* Right partners — hidden on mobile */}
+            <div className="hero-partners hidden lg:flex lg:w-[18%] flex-col items-end gap-5 pt-10 lg:pt-0">
+              <p className="text-xs font-semibold tracking-[0.15em] uppercase text-gray-400 font-sans">Our Partners</p>
+              <div className="flex flex-col gap-3.5">
+                {partners.map((partner) => (
+                  <span key={partner} className="text-sm text-gray-400 hover:text-[#1a1a1a] transition-colors cursor-pointer font-sans">
+                    {partner}
+                  </span>
+                ))}
+              </div>
+              <div className="mt-6 flex items-center gap-2 text-gray-400">
+                <span className="text-xs font-sans">Scroll to explore</span>
+                <ArrowDownRight size={14} />
+              </div>
             </div>
           </div>
         </div>
+      </section>
 
-        {/* questionnaire Widget */}
-        <div className="bg-[#fcfaf6] border border-black/5 rounded-[2.5rem] p-8 sm:p-12 flex flex-col justify-between shadow-sm">
+      {/* ===== SECTION 2: WHY QOLAB — backdrop blur over fixed silhouette ===== */}
+      <section
+        ref={s2Ref}
+        className="relative w-full py-24 md:py-32 px-6 md:px-12 lg:px-16 z-20"
+        style={{
+          backgroundColor: 'rgba(255,255,255,0.45)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+        }}
+      >
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div>
-            <h4 className="font-display text-4xl text-black leading-tight italic">How can we help you?</h4>
-            <p className="text-xs text-gray-400 mt-2 font-mono uppercase tracking-wider">Select all options that apply</p>
-            
-            <div className="flex flex-wrap gap-3 mt-6">
-              {[
-                'Rebrand my business',
-                'Build a custom website',
-                'Design a mobile app',
-                'Consult on architecture',
-                'Improve UX/UI'
-              ].map((service) => {
-                const active = selectedServices.includes(service);
-                return (
-                  <button
-                    key={service}
-                    type="button"
-                    onClick={() => toggleService(service)}
-                    className={`py-2.5 px-5 rounded-full border text-xs font-semibold transition-all duration-300 ${
-                      active
-                        ? 'bg-[#108a93] border-[#108a93] text-white'
-                        : 'bg-white border-black/5 hover:border-black/20 text-gray-800'
-                    }`}
-                  >
-                    {service}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          <div className="mt-8 border-t border-black/5 pt-6 flex flex-col gap-4">
-            <p className="text-sm text-gray-600">Tell us where to send the proposal</p>
-            <div className="flex gap-2">
-              <input
-                type="email"
-                placeholder="name@email.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="flex-grow bg-white border border-black/5 focus:border-[#108a93] focus:outline-none rounded-full px-6 py-3 text-sm text-black shadow-sm"
-              />
-              <button
-                type="button"
-                onClick={() => setSubmitted(true)}
-                className="w-12 h-12 bg-black hover:bg-gray-800 text-white rounded-full flex items-center justify-center transition-transform hover:scale-105 active:scale-95 shadow-sm"
-              >
-                {submitted ? <Check size={18} className="text-green-400" /> : <Send size={18} />}
-              </button>
-            </div>
-            {submitted && <p className="text-xs text-green-600 font-semibold animate-fade-in">Request submitted! We will reach out within 24 hours.</p>}
-          </div>
-        </div>
-      </div>
-
-      {/* SECTION 6: TEAM SECTION */}
-      <div id="about" className="max-w-6xl mx-auto py-20 border-t border-black/5 mt-12 text-center">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          <div className="flex gap-4">
-            <div className="w-1/2 aspect-[4/5] rounded-[2rem] overflow-hidden shadow-md relative">
-              <img src={heroImg1} alt="Creative Team" className="w-full h-full object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex items-end p-4">
-                <span className="text-white text-xs font-semibold">Creative Team</span>
-              </div>
-            </div>
-            <div className="w-1/2 aspect-[4/5] rounded-[2rem] overflow-hidden shadow-md relative mt-8">
-              <img src={heroImg7} alt="Coding Desk" className="w-full h-full object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex items-end p-4">
-                <span className="text-white text-xs font-semibold">Coding Desk</span>
-              </div>
-            </div>
-          </div>
-          <div className="text-left md:pl-8">
-            <h3 className="font-display text-4xl sm:text-5xl text-black italic leading-tight">
-              We're a small team of versatile creatives.
-            </h3>
-            <p className="text-gray-600 text-base sm:text-lg mt-6 leading-relaxed">
-              We operate at the convergence of beautiful interfaces and performant engineering. Fully aligned with your goals, we design with craft and code with rigor.
+            <p className="s2-inner text-xs font-semibold tracking-[0.2em] uppercase text-[#108a93] mb-4 font-sans">Why Qolab</p>
+            <h2 className="s2-inner font-display text-4xl sm:text-5xl lg:text-6xl text-[#1a1a1a] leading-[1.05]">
+              We don't just design — <span className="italic text-[#108a93]">we engineer</span> experiences.
+            </h2>
+            <p className="s2-inner text-gray-500 text-base sm:text-lg mt-6 leading-relaxed font-sans max-w-lg">
+              Every pixel, every interaction, every line of code is intentional. We blend creative direction with technical mastery to build products people genuinely love.
             </p>
-            <button className="mt-8 flex items-center gap-2 bg-black text-white hover:bg-gray-800 px-6 py-3 rounded-full text-sm font-semibold transition-transform hover:scale-105 active:scale-95 shadow-md">
-              <span>Find out more</span>
-              <ArrowUpRight size={16} />
-            </button>
+          </div>
+          <div className="grid grid-cols-2 gap-6">
+            {[
+              { num: '150+', label: 'Projects Delivered' },
+              { num: '98%', label: 'Client Retention' },
+              { num: '12', label: 'Design Awards' },
+              { num: '8+', label: 'Years of Craft' },
+            ].map((stat) => (
+              <div key={stat.label} className="s2-inner bg-white/70 backdrop-blur-md rounded-2xl p-6 border border-black/5">
+                <span className="font-display text-3xl sm:text-4xl text-[#1a1a1a]">{stat.num}</span>
+                <p className="text-sm text-gray-500 mt-2 font-sans">{stat.label}</p>
+              </div>
+            ))}
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* SECTION 7: VIBRANT ORANGE NEWSLETTER */}
-      <div className="max-w-6xl mx-auto py-8">
-        <div className="bg-[#f4a261] rounded-[2.5rem] p-8 sm:p-12 md:p-16 flex flex-col md:flex-row justify-between items-center gap-8 shadow-sm">
-          <h3 className="font-display text-4xl sm:text-5xl text-white leading-tight italic max-w-md text-center md:text-left">
-            Stay connected with updates, insights and inspiration.
-          </h3>
-          <div className="w-full md:w-auto flex-grow max-w-md bg-white/10 p-2 rounded-[2rem] border border-white/10 flex flex-col sm:flex-row gap-2 sm:gap-0">
-            <input
-              type="email"
-              placeholder="Your email address"
-              className="flex-grow bg-transparent focus:outline-none px-6 py-3 text-sm text-white placeholder-white/60 font-sans w-full sm:w-auto"
-            />
-            <button className="bg-white text-gray-900 hover:bg-gray-100 font-semibold py-3 px-8 rounded-full text-sm transition-transform hover:scale-105 active:scale-95 shadow-md w-full sm:w-auto">
-              Subscribe
-            </button>
-          </div>
-        </div>
-      </div>
+      {/* ===== SECTION 3: SERVICES CAROUSEL ===== */}
+      <ServicesCarousel
+        onSelectService={(svc) => {
+          if (onSelectService) onSelectService(svc);
+        }}
+      />
 
-      {/* SECTION 8: CALL TO ACTION */}
-      <div id="contact" className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] bg-[#0f0f11] text-[#faf7f2] py-28 px-6 sm:px-12 text-center mt-20">
-        <div className="max-w-4xl mx-auto">
-          <span className="text-[#108a93] font-mono text-xs uppercase tracking-widest font-bold">Got a project?</span>
-          <h2 className="font-display text-5xl sm:text-7xl md:text-8xl text-white italic mt-6 leading-none">
-            Ready to move forward?<br className="hidden sm:inline" /> Let's work together.
+      {/* ===== SECTION 4: PROJECTS (Asymmetric Parallax Grid) ===== */}
+      <ProjectGrid
+        onSelectProject={onSelectProject}
+      />
+
+      {/* ===== SECTION 6: TESTIMONIALS ===== */}
+      <section ref={s6Ref} className="relative w-full py-24 md:py-32 px-6 md:px-12 lg:px-16 bg-[#f5f5f5] z-20">
+        <div className="max-w-7xl mx-auto">
+          <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[#108a93] mb-3 font-sans">Testimonials</p>
+          <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl text-[#1a1a1a] leading-tight mb-16">
+            Words from those<br />who've experienced it
           </h2>
-          <div className="flex justify-center mt-12">
-            <button className="bg-[#108a93] hover:bg-[#159da8] text-white font-semibold py-4 px-12 rounded-full text-base tracking-wide transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg">
-              Get in touch
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {testimonials.map((t, i) => (
+              <div key={i} className="s6-card bg-white rounded-3xl p-8 sm:p-10 flex flex-col justify-between border border-black/5">
+                <div>
+                  <span className="font-display text-[#108a93] text-6xl leading-none opacity-40">"</span>
+                  <p className="font-display text-lg sm:text-xl text-[#1a1a1a] leading-relaxed italic -mt-6">{t.quote}</p>
+                </div>
+                <div className="flex items-center gap-4 mt-8">
+                  <div className="w-11 h-11 rounded-full bg-[#108a93] flex items-center justify-center text-white font-bold text-sm font-sans">
+                    {t.name.split(' ').map(n => n[0]).join('')}
+                  </div>
+                  <div>
+                    <h5 className="font-bold text-[#1a1a1a] text-sm font-sans">{t.name}</h5>
+                    <p className="text-xs text-gray-500 font-sans">{t.role}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== SECTION 7: PROCESS ===== */}
+      <section ref={s7Ref} className="relative w-full py-24 md:py-32 px-6 md:px-12 lg:px-16 bg-white z-20">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-6">
+            <div>
+              <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[#108a93] mb-3 font-sans">How We Work</p>
+              <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl text-[#1a1a1a] leading-tight">
+                A process refined<br />by experience
+              </h2>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+            {process.map((p) => (
+              <div key={p.step} className="s7-step group bg-[#f5f5f5] rounded-3xl p-6 sm:p-8 border border-black/5 hover:border-[#108a93]/30 transition-all duration-300">
+                <span className="font-mono text-xs text-[#108a93] font-bold">{p.step}</span>
+                <h3 className="font-display text-xl sm:text-2xl text-[#1a1a1a] mt-4 mb-3">{p.title}</h3>
+                <p className="text-sm text-gray-500 font-sans leading-relaxed">{p.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== SECTION 7b: OUR APPROACH (Stacking Cards) ===== */}
+      <div ref={approachRef}>
+        <ApproachSection />
+      </div>
+
+      {/* ===== SECTION 8: CTA ===== */}
+      <section ref={s8Ref} className="relative w-full py-24 md:py-32 px-6 md:px-12 lg:px-16 bg-[#0f0f11] text-white overflow-hidden z-20">
+        <div className="absolute inset-0 pointer-events-none opacity-10">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-display text-[25vw] leading-none tracking-tighter text-white select-none">
+            Q
+          </div>
+        </div>
+        <div className="s8-content max-w-5xl mx-auto text-center relative z-10">
+          <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[#108a93] mb-6 font-sans">Ready to start?</p>
+          <h2 className="font-display text-5xl sm:text-6xl md:text-8xl text-white leading-none italic">
+            Let's build something<br />remarkable together.
+          </h2>
+          <p className="text-gray-400 text-base sm:text-lg mt-8 max-w-2xl mx-auto font-sans leading-relaxed">
+            Whether you're launching a new product, reimagining your brand, or scaling your digital presence — we're here to make it happen.
+          </p>
+          <div className="flex flex-col sm:flex-row justify-center gap-4 mt-12">
+            <button className="bg-[#108a93] hover:bg-[#0d7a82] text-white font-semibold py-4 px-10 rounded-full text-base transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg font-sans">
+              Start a Project
+            </button>
+            <button
+              onClick={onViewAllProjects}
+              className="border border-white/20 hover:border-white/40 text-white font-semibold py-4 px-10 rounded-full text-base transition-all duration-300 hover:bg-white/5 font-sans"
+            >
+              View Our Work
             </button>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* SECTION 9: FOOTER */}
-      <footer className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] bg-[#0f0f11] text-gray-400 pt-12 pb-8 px-6 sm:px-12 border-t border-white/5">
-        <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
-          <div>
-            <h5 className="text-white text-xs font-mono uppercase tracking-widest mb-4">Work</h5>
-            <ul className="flex flex-col gap-2 text-sm text-gray-500">
-              <li><a href="#" className="hover:text-white transition-colors">Shorthand</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Olipop</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Outlier AI</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Kiva Platform</a></li>
+      {/* ===== FOOTER ===== */}
+      <footer className="site-footer w-full bg-[#0f0f11] text-gray-400 pt-16 pb-8 px-6 md:px-12 lg:px-16 border-t border-white/5 z-20 relative">
+        <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+          <div className="footer-col">
+            <h5 className="text-white text-xs font-mono uppercase tracking-widest mb-5 font-sans">Work</h5>
+            <ul className="flex flex-col gap-2.5 text-sm font-sans">
+              {projectsData.map(p => (
+                <li key={p.id}><a href="#" className="hover:text-white transition-colors">{p.title}</a></li>
+              ))}
             </ul>
           </div>
-          <div>
-            <h5 className="text-white text-xs font-mono uppercase tracking-widest mb-4">Services</h5>
-            <ul className="flex flex-col gap-2 text-sm text-gray-500">
+          <div className="footer-col">
+            <h5 className="text-white text-xs font-mono uppercase tracking-widest mb-5 font-sans">Services</h5>
+            <ul className="flex flex-col gap-2.5 text-sm font-sans">
+              <li><a href="#" className="hover:text-white transition-colors">Brand Strategy</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Product Design</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Frontend Engineering</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Brand Identity</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">UX Research</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Web Development</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Motion & Interaction</a></li>
             </ul>
           </div>
-          <div>
-            <h5 className="text-white text-xs font-mono uppercase tracking-widest mb-4">About</h5>
-            <ul className="flex flex-col gap-2 text-sm text-gray-500">
-              <li><a href="#" className="hover:text-white transition-colors">Our Team</a></li>
+          <div className="footer-col">
+            <h5 className="text-white text-xs font-mono uppercase tracking-widest mb-5 font-sans">Company</h5>
+            <ul className="flex flex-col gap-2.5 text-sm font-sans">
+              <li><a href="#" className="hover:text-white transition-colors">About Us</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Process</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Careers</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
             </ul>
           </div>
-          <div>
-            <h5 className="text-white text-xs font-mono uppercase tracking-widest mb-4">Connect</h5>
-            <ul className="flex flex-col gap-2 text-sm text-gray-500">
+          <div className="footer-col">
+            <h5 className="text-white text-xs font-mono uppercase tracking-widest mb-5 font-sans">Connect</h5>
+            <ul className="flex flex-col gap-2.5 text-sm font-sans">
               <li><a href="#" className="hover:text-white transition-colors">Instagram</a></li>
               <li><a href="#" className="hover:text-white transition-colors">LinkedIn</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Twitter</a></li>
@@ -448,15 +390,16 @@ export default function LandingHero({ onSelectProject, onViewAllProjects }: Land
             </ul>
           </div>
         </div>
-
-        <div className="max-w-6xl mx-auto pt-8 border-t border-white/5 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-[#108a93] flex items-center justify-center">
-              <span className="text-white font-bold text-sm">Q</span>
-            </div>
-            <span className="text-white font-bold text-base tracking-wider font-display">qolab</span>
+        <div className="max-w-7xl mx-auto pt-8 border-t border-white/5 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs">
+          <div className="flex items-center gap-0">
+            <img
+              src={logoImg}
+              alt="Qolab"
+              className="h-16 w-auto"
+              style={{ filter: 'brightness(0) invert(1)', mixBlendMode: 'screen' }}
+            />
           </div>
-          <p className="text-gray-600">© 2026 Qolab Digital. All rights reserved.</p>
+          <p className="text-gray-600 font-sans">© 2026 Qolab Digital. All rights reserved.</p>
         </div>
       </footer>
     </div>
