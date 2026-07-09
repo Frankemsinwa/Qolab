@@ -25,7 +25,6 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
   const scrollProgress = useRef(0);
 
   const s6Ref = useRef<HTMLDivElement>(null);
-  const s7Ref = useRef<HTMLDivElement>(null);
   const approachRef = useRef<HTMLDivElement>(null);
   const s8Ref = useRef<HTMLDivElement>(null);
 
@@ -74,12 +73,6 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
         scrollTrigger: { trigger: s6Ref.current, start: 'top 75%' }
       });
 
-      // Section 7
-      gsap.from('.s7-step', {
-        y: 50, opacity: 0, duration: 0.8, stagger: 0.15,
-        scrollTrigger: { trigger: s7Ref.current, start: 'top 80%' }
-      });
-
       // Section 8
       gsap.from('.s8-content', {
         y: 60, opacity: 0, duration: 1.2,
@@ -98,14 +91,6 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
   }, []);
 
   const partners = ['Accenture', 'Deloitte', 'KPMG', 'PwC', 'EY'];
-
-  const process = [
-    { step: '01', title: 'Discover', desc: 'We dive deep into your vision, users, and market landscape to uncover opportunities.' },
-    { step: '02', title: 'Define', desc: 'Strategy crystallizes into clear roadmaps, personas, and experience frameworks.' },
-    { step: '03', title: 'Design', desc: 'Iterative prototyping with pixel-level craft until every interaction feels effortless.' },
-    { step: '04', title: 'Develop', desc: 'Engineering with modern stacks, performance budgets, and accessibility at the core.' },
-    { step: '05', title: 'Deliver', desc: 'Launch, measure, and iterate. We stay with you beyond the deploy button.' },
-  ];
 
   const testimonials = [
     { quote: "Qolab's collaborative workflow, technical precision, and eye for detail helped us launch ahead of schedule with remarkable aesthetics.", name: 'Clara Solis', role: 'VP of Design, Shorthand' },
@@ -294,30 +279,7 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
         </div>
       </section>
 
-      {/* ===== SECTION 7: PROCESS ===== */}
-      <section ref={s7Ref} className="relative w-full py-24 md:py-32 px-6 md:px-12 lg:px-16 bg-white z-20">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-6">
-            <div>
-              <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[#108a93] mb-3 font-sans">How We Work</p>
-              <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl text-[#1a1a1a] leading-tight">
-                A process refined<br />by experience
-              </h2>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-            {process.map((p) => (
-              <div key={p.step} className="s7-step group bg-[#f5f5f5] rounded-3xl p-6 sm:p-8 border border-black/5 hover:border-[#108a93]/30 transition-all duration-300">
-                <span className="font-mono text-xs text-[#108a93] font-bold">{p.step}</span>
-                <h3 className="font-display text-xl sm:text-2xl text-[#1a1a1a] mt-4 mb-3">{p.title}</h3>
-                <p className="text-sm text-gray-500 font-sans leading-relaxed">{p.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ===== SECTION 7b: OUR APPROACH (Stacking Cards) ===== */}
+      {/* ===== OUR APPROACH (Stacking Cards) ===== */}
       <div ref={approachRef}>
         <ApproachSection />
       </div>

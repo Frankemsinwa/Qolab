@@ -1,7 +1,7 @@
 import { useEffect, useRef, useCallback, useState, type MutableRefObject } from 'react';
 
 const TOTAL_FRAMES = 151;
-const FRAME_PATH = '/src/assets/sequence/';
+const FRAME_PATH = '/sequence/';
 
 interface SilhouetteSequenceProps {
   progressRef: MutableRefObject<number>;
