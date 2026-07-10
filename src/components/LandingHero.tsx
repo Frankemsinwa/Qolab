@@ -1,7 +1,7 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ArrowUpRight, ArrowRight, ArrowDownRight } from 'lucide-react';
+import { ArrowUpRight, ArrowRight, ArrowDownRight, Menu, X } from 'lucide-react';
 import SilhouetteSequence from './SilhouetteSequence';
 import ServicesCarousel from './ServicesCarousel';
 import ProjectGrid from './ProjectGrid';
@@ -16,9 +16,10 @@ interface LandingHeroProps {
   onSelectProject: (project: any) => void;
   onViewAllProjects: () => void;
   onSelectService?: (service: Service) => void;
+  onNavigate?: (view: 'about' | 'projects' | 'contact') => void;
 }
 
-export default function LandingHero({ onSelectProject, onViewAllProjects, onSelectService }: LandingHeroProps) {
+export default function LandingHero({ onSelectProject, onViewAllProjects, onSelectService, onNavigate }: LandingHeroProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLDivElement>(null);
   const s2Ref = useRef<HTMLDivElement>(null);
@@ -27,6 +28,7 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
   const s6Ref = useRef<HTMLDivElement>(null);
   const approachRef = useRef<HTMLDivElement>(null);
   const s8Ref = useRef<HTMLDivElement>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -129,17 +131,66 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
               />
             </div>
             <nav className="hidden md:flex items-center gap-8">
-              {['Home', 'Product', 'About', 'Works', 'Career', 'Partners'].map((item) => (
-                <a key={item} className="hero-nav-item text-sm font-medium text-gray-500 hover:text-[#1a1a1a] transition-colors cursor-pointer font-sans">
-                  {item}
+              {[
+                { label: 'Home', action: () => window.scrollTo({ top: 0, behavior: 'smooth' }) },
+                { label: 'About', action: () => onNavigate?.('about') },
+                { label: 'Works', action: () => onNavigate?.('projects') },
+                { label: 'Contact', action: () => onNavigate?.('contact') },
+              ].map((item) => (
+                <a
+                  key={item.label}
+                  onClick={item.action}
+                  className="hero-nav-item text-sm font-medium text-gray-500 hover:text-[#1a1a1a] transition-colors cursor-pointer font-sans"
+                >
+                  {item.label}
                 </a>
               ))}
             </nav>
-            <div className="flex items-center gap-5">
+            {/* Mobile hamburger */}
+            <button
+              onClick={() => setMobileMenuOpen(true)}
+              className="md:hidden flex items-center justify-center w-10 h-10 text-[#1a1a1a]"
+              aria-label="Open menu"
+            >
+              <Menu size={24} />
+            </button>
+            <div className="hidden md:flex items-center gap-5">
               <span className="hidden lg:block text-xs text-gray-400 font-sans">Based in Abuja, Nigeria</span>
               <span className="hero-nav-item text-sm font-semibold text-[#1a1a1a] cursor-pointer font-sans">EN . USD</span>
             </div>
           </div>
+
+          {/* Mobile menu overlay */}
+          {mobileMenuOpen && (
+            <div className="fixed inset-0 z-[100] bg-white flex flex-col px-6 md:hidden">
+              <div className="flex items-center justify-between pt-4">
+                <img src={logoImg} alt="Qolab" className="h-20 w-auto" style={{ mixBlendMode: 'multiply' }} />
+                <button
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center justify-center w-10 h-10 text-[#1a1a1a]"
+                  aria-label="Close menu"
+                >
+                  <X size={24} />
+                </button>
+              </div>
+              <nav className="flex flex-col gap-8 mt-16">
+                {[
+                  { label: 'Home', action: () => { setMobileMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); } },
+                  { label: 'About', action: () => { setMobileMenuOpen(false); onNavigate?.('about'); } },
+                  { label: 'Works', action: () => { setMobileMenuOpen(false); onNavigate?.('projects'); } },
+                  { label: 'Contact', action: () => { setMobileMenuOpen(false); onNavigate?.('contact'); } },
+                ].map((item) => (
+                  <a
+                    key={item.label}
+                    onClick={item.action}
+                    className="font-display text-4xl text-[#1a1a1a] hover:text-[#108a93] transition-colors cursor-pointer"
+                  >
+                    {item.label}
+                  </a>
+                ))}
+              </nav>
+            </div>
+          )}
 
           {/* Hero text content */}
           <div className="flex-1 flex flex-col lg:flex-row items-center justify-between px-6 md:px-12 lg:px-16">

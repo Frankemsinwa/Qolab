@@ -95,6 +95,7 @@ export default function App() {
             onSelectProject={handleSelectProject}
             onViewAllProjects={() => setView('projects')}
             onSelectService={handleSelectService}
+            onNavigate={(target) => setView(target)}
           />
         )}
         {view === 'projects' && (
