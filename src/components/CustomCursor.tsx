@@ -1,33 +1,28 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
+import { useEffect, useRef, useCallback, useState } from 'react';
 
-import { useEffect, useRef, useState } from 'react';
-
-interface CustomCursorProps {
-  cursorType: 'default' | 'hover' | 'magnetic' | 'drag' | 'view' | 'play' | 'sound';
-  cursorText?: string;
-  darkMode: boolean;
-}
-
-export default function CustomCursor({ cursorType, cursorText, darkMode }: CustomCursorProps) {
-  const cursorRef = useRef<HTMLDivElement>(null);
+export default function CustomCursor() {
+  const dotRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
-  const trailCanvasRef = useRef<HTMLCanvasElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const pos = useRef({ x: 0, y: 0 }); // Current coordinates
-  const target = useRef({ x: 0, y: 0 }); // Target mouse coordinates
+  const pos = useRef({ x: -100, y: -100 });
+  const ringPos = useRef({ x: -100, y: -100 });
+  const target = useRef({ x: -100, y: -100 });
+  const [state, setState] = useState<'default' | 'hover' | 'view' | 'magnetic'>('default');
+  const [cursorText, setCursorText] = useState('');
   const [isVisible, setIsVisible] = useState(false);
 
-  // Particle trails structure
-  interface TrailPoint {
-    x: number;
-    y: number;
-    alpha: number;
-    size: number;
-  }
-  const trails = useRef<TrailPoint[]>([]);
+  interface Trail { x: number; y: number; alpha: number; size: number; color: string; }
+  const trails = useRef<Trail[]>([]);
+  const isHovering = useRef(false);
+
+  const getAccentColor = useCallback(() => {
+    const el = document.elementFromPoint(pos.current.x, pos.current.y);
+    if (!el) return 'rgba(16,138,147,1)';
+    const section = el.closest('section, [class*="bg-[#0f0f11]"], [class*="bg-[#1a1a1a]"]');
+    if (section) return 'rgba(255,255,255,0.9)';
+    return 'rgba(16,138,147,1)';
+  }, []);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -35,178 +30,175 @@ export default function CustomCursor({ cursorType, cursorText, darkMode }: Custo
       target.current.y = e.clientY;
       if (!isVisible) setIsVisible(true);
 
-      // Add a point for particle trail
-      if (Math.random() > 0.4) {
+      const color = getAccentColor();
+      if (Math.random() > 0.5) {
         trails.current.push({
-          x: e.clientX,
-          y: e.clientY,
-          alpha: 1.0,
-          size: Math.random() * 2.5 + 1.0,
+          x: e.clientX + (Math.random() - 0.5) * 4,
+          y: e.clientY + (Math.random() - 0.5) * 4,
+          alpha: 0.6,
+          size: Math.random() * 2.5 + 0.8,
+          color,
         });
-        if (trails.current.length > 25) {
-          trails.current.shift();
-        }
+        if (trails.current.length > 30) trails.current.shift();
       }
     };
 
-    const handleMouseLeave = () => {
-      setIsVisible(false);
-    };
+    const handleMouseEnter = () => setIsVisible(true);
+    const handleMouseLeave = () => setIsVisible(false);
 
     window.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseenter', handleMouseEnter);
     document.addEventListener('mouseleave', handleMouseLeave);
-
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseenter', handleMouseEnter);
       document.removeEventListener('mouseleave', handleMouseLeave);
     };
-  }, [isVisible]);
+  }, [getAccentColor, isVisible]);
 
-  // Handle spring animation loops
+  // Hover detection
+  useEffect(() => {
+    const addHoverListeners = () => {
+      document.querySelectorAll('a, button, [data-cursor], .project-card, [data-project-card]').forEach((el) => {
+        if ((el as HTMLElement)._cursorBound) return;
+        (el as HTMLElement)._cursorBound = true;
+
+        el.addEventListener('mouseenter', () => {
+          isHovering.current = true;
+          const text = el.getAttribute('data-cursor-text') || '';
+          const type = el.getAttribute('data-cursor') || 'hover';
+          setState(type as any);
+          setCursorText(text);
+        });
+        el.addEventListener('mouseleave', () => {
+          isHovering.current = false;
+          setState('default');
+          setCursorText('');
+        });
+      });
+    };
+
+    addHoverListeners();
+    const observer = new MutationObserver(addHoverListeners);
+    observer.observe(document.body, { childList: true, subtree: true });
+    return () => observer.disconnect();
+  }, []);
+
+  // Animation loop
   useEffect(() => {
     let animId: number;
-
     const render = () => {
-      // 1. Spring physics for cursor core
-      const ease = 0.14; // spring damping
+      // Dot spring
+      const ease = 0.18;
       pos.current.x += (target.current.x - pos.current.x) * ease;
       pos.current.y += (target.current.y - pos.current.y) * ease;
 
-      if (cursorRef.current) {
-        cursorRef.current.style.transform = `translate3d(${pos.current.x}px, ${pos.current.y}px, 0)`;
+      // Ring spring (slower, trailing)
+      const ringEase = 0.08;
+      ringPos.current.x += (target.current.x - ringPos.current.x) * ringEase;
+      ringPos.current.y += (target.current.y - ringPos.current.y) * ringEase;
+
+      if (dotRef.current) {
+        dotRef.current.style.transform = `translate3d(${pos.current.x}px, ${pos.current.y}px, 0)`;
       }
       if (ringRef.current) {
-        // Double delay for the trailing rings
-        ringRef.current.style.transform = `translate3d(${pos.current.x}px, ${pos.current.y}px, 0)`;
+        ringRef.current.style.transform = `translate3d(${ringPos.current.x}px, ${ringPos.current.y}px, 0)`;
       }
 
-      // 2. Render particle trail on the canvas
-      const canvas = trailCanvasRef.current;
+      // Canvas trails
+      const canvas = canvasRef.current;
       if (canvas) {
         const ctx = canvas.getContext('2d');
         if (ctx) {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-          // Render each trailing particle
-          trails.current.forEach((t, index) => {
-            t.alpha -= 0.04; // decay rate
-            t.size *= 0.95; // shrinking size
-
+          trails.current.forEach((t) => {
+            t.alpha -= 0.025;
+            t.size *= 0.97;
             if (t.alpha > 0) {
               ctx.beginPath();
               ctx.arc(t.x, t.y, t.size, 0, Math.PI * 2);
-              
-              // Color based on theme and hover state
-              if (cursorType === 'view' || cursorType === 'drag' || cursorType === 'play') {
-                ctx.fillStyle = `rgba(225, 29, 72, ${t.alpha})`; // Rose spark
-              } else {
-                ctx.fillStyle = darkMode 
-                  ? `rgba(255, 255, 255, ${t.alpha * 0.3})` 
-                  : `rgba(7, 7, 8, ${t.alpha * 0.25})`;
-              }
+              ctx.fillStyle = t.color.replace(/[\d.]+\)$/, `${t.alpha})`);
               ctx.fill();
             }
           });
-
-          // Filter out expired trails
           trails.current = trails.current.filter((t) => t.alpha > 0);
         }
       }
 
       animId = requestAnimationFrame(render);
     };
-
     render();
+    return () => cancelAnimationFrame(animId);
+  }, []);
 
-    return () => {
-      cancelAnimationFrame(animId);
-    };
-  }, [cursorType, darkMode]);
-
-  // Handle resizing of the trailing canvas to fullscreen
+  // Canvas resize
   useEffect(() => {
-    const handleResize = () => {
-      const canvas = trailCanvasRef.current;
-      if (canvas) {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+    const resize = () => {
+      if (canvasRef.current) {
+        canvasRef.current.width = window.innerWidth;
+        canvasRef.current.height = window.innerHeight;
       }
     };
-
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    resize();
+    window.addEventListener('resize', resize);
+    return () => window.removeEventListener('resize', resize);
   }, []);
 
   if (!isVisible) return null;
 
-  // Custom morphing sizes and layouts based on states
-  const getCursorStyles = () => {
-    switch (cursorType) {
+  const getStyles = () => {
+    switch (state) {
       case 'hover':
         return {
-          core: 'w-4 h-4 bg-accent-rose',
-          ring: 'w-10 h-10 border-2 border-accent-rose bg-accent-rose/10 scale-125',
+          dot: 'w-3 h-3 bg-[#108a93] mix-blend-difference',
+          ring: 'w-12 h-12 border-2 border-[#108a93]/60',
         };
       case 'view':
         return {
-          core: 'w-24 h-24 bg-accent-rose/95 text-white',
-          ring: 'w-26 h-26 border border-accent-rose/30 scale-110',
-        };
-      case 'drag':
-        return {
-          core: 'w-20 h-20 bg-accent-violet text-white font-medium',
-          ring: 'w-22 h-22 border border-accent-violet/30 scale-105',
-        };
-      case 'play':
-      case 'sound':
-        return {
-          core: 'w-20 h-20 bg-accent-lime text-black font-semibold',
-          ring: 'w-22 h-22 border border-accent-lime/30 scale-110',
+          dot: 'w-20 h-20 bg-[#108a93] text-white rounded-2xl',
+          ring: 'w-24 h-24 border border-[#108a93]/30 rounded-2xl',
         };
       case 'magnetic':
         return {
-          core: 'w-2 h-2 bg-accent-rose',
-          ring: 'w-12 h-12 border border-accent-rose/80 bg-accent-rose/5 scale-125',
+          dot: 'w-2 h-2 bg-[#108a93]',
+          ring: 'w-16 h-16 border border-[#108a93]/50',
         };
       default:
         return {
-          core: darkMode ? 'w-2.5 h-2.5 bg-white' : 'w-2.5 h-2.5 bg-bg-dark',
-          ring: darkMode ? 'w-7 h-7 border border-white/20' : 'w-7 h-7 border border-bg-dark/20',
+          dot: 'w-2 h-2 bg-[#1a1a1a]',
+          ring: 'w-8 h-8 border border-[#1a1a1a]/15',
         };
     }
   };
 
-  const classes = getCursorStyles();
+  const s = getStyles();
 
   return (
     <>
-      {/* Absolute Overlay Trail Canvas */}
       <canvas
-        ref={trailCanvasRef}
-        id="cursor-trailing-sparks"
-        className="fixed inset-0 w-full h-full pointer-events-none z-[9997]"
+        ref={canvasRef}
+        className="fixed inset-0 pointer-events-none z-[9998]"
       />
-
-      {/* Lagging Ring Wrapper */}
       <div
         ref={ringRef}
-        id="cursor-ring"
-        className={`fixed top-0 left-0 -ml-3.5 -mt-3.5 pointer-events-none z-[9998] rounded-full transition-all duration-300 ease-out flex items-center justify-center ${classes.ring}`}
-        style={{ willChange: 'transform' }}
+        className={`fixed top-0 left-0 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-[9999] rounded-full transition-[width,height,border,background-color] duration-300 ease-out ${s.ring}`}
       />
-
-      {/* Direct Interpolated Core with custom texts */}
       <div
-        ref={cursorRef}
-        id="cursor-dot"
-        className={`fixed top-0 left-0 -ml-1.5 -mt-1.5 pointer-events-none z-[9999] rounded-full flex flex-col items-center justify-center text-[9px] tracking-wider uppercase select-none transition-all duration-300 ease-out text-center shadow-lg leading-none ${classes.core}`}
-        style={{ willChange: 'transform' }}
+        ref={dotRef}
+        className={`fixed top-0 left-0 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-[10000] rounded-full flex items-center justify-center transition-[width,height,background-color,border-radius] duration-300 ease-out ${s.dot}`}
       >
-        {cursorText && (cursorType === 'view' || cursorType === 'drag' || cursorType === 'play') && (
-          <span className="font-mono font-bold animate-fade-in px-2 block">{cursorText}</span>
+        {cursorText && (
+          <span className="text-[9px] font-bold tracking-widest uppercase select-none animate-fade-in px-1">
+            {cursorText}
+          </span>
         )}
       </div>
     </>
   );
+}
+
+declare global {
+  interface HTMLElement {
+    _cursorBound?: boolean;
+  }
 }

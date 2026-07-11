@@ -5,31 +5,31 @@
 
 import { Project, LabExperiment } from './types';
 
-import proj1 from './assets/projects/project-1.jpg';
+import proj1 from './assets/projects/project-1.webp';
 import proj2 from './assets/projects/project-2.jpg';
 import proj3 from './assets/projects/project-3.jpg';
 import proj4 from './assets/projects/project-4.jpg';
 
 export const projectsData: Project[] = [
   {
-    id: 'synapse-identity',
-    title: 'SYNAPSE IDENTITY',
-    subtitle: 'Brand System & Neuro-Web Platform',
-    category: 'BRAND DESIGN & UI/UX',
-    client: 'Synapse Labs',
+    id: 'luxel-bookings',
+    title: 'LUXEL BOOKINGS',
+    subtitle: 'Flight Booking Platform for Nigeria & Beyond',
+    category: 'FULL-STACK WEB DEVELOPMENT & UI/UX',
+    client: 'Luxel Inc.',
     year: '2026',
-    role: 'Visual Identity, Mobile UI & Interactive Engineering',
-    description: 'An interactive, generative brand design and mobile suite that responds dynamically to neurological feed inputs and cursor motion. We replaced standard brand guidelines with a fluid, living digital system.',
-    challenge: 'Synapse Labs wanted a brand design and UI/UX experience that rejected standard static templates. The main bottleneck was bringing dense real-time analytical data into a gorgeous, readable mobile application and web interface running smoothly at 120Hz.',
-    solution: 'QOLAB engineered a responsive, high-performance web system and mobile UI/UX framework. By utilizing customized shader pipelines and lightweight SVG grids, we reduced rendering overhead by 68% while delivering stunning custom micro-interactions.',
+    role: 'Full-Stack Engineering & Product Design',
+    description: 'A modern flight booking platform that makes travel accessible and affordable. Users can search, compare, and book flights from anywhere in the world with a focus on local Nigerian routes at the best prices.',
+    challenge: 'The Nigerian travel market lacked a seamless, mobile-first booking experience that combined global flight inventory with affordable local routes. Existing platforms were slow, cluttered, and didn\'t prioritize the local user\'s needs.',
+    solution: 'QOLAB engineered a performant, responsive booking platform with real-time flight search, smart fare comparison, and a streamlined checkout flow. The interface prioritizes speed and clarity, reducing booking time by 60% while maintaining access to the cheapest available fares.',
     results: [
-      'Featured on Behance Design Focus (Best UI/UX)',
-      '+140% user engagement on the mobile beta platform',
-      'Unified brand identity deployed globally across 8 digital ecosystems'
+      'Launched with 200+ local and international airline partnerships',
+      'Average booking time reduced to under 3 minutes',
+      'Mobile conversion rate of 4.8% — 2x industry average'
     ],
-    tech: ['Brand Architecture', 'Framer Motion', 'React Native Design', 'WebGL Canvas', 'SVG Grids'],
-    color: 'bg-rose-950',
-    accentColor: '#e11d48',
+    tech: ['React', 'Node.js', 'Real-Time API Integration', 'Payment Gateway', 'Responsive Design'],
+    color: 'bg-sky-950',
+    accentColor: '#0ea5e9',
     heroImage: proj1,
     galleryImages: [proj1, proj2, proj3]
   },

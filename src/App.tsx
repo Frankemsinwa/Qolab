@@ -9,6 +9,7 @@ import ServicesPage from './components/ServicesPage';
 import ContactPage from './components/ContactPage';
 import ServiceDetail from './components/ServiceDetail';
 import TransitionOverlay, { type TransitionHandle } from './components/TransitionOverlay';
+import CustomCursor from './components/CustomCursor';
 import { Project, Service } from './types';
 
 type View = 'landing' | 'projects' | 'detail' | 'about' | 'services' | 'contact' | 'service-detail';
@@ -79,7 +80,10 @@ export default function App() {
   }, []);
 
   return (
-    <div id="app-root-container" className="min-h-screen bg-white text-[#1a1a1a] overflow-x-hidden selection:bg-accent-teal selection:text-white">
+    <div id="app-root-container" className="min-h-screen bg-white text-[#1a1a1a] overflow-x-hidden selection:bg-accent-teal selection:text-white cursor-none md:cursor-none">
+      {/* Custom cursor */}
+      <CustomCursor />
+
       {/* Global transition overlay for service card zoom */}
       <TransitionOverlay ref={transitionRef} />
 

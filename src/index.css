@@ -30,6 +30,17 @@ html, body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  cursor: none;
+}
+
+a, button, input, textarea, select, [role="button"] {
+  cursor: none;
+}
+
+@media (pointer: coarse) {
+  html, body, a, button, input, textarea, select, [role="button"] {
+    cursor: auto;
+  }
 }
 
 html.lenis, html.lenis body {
