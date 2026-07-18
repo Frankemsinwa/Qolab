@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowUpRight, ArrowRight, ArrowDownRight, Menu, X } from 'lucide-react';
-import SilhouetteSequence from './SilhouetteSequence';
+import heroVideo from '../assets/video_3157b4c2cd31.mp4';
 import ServicesCarousel from './ServicesCarousel';
 import ProjectGrid from './ProjectGrid';
 import ApproachSection from './ApproachSection';
@@ -102,21 +102,36 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
 
   return (
     <div ref={containerRef} className="w-full">
-      {/* ===== FIXED SILHOUETTE — stays on screen through hero + section 2 ===== */}
-      <div className="fixed inset-0 z-0 pointer-events-none fixed-silhouette">
-        <div className="relative w-full h-full">
-          <SilhouetteSequence progressRef={scrollProgress} />
+      {/* ===== FIXED BACKGROUND VIDEO — stays on screen through hero + section 2 ===== */}
+      <div className="fixed inset-0 z-0 pointer-events-none bg-[#0f0f11]">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover opacity-45"
+          src={heroVideo}
+        />
+        {/* Premium blending layers */}
+        <div 
+          className="absolute inset-0 z-[1] bg-gradient-to-b from-black/50 via-transparent to-[#0f0f11]"
+        />
+        <div 
+          className="absolute inset-0 z-[2]"
+          style={{
+            background: 'radial-gradient(circle at 50% 50%, rgba(15, 15, 17, 0.15) 0%, rgba(15, 15, 17, 0.85) 100%)'
+          }}
+        />
+        {/* Giant QOLAB text — behind content */}
+        <div className="absolute inset-0 flex items-center justify-center z-[3] select-none overflow-hidden">
+          <span className="font-display text-[22vw] leading-none tracking-tighter text-white/[0.05] font-bold whitespace-nowrap">
+            QOLAB
+          </span>
         </div>
       </div>
 
       {/* ===== PINNED HERO ===== */}
       <section ref={heroRef} className="relative w-full h-screen overflow-hidden bg-transparent z-10">
-        {/* Giant QOLAB text BEHIND silhouette */}
-        <div className="hero-bigtext absolute inset-0 flex items-center justify-center z-[1] pointer-events-none select-none overflow-hidden">
-          <span className="font-display text-[22vw] leading-none tracking-tighter text-black/[0.04] font-bold whitespace-nowrap">
-            QOLAB
-          </span>
-        </div>
 
         {/* Hero text content */}
         <div className="hero-content-layer relative z-10 w-full h-full flex flex-col">
@@ -127,7 +142,7 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
                 src={logoImg}
                 alt="Qolab"
                 className="h-20 md:h-24 w-auto"
-                style={{ mixBlendMode: 'multiply' }}
+                style={{ filter: 'brightness(0) invert(1)' }}
               />
             </div>
             <nav className="hidden md:flex items-center gap-8">
@@ -140,7 +155,7 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
                 <a
                   key={item.label}
                   onClick={item.action}
-                  className="hero-nav-item text-sm font-medium text-gray-500 hover:text-[#1a1a1a] transition-colors cursor-pointer font-sans"
+                  className="hero-nav-item text-sm font-medium text-gray-400 hover:text-white transition-colors cursor-pointer font-sans"
                 >
                   {item.label}
                 </a>
@@ -149,14 +164,14 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
             {/* Mobile hamburger */}
             <button
               onClick={() => setMobileMenuOpen(true)}
-              className="md:hidden flex items-center justify-center w-10 h-10 text-[#1a1a1a]"
+              className="md:hidden flex items-center justify-center w-10 h-10 text-white"
               aria-label="Open menu"
             >
               <Menu size={24} />
             </button>
             <div className="hidden md:flex items-center gap-5">
               <span className="hidden lg:block text-xs text-gray-400 font-sans">Based in Abuja, Nigeria</span>
-              <span className="hero-nav-item text-sm font-semibold text-[#1a1a1a] cursor-pointer font-sans">EN . USD</span>
+              <span className="hero-nav-item text-sm font-semibold text-white cursor-pointer font-sans">EN . USD</span>
             </div>
           </div>
 
@@ -199,34 +214,34 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
               {/* Mobile backdrop */}
               <div className="lg:hidden absolute inset-0 -mx-6 -mt-20 pt-20 pb-8 px-6 pointer-events-none"
                 style={{
-                  background: 'linear-gradient(to bottom, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.85) 50%, rgba(255,255,255,0.6) 80%, transparent 100%)',
+                  background: 'linear-gradient(to bottom, rgba(15,15,17,0.95) 0%, rgba(15,15,17,0.85) 50%, rgba(15,15,17,0.6) 80%, transparent 100%)',
                 }}
               />
-              <p className="hero-nav-item text-xs font-semibold tracking-[0.2em] uppercase text-gray-400 mb-5 font-sans relative">
+              <p className="hero-nav-item text-xs font-semibold tracking-[0.2em] uppercase text-gray-500 mb-5 font-sans relative">
                 Creative Agency
               </p>
-              <h1 className="hero-headline font-display text-[2.4rem] sm:text-[3.8rem] lg:text-[4.8rem] leading-[0.92] tracking-tight text-[#1a1a1a] relative">
+              <h1 className="hero-headline font-display text-[2.4rem] sm:text-[3.8rem] lg:text-[4.8rem] leading-[0.92] tracking-tight text-white relative">
                 We start from zero, delivering only what matters.
               </h1>
               <div className="hero-subtext mt-8 flex items-center gap-4 relative">
                 <div className="flex -space-x-2">
                   {[0,1,2].map(i => (
-                    <div key={i} className="w-7 h-7 rounded-full border-2 border-white bg-gradient-to-br from-gray-400 to-gray-600" />
-                  ))}
-                </div>
-                <span className="text-sm text-gray-500 font-sans">450+ Global Customers</span>
+                  <div key={i} className="w-7 h-7 rounded-full border-2 border-[#0f0f11] bg-gradient-to-br from-gray-400 to-gray-600" />
+                ))}
+              </div>
+              <span className="text-sm text-gray-400 font-sans">450+ Global Customers</span>
               </div>
               <div className="hero-cta mt-10 flex items-center gap-4 relative">
                 <button
                   onClick={onViewAllProjects}
-                  className="flex items-center gap-2.5 bg-[#1a1a1a] text-white px-7 py-3.5 rounded-full text-sm font-semibold hover:bg-black transition-all hover:scale-105 active:scale-95 font-sans"
+                  className="flex items-center gap-2.5 bg-white text-[#1a1a1a] px-7 py-3.5 rounded-full text-sm font-semibold hover:bg-gray-100 transition-all hover:scale-105 active:scale-95 font-sans"
                 >
                   Check Our Works
                   <ArrowUpRight size={16} />
                 </button>
                 <button
                   onClick={onViewAllProjects}
-                  className="flex items-center gap-2 text-sm font-semibold text-[#1a1a1a] hover:text-[#108a93] transition-colors font-sans"
+                  className="flex items-center gap-2 text-sm font-semibold text-white hover:text-[#108a93] transition-colors font-sans"
                 >
                   Our Story
                   <ArrowRight size={16} />
@@ -236,15 +251,15 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
 
             {/* Right partners — hidden on mobile */}
             <div className="hero-partners hidden lg:flex lg:w-[18%] flex-col items-end gap-5 pt-10 lg:pt-0">
-              <p className="text-xs font-semibold tracking-[0.15em] uppercase text-gray-400 font-sans">Our Partners</p>
+              <p className="text-xs font-semibold tracking-[0.15em] uppercase text-gray-500 font-sans">Our Partners</p>
               <div className="flex flex-col gap-3.5">
                 {partners.map((partner) => (
-                  <span key={partner} className="text-sm text-gray-400 hover:text-[#1a1a1a] transition-colors cursor-pointer font-sans">
+                  <span key={partner} className="text-sm text-gray-500 hover:text-white transition-colors cursor-pointer font-sans">
                     {partner}
                   </span>
                 ))}
               </div>
-              <div className="mt-6 flex items-center gap-2 text-gray-400">
+              <div className="mt-6 flex items-center gap-2 text-gray-500">
                 <span className="text-xs font-sans">Scroll to explore</span>
                 <ArrowDownRight size={14} />
               </div>

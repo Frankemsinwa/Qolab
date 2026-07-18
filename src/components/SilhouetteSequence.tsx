@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback, useState, type MutableRefObject } from 'react';
+import { useEffect, useRef, useCallback, useState, type MutableRefObject, type CSSProperties } from 'react';
 
 const TOTAL_FRAMES = 151;
 const FRAME_PATH = '/sequence/';
@@ -78,7 +78,6 @@ export default function SilhouetteSequence({ progressRef }: SilhouetteSequencePr
     ctx.drawImage(img, offsetX, offsetY, drawW, drawH);
   }, []);
 
-  // Desktop: scroll-driven animation
   const animate = useCallback(() => {
     if (isMobile) return;
     const targetFrame = progressRef.current * (TOTAL_FRAMES - 1);
@@ -102,13 +101,11 @@ export default function SilhouetteSequence({ progressRef }: SilhouetteSequencePr
   }, [drawFrame, preloadFrame, progressRef, isMobile]);
 
   useEffect(() => {
-    // Preload first 40 frames always
     for (let i = 0; i < Math.min(40, TOTAL_FRAMES); i++) {
       preloadFrame(i);
     }
 
     if (isMobile) {
-      // Mobile: show static frame 0, no scroll animation
       const waitForFrame = () => {
         if (imagesRef.current[0]) {
           drawFrame(0);
@@ -120,7 +117,6 @@ export default function SilhouetteSequence({ progressRef }: SilhouetteSequencePr
       return () => cancelAnimationFrame(rafRef.current);
     }
 
-    // Desktop: start scroll-driven animation loop
     rafRef.current = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(rafRef.current);
   }, [preloadFrame, animate, drawFrame, isMobile]);
@@ -136,7 +132,11 @@ export default function SilhouetteSequence({ progressRef }: SilhouetteSequencePr
     return () => observer.disconnect();
   }, [drawFrame]);
 
-  // Mobile: subtle breathing/pulse CSS animation instead of scroll
+  const canvasStyle: CSSProperties = {
+    imageRendering: 'auto',
+    objectFit: 'contain',
+  };
+
   if (isMobile) {
     return (
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
@@ -151,22 +151,24 @@ export default function SilhouetteSequence({ progressRef }: SilhouetteSequencePr
           <canvas
             ref={canvasRef}
             className="w-full h-full"
-            style={{ imageRendering: 'auto', objectFit: 'contain' }}
+            style={{
+              ...canvasStyle,
+              maskImage: 'radial-gradient(ellipse 65% 80% at 50% 45%, black 40%, transparent 100%)',
+              WebkitMaskImage: 'radial-gradient(ellipse 65% 80% at 50% 45%, black 40%, transparent 100%)',
+            }}
           />
         </div>
       </div>
     );
   }
 
-  // Desktop: scroll-driven canvas
   return (
     <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
       <canvas
         ref={canvasRef}
         className="w-full h-full"
         style={{
-          imageRendering: 'auto',
-          objectFit: 'contain',
+          ...canvasStyle,
           maskImage: 'radial-gradient(ellipse 70% 85% at 50% 45%, black 50%, transparent 100%)',
           WebkitMaskImage: 'radial-gradient(ellipse 70% 85% at 50% 45%, black 50%, transparent 100%)',
         }}
