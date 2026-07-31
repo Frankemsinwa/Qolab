@@ -124,7 +124,7 @@ export default function ProjectGrid({ onSelectProject }: ProjectGridProps) {
           <h3 className="font-display text-2xl sm:text-3xl md:text-4xl text-slate-900 leading-[0.95] tracking-tighter mt-1.5">
             {project.title}
           </h3>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1.5 font-sans leading-relaxed max-w-xs">
+          <p className="text-xs sm:text-sm text-slate-500 mt-1.5 font-display leading-relaxed max-w-xs">
             {project.subtitle}
           </p>
         </div>
@@ -144,7 +144,7 @@ export default function ProjectGrid({ onSelectProject }: ProjectGridProps) {
       {/* Magnetic cursor */}
       <div
         ref={cursorRef}
-        className="fixed pointer-events-none z-[100] flex items-center justify-center w-28 h-28 rounded-full bg-slate-900 text-white font-sans text-xs tracking-[0.2em] uppercase font-semibold"
+        className="fixed pointer-events-none z-[100] flex items-center justify-center w-28 h-28 rounded-full bg-slate-900 text-white font-display text-xs tracking-[0.2em] uppercase font-semibold"
         style={{
           opacity: 0,
           scale: 0.8,

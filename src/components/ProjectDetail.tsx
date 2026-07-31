@@ -97,7 +97,7 @@ export default function ProjectDetail({ project, onBack }: ProjectDetailProps) {
             <span key={i} className="detail-title-word inline-block italic font-light text-black/80 mr-4">{word}</span>
           ))}
         </h1>
-        <p className="font-sans text-lg sm:text-2xl text-gray-600 mt-6 max-w-3xl leading-relaxed">
+        <p className="font-display text-lg sm:text-2xl text-gray-600 mt-6 max-w-3xl leading-relaxed">
           {project.subtitle}
         </p>
       </div>
@@ -117,19 +117,19 @@ export default function ProjectDetail({ project, onBack }: ProjectDetailProps) {
       <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 pb-16 border-b border-black/10 mb-20">
         <div className="metric-item flex flex-col">
           <span className="font-mono text-xs text-black/40 uppercase tracking-wider mb-2">Role</span>
-          <span className="font-sans text-sm font-semibold text-gray-800 leading-snug">{project.role}</span>
+          <span className="font-display text-sm font-semibold text-gray-800 leading-snug">{project.role}</span>
         </div>
         <div className="metric-item flex flex-col">
           <span className="font-mono text-xs text-black/40 uppercase tracking-wider mb-2">Client</span>
-          <span className="font-sans text-sm font-semibold text-gray-800 leading-snug">{project.client}</span>
+          <span className="font-display text-sm font-semibold text-gray-800 leading-snug">{project.client}</span>
         </div>
         <div className="metric-item flex flex-col">
           <span className="font-mono text-xs text-black/40 uppercase tracking-wider mb-2">Sector</span>
-          <span className="font-sans text-sm font-semibold text-gray-800 leading-snug">{project.category}</span>
+          <span className="font-display text-sm font-semibold text-gray-800 leading-snug">{project.category}</span>
         </div>
         <div className="metric-item flex flex-col">
           <span className="font-mono text-xs text-black/40 uppercase tracking-wider mb-2">Year</span>
-          <span className="font-sans text-sm font-semibold text-gray-800 leading-snug">{project.year}</span>
+          <span className="font-display text-sm font-semibold text-gray-800 leading-snug">{project.year}</span>
         </div>
       </div>
 
@@ -140,7 +140,7 @@ export default function ProjectDetail({ project, onBack }: ProjectDetailProps) {
           <h3 className="font-display text-4xl text-black font-semibold italic mb-6">
             The Synopsis
           </h3>
-          <p className="font-sans text-base sm:text-lg text-gray-600 leading-relaxed">
+          <p className="font-display text-base sm:text-lg text-gray-600 leading-relaxed">
             {project.description}
           </p>
 
@@ -164,7 +164,7 @@ export default function ProjectDetail({ project, onBack }: ProjectDetailProps) {
             <h4 className="font-display text-2xl text-black font-semibold italic mb-4">
               The Objective
             </h4>
-            <p className="font-sans text-sm sm:text-base text-gray-600 leading-relaxed">
+            <p className="font-display text-sm sm:text-base text-gray-600 leading-relaxed">
               {project.challenge}
             </p>
           </div>
@@ -175,7 +175,7 @@ export default function ProjectDetail({ project, onBack }: ProjectDetailProps) {
             <h4 className="font-display text-2xl text-black font-semibold italic mb-4">
               Our Approach
             </h4>
-            <p className="font-sans text-sm sm:text-base text-gray-700 leading-relaxed">
+            <p className="font-display text-sm sm:text-base text-gray-700 leading-relaxed">
               {project.solution}
             </p>
           </div>
@@ -195,7 +195,7 @@ export default function ProjectDetail({ project, onBack }: ProjectDetailProps) {
               </div>
               <div>
                 <span className="font-mono text-xs text-black/40 block mb-1">Metric // 0{idx + 1}</span>
-                <p className="font-sans text-sm sm:text-base font-semibold text-gray-800 leading-snug">
+                <p className="font-display text-sm sm:text-base font-semibold text-gray-800 leading-snug">
                   {result}
                 </p>
               </div>

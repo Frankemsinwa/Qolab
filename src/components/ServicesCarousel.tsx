@@ -98,16 +98,13 @@ export default function ServicesCarousel({ onSelectService }: ServicesCarouselPr
         <div className="absolute top-0 left-0 right-0 z-20 px-6 md:px-12 lg:px-16 pt-10">
           <div className="max-w-7xl mx-auto flex items-end justify-between">
             <div>
-              <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[#108a93] mb-3 font-sans">What We Do</p>
-              <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl text-white leading-tight">
-                Services built for<br />ambitious brands
-              </h2>
+              <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[#3a863f] mb-3 font-display">What We Do</p>
             </div>
             <div className="hidden md:flex items-center gap-3">
               <span className="text-white/40 text-sm font-sans font-mono">{String(activeIndex + 1).padStart(2, '0')}</span>
               <div className="w-24 h-[2px] bg-white/10 relative rounded-full overflow-hidden">
                 <div
-                  className="absolute inset-y-0 left-0 bg-[#108a93] rounded-full transition-all duration-300"
+                  className="absolute inset-y-0 left-0 bg-[#3a863f] rounded-full transition-all duration-300"
                   style={{ width: `${((activeIndex + 1) / SERVICES.length) * 100}%` }}
                 />
               </div>
@@ -208,7 +205,7 @@ export default function ServicesCarousel({ onSelectService }: ServicesCarouselPr
               style={{
                 width: activeIndex === i ? '24px' : '6px',
                 height: '6px',
-                backgroundColor: activeIndex === i ? '#108a93' : 'rgba(255,255,255,0.2)',
+                backgroundColor: activeIndex === i ? '#3a863f' : 'rgba(255,255,255,0.2)',
               }}
             />
           ))}
