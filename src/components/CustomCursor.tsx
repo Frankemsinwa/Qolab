@@ -1,9 +1,8 @@
-import { useEffect, useRef, useCallback, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export default function CustomCursor() {
   const dotRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const pos = useRef({ x: -100, y: -100 });
   const ringPos = useRef({ x: -100, y: -100 });
@@ -12,35 +11,13 @@ export default function CustomCursor() {
   const [cursorText, setCursorText] = useState('');
   const [isVisible, setIsVisible] = useState(false);
 
-  interface Trail { x: number; y: number; alpha: number; size: number; color: string; }
-  const trails = useRef<Trail[]>([]);
   const isHovering = useRef(false);
-
-  const getAccentColor = useCallback(() => {
-    const el = document.elementFromPoint(pos.current.x, pos.current.y);
-    if (!el) return 'rgba(16,138,147,1)';
-    const section = el.closest('section, [class*="bg-[#0f0f11]"], [class*="bg-[#1a1a1a]"]');
-    if (section) return 'rgba(255,255,255,0.9)';
-    return 'rgba(16,138,147,1)';
-  }, []);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       target.current.x = e.clientX;
       target.current.y = e.clientY;
       if (!isVisible) setIsVisible(true);
-
-      const color = getAccentColor();
-      if (Math.random() > 0.5) {
-        trails.current.push({
-          x: e.clientX + (Math.random() - 0.5) * 4,
-          y: e.clientY + (Math.random() - 0.5) * 4,
-          alpha: 0.6,
-          size: Math.random() * 2.5 + 0.8,
-          color,
-        });
-        if (trails.current.length > 30) trails.current.shift();
-      }
     };
 
     const handleMouseEnter = () => setIsVisible(true);
@@ -54,7 +31,7 @@ export default function CustomCursor() {
       document.removeEventListener('mouseenter', handleMouseEnter);
       document.removeEventListener('mouseleave', handleMouseLeave);
     };
-  }, [getAccentColor, isVisible]);
+  }, [isVisible]);
 
   // Hover detection
   useEffect(() => {
@@ -88,13 +65,12 @@ export default function CustomCursor() {
   useEffect(() => {
     let animId: number;
     const render = () => {
-      // Dot spring
-      const ease = 0.18;
-      pos.current.x += (target.current.x - pos.current.x) * ease;
-      pos.current.y += (target.current.y - pos.current.y) * ease;
+      // Arrow snaps instantly to the exact cursor position (Figma-style precision)
+      pos.current.x = target.current.x;
+      pos.current.y = target.current.y;
 
-      // Ring spring (slower, trailing)
-      const ringEase = 0.08;
+      // Ring spring (slower, trailing) — contextual hover feedback
+      const ringEase = 0.14;
       ringPos.current.x += (target.current.x - ringPos.current.x) * ringEase;
       ringPos.current.y += (target.current.y - ringPos.current.y) * ringEase;
 
@@ -105,43 +81,10 @@ export default function CustomCursor() {
         ringRef.current.style.transform = `translate3d(${ringPos.current.x}px, ${ringPos.current.y}px, 0)`;
       }
 
-      // Canvas trails
-      const canvas = canvasRef.current;
-      if (canvas) {
-        const ctx = canvas.getContext('2d');
-        if (ctx) {
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          trails.current.forEach((t) => {
-            t.alpha -= 0.025;
-            t.size *= 0.97;
-            if (t.alpha > 0) {
-              ctx.beginPath();
-              ctx.arc(t.x, t.y, t.size, 0, Math.PI * 2);
-              ctx.fillStyle = t.color.replace(/[\d.]+\)$/, `${t.alpha})`);
-              ctx.fill();
-            }
-          });
-          trails.current = trails.current.filter((t) => t.alpha > 0);
-        }
-      }
-
       animId = requestAnimationFrame(render);
     };
     render();
     return () => cancelAnimationFrame(animId);
-  }, []);
-
-  // Canvas resize
-  useEffect(() => {
-    const resize = () => {
-      if (canvasRef.current) {
-        canvasRef.current.width = window.innerWidth;
-        canvasRef.current.height = window.innerHeight;
-      }
-    };
-    resize();
-    window.addEventListener('resize', resize);
-    return () => window.removeEventListener('resize', resize);
   }, []);
 
   if (!isVisible) return null;
@@ -150,23 +93,23 @@ export default function CustomCursor() {
     switch (state) {
       case 'hover':
         return {
-          dot: 'w-3 h-3 bg-[#108a93] mix-blend-difference',
-          ring: 'w-12 h-12 border-2 border-[#108a93]/60',
+          dot: 'w-3 h-3',
+          ring: 'w-10 h-10 border border-[#3a863f]/60 bg-[#3a863f]/10',
         };
       case 'view':
         return {
-          dot: 'w-20 h-20 bg-[#108a93] text-white rounded-2xl',
-          ring: 'w-24 h-24 border border-[#108a93]/30 rounded-2xl',
+          dot: 'w-3 h-3',
+          ring: 'w-14 h-14 border border-[#3a863f]/50 bg-[#3a863f]/15',
         };
       case 'magnetic':
         return {
-          dot: 'w-2 h-2 bg-[#108a93]',
-          ring: 'w-16 h-16 border border-[#108a93]/50',
+          dot: 'w-3 h-3',
+          ring: 'w-12 h-12 border border-[#3a863f]/45 bg-[#3a863f]/10',
         };
       default:
         return {
-          dot: 'w-2 h-2 bg-[#1a1a1a]',
-          ring: 'w-8 h-8 border border-[#1a1a1a]/15',
+          dot: 'w-3 h-3',
+          ring: 'w-0 h-0 border-transparent bg-transparent',
         };
     }
   };
@@ -175,20 +118,38 @@ export default function CustomCursor() {
 
   return (
     <>
-      <canvas
-        ref={canvasRef}
-        className="fixed inset-0 pointer-events-none z-[9998]"
-      />
+      {/* Trailing ring — contextual hover feedback */}
       <div
         ref={ringRef}
         className={`fixed top-0 left-0 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-[9999] rounded-full transition-[width,height,border,background-color] duration-300 ease-out ${s.ring}`}
       />
+      {/* Figma-style arrow pointer — no offset, snaps to exact pixel */}
       <div
         ref={dotRef}
-        className={`fixed top-0 left-0 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-[10000] rounded-full flex items-center justify-center transition-[width,height,background-color,border-radius] duration-300 ease-out ${s.dot}`}
+        className="fixed top-0 left-0 pointer-events-none z-[10000] transition-[width,height] duration-200 ease-out"
+        style={{ width: '20px', height: '20px' }}
       >
-        {cursorText && (
-          <span className="text-[9px] font-bold tracking-widest uppercase select-none animate-fade-in px-1">
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 20 20"
+          fill="none"
+          style={{ filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.45))' }}
+        >
+          <path
+            d="M3 2.5 L3 16.5 L7.2 12.7 L9.6 18.2 L12 17.2 L9.6 11.8 L15.4 11.6 Z"
+            fill="#111111"
+            stroke="#ffffff"
+            strokeWidth="1.1"
+            strokeLinejoin="round"
+          />
+        </svg>
+        {/* Contextual label bubble (Figma-style) */}
+        {cursorText && state !== 'default' && (
+          <span
+            className="absolute top-5 left-4 whitespace-nowrap rounded-md bg-[#111111] text-white text-[10px] font-semibold tracking-wide px-2 py-1 shadow-lg select-none pointer-events-none"
+            style={{ fontFamily: '"Poppins", system-ui, sans-serif' }}
+          >
             {cursorText}
           </span>
         )}
