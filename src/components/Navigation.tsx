@@ -17,7 +17,7 @@ export default function Navigation({ onNavigate }: NavigationProps) {
           onClick={() => onNavigate('landing')}
           className="pointer-events-auto cursor-pointer bg-white rounded-full px-4 py-2 border border-black/5 shadow-sm"
         >
-          <QolabLogo tone="dark" markClassName="h-7 md:h-8" textClassName="text-[10px] md:text-xs" />
+          <QolabLogo className="w-20 md:w-24" />
         </div>
 
         {/* Menu Plus Button - Right */}
