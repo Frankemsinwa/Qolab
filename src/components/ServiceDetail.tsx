@@ -3,7 +3,7 @@ import { gsap } from 'gsap';
 import { ArrowLeft, ArrowUpRight } from 'lucide-react';
 import type { Service } from '../types';
 import { servicesData } from '../data';
-import logoImg from '../assets/logo.png.png';
+import QolabLogo from './QolabLogo';
 
 interface ServiceDetailProps {
   service: Service;
@@ -164,7 +164,7 @@ export default function ServiceDetail({ service, onBack, onNavigateToContact }: 
 
         {/* Brand Logo - top right */}
         <div className="absolute top-6 right-6 md:top-10 md:right-10 z-20 bg-white rounded-full px-4 py-2 border border-black/5 shadow-sm">
-          <img src={logoImg} alt="Qolab" className="h-8 md:h-10 w-auto" />
+          <QolabLogo tone="dark" markClassName="h-7 md:h-8" textClassName="text-[10px] md:text-xs" />
         </div>
 
         {/* Hero content */}

@@ -10,7 +10,7 @@ import ContactPage from './components/ContactPage';
 import ServiceDetail from './components/ServiceDetail';
 import TransitionOverlay, { type TransitionHandle } from './components/TransitionOverlay';
 import CustomCursor from './components/CustomCursor';
-import logoImg from './assets/logo.png.png';
+import QolabLogo from './components/QolabLogo';
 import { Project, Service } from './types';
 
 type View = 'landing' | 'projects' | 'detail' | 'about' | 'services' | 'contact' | 'service-detail' | 'not-found';
@@ -140,7 +140,9 @@ export default function App() {
         )}
         {view === 'not-found' && (
           <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center bg-white">
-            <img src={logoImg} alt="Qolab" className="h-20 md:h-24 w-auto mb-10" />
+            <div className="mb-10">
+              <QolabLogo tone="dark" markClassName="h-14 md:h-16" textClassName="text-2xl md:text-3xl" />
+            </div>
             <h1 className="font-display italic text-4xl sm:text-5xl text-black leading-tight mb-4">
               Looks like this piece doesn't fit.
             </h1>
