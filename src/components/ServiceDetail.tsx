@@ -164,7 +164,7 @@ export default function ServiceDetail({ service, onBack, onNavigateToContact }: 
 
         {/* Brand Logo - top right */}
         <div className="absolute top-6 right-6 md:top-10 md:right-10 z-20 bg-white rounded-full px-4 py-2 border border-black/5 shadow-sm">
-          <QolabLogo className="w-20 md:w-24" />
+          <QolabLogo className="w-16 md:w-20" />
         </div>
 
         {/* Hero content */}

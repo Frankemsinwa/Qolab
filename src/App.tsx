@@ -141,7 +141,7 @@ export default function App() {
         {view === 'not-found' && (
           <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center bg-white">
             <div className="mb-10">
-              <QolabLogo className="w-32 md:w-36" />
+              <QolabLogo className="w-24 md:w-28" />
             </div>
             <h1 className="font-display italic text-4xl sm:text-5xl text-black leading-tight mb-4">
               Looks like this piece doesn't fit.

@@ -159,7 +159,7 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
           {/* Top nav */}
           <div className="w-full flex items-center justify-between px-6 md:px-12 lg:px-16 pt-4 md:pt-6 relative z-20">
             <div className="flex items-center">
-              <QolabLogo className="w-32 md:w-44" />
+              <QolabLogo className="w-24 md:w-32" />
             </div>
             <nav className="hidden md:flex items-center gap-8">
               {[
@@ -201,7 +201,7 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
           {mobileMenuOpen && (
             <div className="fixed inset-0 z-[100] bg-white flex flex-col px-6 md:hidden">
               <div className="flex items-center justify-between pt-4">
-                <QolabLogo className="w-24" />
+                <QolabLogo className="w-18" />
                 <button
                   onClick={() => setMobileMenuOpen(false)}
                   className="flex items-center justify-center w-10 h-10 text-[#1a1a1a]"
@@ -540,7 +540,7 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
         </div>
         <div className="max-w-7xl mx-auto pt-8 border-t border-white/5 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs">
           <div className="flex items-center">
-            <QolabLogo className="w-24" />
+            <QolabLogo className="w-20" />
           </div>
           <div className="text-right">
             <p className="font-display italic text-white text-sm">Still curious. Still building.</p>
