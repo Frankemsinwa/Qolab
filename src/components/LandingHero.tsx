@@ -8,6 +8,7 @@ import ApproachSection from './ApproachSection';
 import { projectsData } from '../data';
 import { Service } from '../types';
 import logoImg from '../assets/logo.png.png';
+import heroBg from '../../assets/hero-imgs/bg.jpg';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -19,7 +20,7 @@ function FlagPair({ size = 20 }: { size?: number }) {
         role="img"
         aria-label="Nigeria"
         title="Nigeria"
-        className="rounded-full border border-black/15 shrink-0"
+        className="rounded-full border border-white/40 shrink-0"
         style={{
           width: size,
           height: size,
@@ -31,7 +32,7 @@ function FlagPair({ size = 20 }: { size?: number }) {
         role="img"
         aria-label="United Kingdom"
         title="United Kingdom"
-        className="rounded-full border border-black/15 shrink-0"
+        className="rounded-full border border-white/40 shrink-0"
         style={{ width: size, height: size, marginLeft: -size * 0.28 }}
       >
         <defs>
@@ -71,6 +72,7 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
       // Hero content entrance
       const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
       heroTl
+        .from('.hero-bg-image', { scale: 1.12, opacity: 0, duration: 1.8, ease: 'power2.out' }, 0)
         .from('.hero-grid-rule', { scaleY: 0, opacity: 0, transformOrigin: 'top', duration: 1.1, stagger: { amount: 0.7 } }, 0.15)
         .from('.hero-nav-item', { y: -20, opacity: 0, duration: 0.8, stagger: 0.06 })
         .from('.hero-headline', { y: 60, opacity: 0, duration: 1.2 }, '-=0.4')
@@ -129,13 +131,24 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
         className="relative w-full h-screen overflow-hidden bg-transparent z-10"
       >
 
+        {/* ===== HERO BACKGROUND IMAGE + contrast scrims ===== */}
+        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden" aria-hidden="true">
+          <img
+            src={heroBg}
+            alt=""
+            className="hero-bg-image absolute inset-0 w-full h-full object-cover object-center"
+          />
+          <div className="absolute inset-0 bg-black/50" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-transparent to-black/45" />
+        </div>
+
         {/* ===== EDITORIAL COLUMN GRID — faint blueprint rules ===== */}
         <div className="absolute inset-0 z-0 pointer-events-none" aria-hidden="true">
-          <div className="h-full w-full grid grid-cols-4 md:grid-cols-6 lg:grid-cols-12 border-r-2 border-black/[0.06]">
+          <div className="h-full w-full grid grid-cols-4 md:grid-cols-6 lg:grid-cols-12 border-r-2 border-white/[0.07]">
             {Array.from({ length: 12 }).map((_, i) => (
               <div
                 key={i}
-                className={`hero-grid-rule h-full border-l-2 border-black/[0.06] ${i >= 4 ? 'hidden md:block' : ''} ${i >= 6 ? 'lg:block' : ''}`}
+                className={`hero-grid-rule h-full border-l-2 border-white/[0.07] ${i >= 4 ? 'hidden md:block' : ''} ${i >= 6 ? 'lg:block' : ''}`}
               />
             ))}
           </div>
@@ -150,6 +163,7 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
                 src={logoImg}
                 alt="Qolab"
                 className="h-24 md:h-32 w-auto"
+                style={{ filter: 'brightness(0) invert(1)' }}
               />
             </div>
             <nav className="hidden md:flex items-center gap-8">
@@ -164,7 +178,7 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
                   key={item.label}
                   type="button"
                   onClick={item.action}
-                  className="hero-nav-item text-sm font-medium text-gray-500 hover:text-[#1a1a1a] transition-colors cursor-pointer font-display"
+                  className="hero-nav-item text-sm font-medium text-gray-300 hover:text-white transition-colors cursor-pointer font-display"
                 >
                   {item.label}
                 </button>
@@ -175,7 +189,7 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
               <FlagPair size={16} />
               <button
                 onClick={() => setMobileMenuOpen(true)}
-                className="flex items-center justify-center w-10 h-10 text-[#1a1a1a]"
+                className="flex items-center justify-center w-10 h-10 text-white"
                 aria-label="Open menu"
               >
                 <Menu size={24} />
@@ -183,8 +197,8 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
             </div>
             <div className="hidden md:flex items-center gap-4">
               <FlagPair size={20} />
-              <span className="hidden lg:block text-xs text-gray-500 font-display">Nigeria &amp; UK</span>
-              <span className="hero-nav-item text-sm font-semibold text-[#1a1a1a] cursor-pointer font-display">EN . USD</span>
+              <span className="hidden lg:block text-xs text-gray-300 font-display">Nigeria &amp; UK</span>
+              <span className="hero-nav-item text-sm font-semibold text-white cursor-pointer font-display">EN . USD</span>
             </div>
           </div>
 
@@ -225,32 +239,32 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
           {/* Hero text content */}
           <div className="flex-1 flex flex-col items-center justify-center px-6 md:px-12 lg:px-16 relative">
             <div className="relative z-10 w-full max-w-5xl flex flex-col items-center text-center">
-              <p className="hero-nav-item text-xs font-semibold tracking-[0.2em] uppercase text-gray-500 mb-6 font-display">
+              <p className="hero-nav-item text-xs font-semibold tracking-[0.2em] uppercase text-gray-300 mb-6 font-display">
                 Creativity × Technology × Strategy
               </p>
-              <h1 className="hero-headline font-display text-[3.2rem] sm:text-[5rem] lg:text-[7rem] leading-[0.92] tracking-tight text-[#1a1a1a] font-bold">
+              <h1 className="hero-headline font-display text-[3.2rem] sm:text-[5rem] lg:text-[7rem] leading-[0.92] tracking-tight text-white font-bold">
                 Some Ideas Deserve to <span className="italic font-light text-[#3a863f]">Exist.</span>
               </h1>
-              <p className="hero-subtext text-gray-600 text-base sm:text-lg mt-8 max-w-2xl mx-auto font-sans leading-relaxed text-center">
+              <p className="hero-subtext text-gray-300 text-base sm:text-lg mt-8 max-w-2xl mx-auto font-sans leading-relaxed text-center">
                 We don't follow the future. We make it. We bring creativity, technology, and strategy together to turn ambitious thinking into meaningful solutions.
               </p>
               <div className="hero-cta mt-12 flex items-center gap-4 justify-center">
                 <button
                   onClick={() => onNavigate?.('contact')}
-                  className="flex items-center gap-2.5 bg-[#1a1a1a] text-white px-7 py-3.5 rounded-full text-sm font-semibold hover:bg-[#3a863f] transition-all hover:scale-105 active:scale-95 font-display"
+                  className="flex items-center gap-2.5 bg-white text-[#1a1a1a] px-7 py-3.5 rounded-full text-sm font-semibold hover:bg-[#3a863f] hover:text-white transition-all hover:scale-105 active:scale-95 font-display"
                 >
                   Let's Make It Exist.
                   <ArrowUpRight size={16} />
                 </button>
                 <button
                   onClick={onViewAllProjects}
-                  className="flex items-center gap-2 text-sm font-semibold text-[#1a1a1a] hover:text-[#3a863f] transition-colors font-display"
+                  className="flex items-center gap-2 text-sm font-semibold text-white hover:text-[#3a863f] transition-colors font-display"
                 >
                   Explore Our Work.
                   <ArrowRight size={16} />
                 </button>
               </div>
-              <p className="hero-nav-item mt-10 text-[11px] font-semibold tracking-[0.25em] uppercase text-gray-500 font-display">
+              <p className="hero-nav-item mt-10 text-[11px] font-semibold tracking-[0.25em] uppercase text-gray-400 font-display">
                 QOLAB — Future Ready Solutions.
               </p>
             </div>
