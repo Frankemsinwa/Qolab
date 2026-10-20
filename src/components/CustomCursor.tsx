@@ -148,7 +148,7 @@ export default function CustomCursor() {
         {cursorText && state !== 'default' && (
           <span
             className="absolute top-5 left-4 whitespace-nowrap rounded-md bg-[#111111] text-white text-[10px] font-semibold tracking-wide px-2 py-1 shadow-lg select-none pointer-events-none"
-            style={{ fontFamily: '"Poppins", system-ui, sans-serif' }}
+            style={{ fontFamily: '"Instrument Sans", system-ui, sans-serif' }}
           >
             {cursorText}
           </span>

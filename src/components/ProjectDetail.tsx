@@ -10,9 +10,10 @@ gsap.registerPlugin(ScrollTrigger);
 interface ProjectDetailProps {
   project: Project;
   onBack: () => void;
+  onNavigateToContact?: () => void;
 }
 
-export default function ProjectDetail({ project, onBack }: ProjectDetailProps) {
+export default function ProjectDetail({ project, onBack, onNavigateToContact }: ProjectDetailProps) {
   const detailRef = useRef<HTMLDivElement>(null);
 
   // Reset scroll to top on mount
@@ -22,6 +23,7 @@ export default function ProjectDetail({ project, onBack }: ProjectDetailProps) {
 
   // GSAP Animations
   useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const ctx = gsap.context(() => {
       // 1. Text reveals
       gsap.from('.detail-title-word', {
@@ -74,7 +76,7 @@ export default function ProjectDetail({ project, onBack }: ProjectDetailProps) {
       <div className="max-w-6xl mx-auto flex justify-between items-center mb-12">
         <button
           onClick={onBack}
-          className="flex items-center gap-2 text-sm font-semibold text-[#108a93] hover:text-[#159da8] transition-colors group"
+          className="flex items-center gap-2 text-sm font-semibold text-[#3a863f] hover:text-[#2f6d33] transition-colors group"
         >
           <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
           <span>Back to Work</span>
@@ -87,7 +89,7 @@ export default function ProjectDetail({ project, onBack }: ProjectDetailProps) {
       {/* Main Intro Headers */}
       <div className="max-w-6xl mx-auto text-left mb-16">
         <div className="overflow-hidden">
-          <span className="detail-title-word text-[#108a93] font-mono text-xs uppercase tracking-widest block mb-4 font-bold">
+          <span className="detail-title-word text-[#3a863f] font-mono text-xs uppercase tracking-widest block mb-4 font-bold">
             // {project.category}
           </span>
         </div>
@@ -146,11 +148,11 @@ export default function ProjectDetail({ project, onBack }: ProjectDetailProps) {
 
           <div className="flex flex-col gap-4 mt-8 border-t border-black/5 pt-8">
             <div className="flex items-center gap-3">
-              <Clock size={18} className="text-[#108a93]" />
+              <Clock size={18} className="text-[#3a863f]" />
               <span className="font-mono text-xs text-gray-500 uppercase tracking-wider">Fast Iterative Prototyping</span>
             </div>
             <div className="flex items-center gap-3">
-              <Award size={18} className="text-[#108a93]" />
+              <Award size={18} className="text-[#3a863f]" />
               <span className="font-mono text-xs text-gray-500 uppercase tracking-wider">High conversion focus</span>
             </div>
           </div>
@@ -170,7 +172,7 @@ export default function ProjectDetail({ project, onBack }: ProjectDetailProps) {
           </div>
 
           {/* Solution Box */}
-          <div className="detail-section bg-[#e6f3f0] rounded-[2rem] p-8 sm:p-10 shadow-sm relative overflow-hidden">
+          <div className="detail-section bg-[#e9f3ea] rounded-[2rem] p-8 sm:p-10 shadow-sm relative overflow-hidden">
             <span className="absolute top-4 right-4 font-mono text-[10px] text-[#3a863f]/30 uppercase font-semibold">Solution</span>
             <h4 className="font-display text-2xl text-black font-semibold italic mb-4">
               Our Approach
@@ -190,8 +192,8 @@ export default function ProjectDetail({ project, onBack }: ProjectDetailProps) {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {project.results.map((result, idx) => (
             <div key={idx} className="bg-white border border-black/5 p-8 rounded-[2rem] shadow-sm flex flex-col justify-between aspect-square md:aspect-auto md:min-h-[220px]">
-              <div className="w-10 h-10 rounded-full bg-[#108a93]/10 flex items-center justify-center">
-                <CheckCircle size={18} className="text-[#108a93]" />
+              <div className="w-10 h-10 rounded-full bg-[#3a863f]/10 flex items-center justify-center">
+                <CheckCircle size={18} className="text-[#3a863f]" />
               </div>
               <div>
                 <span className="font-mono text-xs text-black/40 block mb-1">Metric // 0{idx + 1}</span>
@@ -230,11 +232,19 @@ export default function ProjectDetail({ project, onBack }: ProjectDetailProps) {
         </span>
         <button
           onClick={onBack}
-          className="font-display text-4xl sm:text-5xl italic font-semibold text-black hover:text-[#108a93] flex items-center gap-2 group transition-all duration-300"
+          className="font-display text-4xl sm:text-5xl italic font-semibold text-black hover:text-[#3a863f] flex items-center gap-2 group transition-all duration-300"
         >
           <span>Return to work</span>
           <ChevronRight size={32} className="group-hover:translate-x-1.5 transition-transform" />
         </button>
+        {onNavigateToContact && (
+          <button
+            onClick={onNavigateToContact}
+            className="mt-6 inline-flex items-center gap-2 bg-[#3a863f] hover:bg-[#2f6d33] text-white font-semibold py-3.5 px-8 rounded-full transition-all duration-300 hover:scale-105 active:scale-95 shadow-md font-sans text-sm"
+          >
+            Let's make it exist.
+          </button>
+        )}
       </div>
     </div>
   );

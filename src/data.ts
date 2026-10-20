@@ -3,12 +3,15 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Project, LabExperiment } from './types';
+import { Project, LabExperiment, Service } from './types';
 
 import proj1 from './assets/projects/project-1.webp';
 import proj2 from './assets/projects/project-2.jpg';
 import proj3 from './assets/projects/project-3.jpg';
 import proj4 from './assets/projects/project-4.jpg';
+import brandIdentityImg from './assets/services/Brand strategy.jpg';
+import digitalMarketingImg from './assets/services/digital- marketing.jpg';
+import businessStrategyImg from './assets/services/Experiential.jpg';
 
 export const projectsData: Project[] = [
   {
@@ -28,8 +31,8 @@ export const projectsData: Project[] = [
       'Mobile conversion rate of 4.8% — 2x industry average'
     ],
     tech: ['React', 'Node.js', 'Real-Time API Integration', 'Payment Gateway', 'Responsive Design'],
-    color: 'bg-sky-950',
-    accentColor: '#0ea5e9',
+    color: 'bg-[#0a0f0d]',
+    accentColor: '#3a863f',
     heroImage: proj1,
     galleryImages: [proj1, proj2, proj3]
   },
@@ -50,8 +53,8 @@ export const projectsData: Project[] = [
       'Zero external assets loaded - 100% vector-generated client layouts'
     ],
     tech: ['iOS / Android Swift', 'React Native', 'Acoustic Feedback Engine', 'Gesture Physics', 'Spring Physics'],
-    color: 'bg-violet-950',
-    accentColor: '#8b5cf6',
+    color: 'bg-[#0a0f0d]',
+    accentColor: '#3a863f',
     heroImage: proj2,
     galleryImages: [proj2, proj3, proj4]
   },
@@ -72,8 +75,8 @@ export const projectsData: Project[] = [
       'Fluid page performance locked at a perfect 120 FPS'
     ],
     tech: ['WebGL', 'HTML5 Canvas', 'GSAP Sequencing', 'Tailwind v4', 'Custom Physics Core'],
-    color: 'bg-emerald-950',
-    accentColor: '#10b981',
+    color: 'bg-[#0a0f0d]',
+    accentColor: '#3a863f',
     heroImage: proj3,
     galleryImages: [proj3, proj4, proj1]
   },
@@ -94,8 +97,8 @@ export const projectsData: Project[] = [
       'Deployed globally across 15+ marketing sub-sites'
     ],
     tech: ['Brand Strategy', 'Typography Design', 'Tailwind v4', 'Asynchronous Grid API'],
-    color: 'bg-zinc-950',
-    accentColor: '#a1a1aa',
+    color: 'bg-[#0a0f0d]',
+    accentColor: '#3a863f',
     heroImage: proj4,
     galleryImages: [proj4, proj1, proj2]
   }
@@ -141,4 +144,13 @@ export const experimentsData: LabExperiment[] = [
       { name: 'Interactive Speed Burst', key: 'burst', min: 0.2, max: 2.5, step: 0.1, defaultValue: 1.0 },
     ]
   }
+];
+
+export const servicesData: Service[] = [
+  { id: 'brand-identity-design', num: '01', title: 'Brand Identity & Design', shortTitle: 'Brand Identity', description: 'Brand strategy, visual identity, art direction, guidelines, and digital assets.', image: brandIdentityImg, accent: '#3a863f' },
+  { id: 'website-design-development', num: '02', title: 'Website Design & Development', shortTitle: 'Web Design', description: 'Business websites, e-commerce, web applications, and digital platforms.', image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=800&q=80', accent: '#3a863f' },
+  { id: 'software-app-development', num: '03', title: 'Software & App Development', shortTitle: 'Software & Apps', description: 'Custom software, web applications, mobile apps, and product development.', image: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=800&q=80', accent: '#3a863f' },
+  { id: 'ai-solutions-automation', num: '04', title: 'AI Solutions & Automation', shortTitle: 'AI & Automation', description: 'AI-enabled solutions, intelligent workflows, and repetitive-process automation.', image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=800&q=80', accent: '#3a863f' },
+  { id: 'digital-marketing-growth', num: '05', title: 'Digital Marketing & Growth Strategy', shortTitle: 'Digital Marketing', description: 'Brand positioning, marketing strategy, campaigns, and growth planning.', image: digitalMarketingImg, accent: '#3a863f' },
+  { id: 'business-strategy-consulting', num: '06', title: 'Business Strategy & Consulting', shortTitle: 'Business Strategy', description: 'Business analysis, operational direction, opportunity identification, and practical growth planning.', image: businessStrategyImg, accent: '#3a863f' },
 ];

@@ -42,6 +42,7 @@ export default function ProjectGrid({ onSelectProject }: ProjectGridProps) {
 
   // GSAP parallax + scroll-triggered animations
   useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const ctx = gsap.context(() => {
       // Entrance stagger
       gsap.from('.pg-card', {
@@ -138,7 +139,7 @@ export default function ProjectGrid({ onSelectProject }: ProjectGridProps) {
   return (
     <section
       ref={sectionRef}
-      className="relative w-full py-28 md:py-36 px-6 md:px-12 lg:px-16 bg-[#f5f3ef] z-30"
+      className="relative w-full py-28 md:py-36 px-6 md:px-12 lg:px-16 bg-[#f6f8f6] z-30"
       id="projects"
     >
       {/* Magnetic cursor */}

@@ -1,14 +1,15 @@
 import { useEffect, useRef } from 'react';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, ArrowUpRight } from 'lucide-react';
 import { gsap } from 'gsap';
 import heroImg1 from '../assets/hero-imgs/hero-1.jpg';
 import heroImg7 from '../assets/hero-imgs/hero-7.jpg';
 
 interface AboutPageProps {
   onBack: () => void;
+  onNavigateToContact?: () => void;
 }
 
-export default function AboutPage({ onBack }: AboutPageProps) {
+export default function AboutPage({ onBack, onNavigateToContact }: AboutPageProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -16,6 +17,7 @@ export default function AboutPage({ onBack }: AboutPageProps) {
   }, []);
 
   useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const ctx = gsap.context(() => {
       gsap.from('.about-reveal', {
         y: 40,
@@ -47,13 +49,19 @@ export default function AboutPage({ onBack }: AboutPageProps) {
     },
   ];
 
+  const disciplines = [
+    { title: 'Creative Thinking', description: 'Brand, design, and story that make people care.' },
+    { title: 'Engineering', description: 'Products and platforms built to work, scale, and last.' },
+    { title: 'Business Strategy', description: 'Clear direction, priorities, and practical next steps.' },
+  ];
+
   return (
     <div ref={containerRef} className="w-full pt-32 pb-24 px-6 sm:px-12 md:px-16 min-h-screen">
       {/* Header */}
       <div className="max-w-6xl mx-auto flex justify-between items-center mb-16 border-b border-black/10 pb-6">
         <button
           onClick={onBack}
-          className="flex items-center gap-2 text-sm font-semibold text-[#108a93] hover:text-[#159da8] transition-colors group"
+          className="flex items-center gap-2 text-sm font-semibold text-[#3a863f] hover:text-[#2f6d33] transition-colors group"
         >
           <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
           <span>Return Home</span>
@@ -69,37 +77,37 @@ export default function AboutPage({ onBack }: AboutPageProps) {
           We are Qolab.
         </h1>
 
-        {/* Studio Description */}
+        {/* Narrative — one practice, possibility to execution (PRD 7.2) */}
         <div className="about-reveal grid grid-cols-1 md:grid-cols-2 gap-12 mb-24">
           <div>
             <p className="font-sans text-lg sm:text-xl text-gray-700 leading-relaxed">
-              Qolab is a creative design & technology studio rooted in craft, curiosity, and care.
-              We design and build products, brands, and digital experiences that people genuinely love,
-              helping modern businesses grow and thrive in a vibrant world.
+              Qolab brings creative thinking, engineering, and business strategy together
+              as one practice. We take ideas from possibility to practical execution —
+              designing, building, and planning the work that moves a business forward.
             </p>
           </div>
           <div>
             <p className="font-sans text-lg sm:text-xl text-gray-700 leading-relaxed">
-              Founded in 2024, we're a small team of versatile creatives operating at the convergence
-              of beautiful interfaces and performant engineering. Fully aligned with your goals, we
-              design with craft and code with rigor.
+              Founded in 2024, we are a Nigeria- and UK-based creative collective of strategists,
+              designers, and engineers. One team around your brand, from the first
+              question to launch — and to what comes next.
             </p>
           </div>
         </div>
 
-        {/* Stats Row */}
-        <div className="about-reveal grid grid-cols-2 md:grid-cols-4 gap-8 py-12 border-y border-black/10 mb-24">
-          {[
-            { number: '4+', label: 'Years Running' },
-            { number: '50+', label: 'Projects Shipped' },
-            { number: '30+', label: 'Happy Clients' },
-            { number: '12', label: 'Team Members' },
-          ].map((stat, i) => (
-            <div key={i} className="text-center">
-              <div className="font-display italic text-4xl sm:text-5xl text-[#108a93] mb-2">{stat.number}</div>
-              <div className="font-sans text-sm text-gray-500 uppercase tracking-wider">{stat.label}</div>
-            </div>
-          ))}
+        {/* One practice strip — replaces unverified stats (F3) */}
+        <div className="about-reveal py-12 border-y border-black/10 mb-24">
+          <p className="font-sans text-xs font-semibold tracking-[0.2em] uppercase text-[#3a863f] mb-8">
+            One practice, three disciplines
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
+            {disciplines.map((discipline, i) => (
+              <div key={i}>
+                <div className="font-display italic text-2xl sm:text-3xl text-black mb-2">{discipline.title}</div>
+                <div className="font-sans text-sm text-gray-500 leading-relaxed">{discipline.description}</div>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Values */}
@@ -115,8 +123,36 @@ export default function AboutPage({ onBack }: AboutPageProps) {
           </div>
         </div>
 
-        {/* Team Section */}
-        <div>
+        {/* Q-puzzle collaboration (PRD 7.2/7.6) */}
+        <div className="about-reveal bg-[#f5f5f5] rounded-[2.5rem] p-8 sm:p-12 md:p-16 grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-24">
+          <div>
+            <p className="font-sans text-xs font-semibold tracking-[0.2em] uppercase text-[#3a863f] mb-4">How we work together</p>
+            <h2 className="font-display italic text-3xl sm:text-4xl text-black leading-tight mb-6">
+              A team around your brand.
+            </h2>
+            <p className="font-sans text-gray-600 leading-relaxed mb-4">
+              Our mark is a Q — a puzzle piece, a reminder that no great thing is built
+              from one piece. Different disciplines and perspectives make stronger work,
+              so collaboration isn't a slogan here: it's the structure.
+            </p>
+            <p className="font-sans text-gray-600 leading-relaxed">
+              We do not assign you one person. We build you a team around your brand —
+              strategists, designers, engineers, and marketers, aligned on one point of
+              contact and one outcome.
+            </p>
+          </div>
+          <div className="flex items-center justify-center">
+            <div className="relative w-48 h-48 sm:w-60 sm:h-60">
+              <div className="absolute inset-0 rounded-[2.5rem] border-2 border-[#3a863f]/30 rotate-6" />
+              <div className="absolute inset-0 rounded-[2.5rem] bg-white shadow-lg flex items-center justify-center">
+                <span className="font-display text-[8rem] sm:text-[10rem] leading-none text-[#3a863f] font-bold">Q</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Team / story (D3 — facts pending F3/F4 confirmation) */}
+        <div className="mb-24">
           <h2 className="about-reveal font-display italic text-3xl sm:text-4xl text-black mb-12">The team.</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             <div className="about-reveal flex gap-4">
@@ -135,12 +171,27 @@ export default function AboutPage({ onBack }: AboutPageProps) {
             </div>
             <div className="about-reveal flex flex-col justify-center">
               <p className="font-sans text-gray-600 text-base sm:text-lg leading-relaxed">
-                We're a small team of versatile creatives. We operate at the convergence of beautiful
-                interfaces and performant engineering. Fully aligned with your goals, we design with
-                craft and code with rigor.
+                A Nigeria- and UK-based creative collective, founded in 2024. Strategists,
+                designers, engineers, and marketers working as one team — fully aligned
+                with your goals, designing with craft and engineering with rigor.
               </p>
             </div>
           </div>
+        </div>
+
+        {/* CTA */}
+        <div className="about-reveal bg-[#3a863f] rounded-[2.5rem] p-8 sm:p-12 md:p-16 text-center">
+          <h2 className="font-display italic text-3xl sm:text-5xl text-white mb-6">So, what's the big idea?</h2>
+          <p className="font-sans text-white/80 max-w-lg mx-auto mb-8">
+            Bring the question. Bring the ambition. Bring the unfinished idea. Let's see what it could become.
+          </p>
+          <button
+            onClick={onNavigateToContact}
+            className="inline-flex items-center gap-3 bg-white text-[#3a863f] font-semibold py-4 px-10 rounded-full hover:bg-gray-100 transition-transform hover:scale-105 active:scale-95 shadow-lg"
+          >
+            <span>Let's Make It Exist.</span>
+            <ArrowUpRight size={18} />
+          </button>
         </div>
       </div>
     </div>

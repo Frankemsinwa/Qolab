@@ -2,24 +2,135 @@ import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ArrowLeft, ArrowUpRight } from 'lucide-react';
 import type { Service } from '../types';
+import { servicesData } from '../data';
+import logoImg from '../assets/logo.png.png';
 
 interface ServiceDetailProps {
   service: Service;
   onBack: () => void;
+  onNavigateToContact?: () => void;
 }
 
-const RELATED_SERVICES: { title: string; desc: string }[] = [
-  { title: 'Brand Architecture', desc: 'Building scalable brand systems from the ground up.' },
-  { title: 'Design Systems', desc: 'Component libraries and tokens that unify your product.' },
-  { title: 'Growth Strategy', desc: 'Data-driven roadmaps for sustainable scaling.' },
-  { title: 'Workshops & Sprints', desc: 'Rapid ideation and prototyping sessions with your team.' },
-];
+const getRelatedServices = (currentId: string): { title: string; desc: string }[] =>
+  servicesData.filter((s) => s.id !== currentId).slice(0, 4).map((s) => ({ title: s.title, desc: s.description }));
 
-export default function ServiceDetail({ service, onBack }: ServiceDetailProps) {
+const SERVICE_CONTENT: Record<string, { overview: string[]; process: { phase: string; desc: string }[] }> = {
+  'brand-identity-design': {
+    overview: [
+      'Brand strategy and positioning that clarifies who you are and who you serve',
+      'Visual identity — logo, colour, typography, and art direction',
+      'Brand guidelines and a digital asset kit your team can actually use',
+      'Naming and messaging support where the brand needs words',
+      'Application across web, social, and print touchpoints',
+      'Design reviews that keep the system consistent as you grow',
+    ],
+    process: [
+      { phase: 'Position', desc: 'We define where your brand sits, who it speaks to, and what it stands for.' },
+      { phase: 'Design', desc: 'Identity, guidelines, and assets come together into one coherent system.' },
+      { phase: 'Rollout', desc: 'We apply the identity across your touchpoints and equip your team to keep it consistent.' },
+    ],
+  },
+  'website-design-development': {
+    overview: [
+      'Business websites built to convert, not just to look good',
+      'E-commerce storefronts with smooth product and checkout flows',
+      'Web applications and digital platforms tailored to your operations',
+      'Responsive design across phones, tablets, and desktops',
+      'Performance, accessibility, and SEO foundations built in',
+      'Content management setup so your team can update with ease',
+    ],
+    process: [
+      { phase: 'Plan', desc: 'We map pages, content, and goals before design begins.' },
+      { phase: 'Design & Build', desc: 'Interface and engineering move together, with previews at every step.' },
+      { phase: 'Launch', desc: 'Testing, performance tuning, and a smooth handover — with support after go-live.' },
+    ],
+  },
+  'software-app-development': {
+    overview: [
+      'Custom software shaped around how your business actually works',
+      'Web and mobile applications built for real-world use',
+      'Product discovery: scope, architecture, and roadmap',
+      'Iterative builds with working demos from early on',
+      'Integrations with the tools and services you already use',
+      'Testing, launch support, and a path for future releases',
+    ],
+    process: [
+      { phase: 'Scope', desc: 'We define the problem, the users, and the smallest version worth shipping.' },
+      { phase: 'Build', desc: 'Short development cycles with working demos, feedback, and quality checks.' },
+      { phase: 'Evolve', desc: 'Post-launch iterations and new features driven by how people actually use the product.' },
+    ],
+  },
+  'ai-solutions-automation': {
+    overview: [
+      'An opportunity audit: where AI and automation actually pay off',
+      'AI-enabled features embedded into your product or workflow',
+      'Intelligent workflows that reduce manual, repetitive work',
+      'Assistants, search, and content tools built on modern AI',
+      'Data plumbing and integrations that make AI useful in practice',
+      'Guardrails, testing, and monitoring so it stays reliable',
+    ],
+    process: [
+      { phase: 'Audit', desc: 'We find the workflows and features where AI creates real leverage.' },
+      { phase: 'Prototype', desc: 'A working proof-of-value is built, tested, and refined with your team.' },
+      { phase: 'Operate', desc: 'Monitoring, tuning, and guardrails keep the system reliable in production.' },
+    ],
+  },
+  'digital-marketing-growth': {
+    overview: [
+      'Brand positioning and messaging that sharpen your market fit',
+      'Marketing strategy and channel planning around real goals',
+      'Campaign concepting and execution across your chosen channels',
+      'Content and creative direction that stays on brand',
+      'Measurement setup so you know what is working',
+      'Growth planning: reviews, priorities, and next moves',
+    ],
+    process: [
+      { phase: 'Position', desc: 'Clarify the message and the market you are speaking to.' },
+      { phase: 'Plan', desc: 'Choose channels, set priorities, and build the campaign calendar.' },
+      { phase: 'Grow', desc: 'Launch, measure, and move budget to what is actually performing.' },
+    ],
+  },
+  'business-strategy-consulting': {
+    overview: [
+      'Business analysis: where you are, what is working, what is not',
+      'Operational direction and practical recommendations',
+      'Opportunity identification in your market and beyond',
+      'Growth planning with clear priorities and next steps',
+      'Workshops with your team to align on the plan',
+      'One accountable team turning thinking into action',
+    ],
+    process: [
+      { phase: 'Analyse', desc: 'A clear read of your business, market, and current bottlenecks.' },
+      { phase: 'Direct', desc: 'Practical recommendations on operations, positioning, and priorities.' },
+      { phase: 'Plan', desc: 'A roadmap of opportunities with concrete next steps.' },
+    ],
+  },
+};
+
+const GENERIC_CONTENT = {
+  overview: [
+    'Discovery phase to understand your goals, audience, and constraints',
+    'Strategic direction with clear priorities and milestones',
+    'Iterative design with stakeholder reviews',
+    'Build, integration, and quality assurance',
+    'Launch support and post-launch optimisation',
+    'A clear path for what comes next',
+  ],
+  process: [
+    { phase: 'Discovery', desc: 'Deep dive into your business, users, and market to uncover the right opportunities.' },
+    { phase: 'Creation', desc: 'Iterative design and engineering sprints with continuous feedback loops.' },
+    { phase: 'Delivery', desc: 'Launch, measure, optimise — we stay engaged to ensure sustained results.' },
+  ],
+};
+
+export default function ServiceDetail({ service, onBack, onNavigateToContact }: ServiceDetailProps) {
   const pageRef = useRef<HTMLDivElement>(null);
+  const content = SERVICE_CONTENT[service.id] ?? GENERIC_CONTENT;
+  const relatedServices = getRelatedServices(service.id);
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     const ctx = gsap.context(() => {
       gsap.from('.sd-hero-title', { y: 60, opacity: 0, duration: 1, ease: 'power3.out', delay: 0.2 });
@@ -50,6 +161,11 @@ export default function ServiceDetail({ service, onBack }: ServiceDetailProps) {
           <ArrowLeft size={16} />
           Back
         </button>
+
+        {/* Brand Logo - top right */}
+        <div className="absolute top-6 right-6 md:top-10 md:right-10 z-20 bg-white rounded-full px-4 py-2 border border-black/5 shadow-sm">
+          <img src={logoImg} alt="Qolab" className="h-8 md:h-10 w-auto" />
+        </div>
 
         {/* Hero content */}
         <div className="absolute bottom-0 left-0 right-0 p-8 md:p-16 z-10">
@@ -85,14 +201,7 @@ export default function ServiceDetail({ service, onBack }: ServiceDetailProps) {
             </h2>
           </div>
           <div className="space-y-6">
-            {[
-              'Comprehensive research and discovery phase',
-              'Strategic roadmap and milestone planning',
-              'Iterative design with stakeholder reviews',
-              'Full-stack development and integration',
-              'Quality assurance and performance testing',
-              'Launch support and post-launch optimization',
-            ].map((item, i) => (
+            {content.overview.map((item, i) => (
               <div key={i} className="flex items-start gap-4">
                 <div className="w-6 h-6 rounded-full flex-shrink-0 flex items-center justify-center mt-0.5" style={{ backgroundColor: `${service.accent}15` }}>
                   <span className="text-xs font-bold font-mono" style={{ color: service.accent }}>{i + 1}</span>
@@ -112,11 +221,7 @@ export default function ServiceDetail({ service, onBack }: ServiceDetailProps) {
             How we deliver results
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              { phase: 'Discovery', desc: 'Deep dive into your business, users, and market landscape to uncover the right opportunities.' },
-              { phase: 'Creation', desc: 'Iterative design and engineering sprints with continuous feedback loops and quality gates.' },
-              { phase: 'Delivery', desc: 'Launch, measure, optimize. We stay engaged to ensure sustained performance and growth.' },
-            ].map((step, i) => (
+            {content.process.map((step, i) => (
               <div key={i} className="bg-white rounded-3xl p-8 border border-black/5">
                 <span className="font-mono text-xs font-bold" style={{ color: service.accent }}>Phase {String(i + 1).padStart(2, '0')}</span>
                 <h3 className="font-display text-2xl text-[#1a1a1a] mt-3 mb-4">{step.phase}</h3>
@@ -130,12 +235,12 @@ export default function ServiceDetail({ service, onBack }: ServiceDetailProps) {
       {/* Related Services */}
       <section className="sd-section w-full py-20 md:py-28 px-6 md:px-12 lg:px-16">
         <div className="max-w-7xl mx-auto">
-          <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[#108a93] mb-4 font-sans">Related</p>
+          <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[#3a863f] mb-4 font-sans">Related</p>
           <h2 className="font-display text-3xl sm:text-4xl text-[#1a1a1a] leading-tight mb-12">
             Explore more services
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {RELATED_SERVICES.map((rel, i) => (
+            {relatedServices.map((rel, i) => (
               <div key={i} className="group bg-[#f5f5f5] rounded-3xl p-6 hover:bg-[#1a1a1a] transition-colors duration-500 cursor-pointer">
                 <h3 className="font-display text-xl text-[#1a1a1a] group-hover:text-white transition-colors">{rel.title}</h3>
                 <p className="text-gray-500 group-hover:text-gray-400 text-sm mt-3 font-sans leading-relaxed transition-colors">{rel.desc}</p>
@@ -153,11 +258,14 @@ export default function ServiceDetail({ service, onBack }: ServiceDetailProps) {
         <div className="max-w-4xl mx-auto text-center">
           <p className="text-xs font-semibold tracking-[0.2em] uppercase mb-6 font-sans" style={{ color: service.accent }}>Ready to start?</p>
           <h2 className="font-display text-4xl sm:text-5xl md:text-6xl text-white leading-tight italic">
-            Let's build something<br />remarkable together.
+            The Future Is Not a<br />Spectator Sport.
           </h2>
           <div className="flex flex-col sm:flex-row justify-center gap-4 mt-12">
-            <button className="bg-[#108a93] hover:bg-[#0d7a82] text-white font-semibold py-4 px-10 rounded-full text-base transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg font-sans">
-              Get in Touch
+            <button
+              onClick={onNavigateToContact}
+              className="bg-[#3a863f] hover:bg-[#2f6d33] text-white font-semibold py-4 px-10 rounded-full text-base transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg font-sans"
+            >
+              Let's Make It Exist.
             </button>
             <button
               onClick={onBack}

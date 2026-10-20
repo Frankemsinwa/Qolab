@@ -1,25 +1,16 @@
-@font-face {
-  font-family: 'Bework';
-  src: url('/font/bework.otf') format('opentype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Bework", "Plus Jakarta Sans", "Inter", sans-serif;
-  --font-display: "Poppins", "Instrument Serif", Georgia, serif;
-  --font-mono: "Space Grotesk", ui-monospace, monospace;
+  --font-sans: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Merriweather Sans", "Instrument Sans", sans-serif;
+  --font-mono: "Instrument Sans", ui-monospace, monospace;
 
   --color-bg-cream: #ffffff;
   --color-bg-hero: #ffffff;
   --color-bg-dark: #0f0f11;
-  --color-accent-teal: #108a93;
-  --color-accent-orange: #f4a261;
   --color-accent-green: #3a863f;
-  --color-accent-yellow: #fcd581;
+  --color-accent-green-deep: #2f6d33;
+  --color-accent-green-tint: #e9f3ea;
 }
 
 html, body {
@@ -168,4 +159,18 @@ html.lenis, html.lenis body {
   50% { transform: scale(1.03); opacity: 1; }
 }
 
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
 
+/* Focus visibility (a11y) */
+:focus-visible {
+  outline: 2px solid #3a863f;
+  outline-offset: 3px;
+}

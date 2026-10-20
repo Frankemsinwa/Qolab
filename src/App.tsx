@@ -10,12 +10,19 @@ import ContactPage from './components/ContactPage';
 import ServiceDetail from './components/ServiceDetail';
 import TransitionOverlay, { type TransitionHandle } from './components/TransitionOverlay';
 import CustomCursor from './components/CustomCursor';
+import logoImg from './assets/logo.png.png';
 import { Project, Service } from './types';
 
-type View = 'landing' | 'projects' | 'detail' | 'about' | 'services' | 'contact' | 'service-detail';
+type View = 'landing' | 'projects' | 'detail' | 'about' | 'services' | 'contact' | 'service-detail' | 'not-found';
+
+const KNOWN_PATHS = ['/', '/index.html'];
 
 export default function App() {
-  const [view, setView] = useState<View>('landing');
+  const [view, setView] = useState<View>(() =>
+    typeof window !== 'undefined' && !KNOWN_PATHS.includes(window.location.pathname)
+      ? 'not-found'
+      : 'landing'
+  );
   const [activeProject, setActiveProject] = useState<Project | null>(null);
   const [activeService, setActiveService] = useState<Service | null>(null);
   const [lastView, setLastView] = useState<'landing' | 'projects'>('landing');
@@ -80,7 +87,7 @@ export default function App() {
   }, []);
 
   return (
-    <div id="app-root-container" className="min-h-screen bg-white text-[#1a1a1a] overflow-x-hidden selection:bg-accent-teal selection:text-white cursor-none md:cursor-none">
+    <div id="app-root-container" className="min-h-screen bg-white text-[#1a1a1a] overflow-x-hidden selection:bg-accent-green selection:text-white cursor-none md:cursor-none">
       {/* Custom cursor */}
       <CustomCursor />
 
@@ -88,7 +95,7 @@ export default function App() {
       <TransitionOverlay ref={transitionRef} />
 
       {/* Header Navigation - hidden on landing since hero has its own nav */}
-      {view !== 'landing' && view !== 'service-detail' && (
+      {view !== 'landing' && view !== 'service-detail' && view !== 'not-found' && (
         <Navigation onNavigate={(target) => setView(target)} />
       )}
 
@@ -112,10 +119,11 @@ export default function App() {
           <ProjectDetail
             project={activeProject}
             onBack={handleBackFromDetail}
+            onNavigateToContact={() => setView('contact')}
           />
         )}
         {view === 'about' && (
-          <AboutPage onBack={() => setView('landing')} />
+          <AboutPage onBack={() => setView('landing')} onNavigateToContact={() => setView('contact')} />
         )}
         {view === 'services' && (
           <ServicesPage onBack={() => setView('landing')} onNavigateToContact={() => setView('contact')} />
@@ -127,7 +135,28 @@ export default function App() {
           <ServiceDetail
             service={activeService}
             onBack={handleBackFromService}
+            onNavigateToContact={() => setView('contact')}
           />
+        )}
+        {view === 'not-found' && (
+          <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center bg-white">
+            <img src={logoImg} alt="Qolab" className="h-20 md:h-24 w-auto mb-10" />
+            <h1 className="font-display italic text-4xl sm:text-5xl text-black leading-tight mb-4">
+              Looks like this piece doesn't fit.
+            </h1>
+            <p className="font-sans text-gray-600 mb-10 max-w-md">
+              The page you're looking for doesn't exist — but the way back is easy.
+            </p>
+            <button
+              onClick={() => {
+                window.history.replaceState(null, '', '/');
+                setView('landing');
+              }}
+              className="inline-flex items-center gap-2 bg-[#3a863f] hover:bg-[#2f6d33] text-white font-semibold py-4 px-10 rounded-full transition-all duration-300 hover:scale-105 active:scale-95 shadow-md font-display"
+            >
+              Find your way back.
+            </button>
+          </div>
         )}
       </main>
     </div>

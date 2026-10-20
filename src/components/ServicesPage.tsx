@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { ArrowLeft, ArrowUpRight } from 'lucide-react';
 import { gsap } from 'gsap';
+import { servicesData } from '../data';
 
 interface ServicesPageProps {
   onBack: () => void;
@@ -15,6 +16,7 @@ export default function ServicesPage({ onBack, onNavigateToContact }: ServicesPa
   }, []);
 
   useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const ctx = gsap.context(() => {
       gsap.from('.service-reveal', {
         y: 40,
@@ -27,32 +29,7 @@ export default function ServicesPage({ onBack, onNavigateToContact }: ServicesPa
     return () => ctx.revert();
   }, []);
 
-  const services = [
-    {
-      title: 'Brand Identity',
-      description: 'Visual identity systems, logos, brand guidelines, and strategic positioning that make your business memorable and distinct.',
-    },
-    {
-      title: 'UI/UX Design',
-      description: 'User research, wireframing, prototyping, and high-fidelity interfaces that delight users and drive conversions.',
-    },
-    {
-      title: 'Web Development',
-      description: 'Custom websites and web applications built with modern frameworks, optimized for performance and scalability.',
-    },
-    {
-      title: 'Mobile Apps',
-      description: 'Native and cross-platform mobile applications with fluid interactions and polished user experiences.',
-    },
-    {
-      title: 'Motion Design',
-      description: 'Animated interfaces, micro-interactions, and visual storytelling that bring your digital products to life.',
-    },
-    {
-      title: 'Digital Strategy',
-      description: 'Product thinking, growth consulting, and technical architecture to ensure your digital investments pay off.',
-    },
-  ];
+  const services = servicesData;
 
   return (
     <div ref={containerRef} className="w-full pt-32 pb-24 px-6 sm:px-12 md:px-16 min-h-screen">
@@ -60,7 +37,7 @@ export default function ServicesPage({ onBack, onNavigateToContact }: ServicesPa
       <div className="max-w-6xl mx-auto flex justify-between items-center mb-16 border-b border-black/10 pb-6">
         <button
           onClick={onBack}
-          className="flex items-center gap-2 text-sm font-semibold text-[#108a93] hover:text-[#159da8] transition-colors group"
+          className="flex items-center gap-2 text-sm font-semibold text-[#3a863f] hover:text-[#2f6d33] transition-colors group"
         >
           <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
           <span>Return Home</span>
@@ -87,8 +64,8 @@ export default function ServicesPage({ onBack, onNavigateToContact }: ServicesPa
               key={i}
               className="service-reveal bg-white/50 rounded-[2rem] p-8 sm:p-10 border border-black/5 hover:shadow-lg transition-shadow duration-300"
             >
-              <div className="w-12 h-12 rounded-full bg-[#108a93]/10 flex items-center justify-center mb-6">
-                <span className="font-display italic text-[#108a93] text-xl">{String(i + 1).padStart(2, '0')}</span>
+              <div className="w-12 h-12 rounded-full bg-[#3a863f]/10 flex items-center justify-center mb-6">
+                <span className="font-display italic text-[#3a863f] text-xl">{String(i + 1).padStart(2, '0')}</span>
               </div>
               <h3 className="font-display italic text-2xl text-black mb-4">{service.title}</h3>
               <p className="font-sans text-gray-600 leading-relaxed text-sm">{service.description}</p>
@@ -99,15 +76,16 @@ export default function ServicesPage({ onBack, onNavigateToContact }: ServicesPa
         {/* Process Section */}
         <div className="mb-24">
           <h2 className="service-reveal font-display italic text-3xl sm:text-4xl text-black mb-12">How we work.</h2>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8">
             {[
-              { step: '01', title: 'Discovery', description: 'We learn your business, goals, and audience deeply before touching a single pixel.' },
-              { step: '02', title: 'Strategy', description: 'We define the approach, architecture, and roadmap for your project.' },
-              { step: '03', title: 'Execute', description: 'Design and engineering happen in parallel, with constant feedback loops.' },
-              { step: '04', title: 'Launch', description: 'We ship, measure, iterate, and support — your success is our success.' },
+              { step: '01', title: 'Question Everything', description: 'Understand the challenge and uncover the real problem.' },
+              { step: '02', title: 'Find the Angle', description: 'Define the direction, priorities, and plan.' },
+              { step: '03', title: 'Make It Real', description: 'Design, develop, experiment, and build.' },
+              { step: '04', title: 'Make It Better', description: 'Test, refine, and improve the solution.' },
+              { step: "05", title: "Keep What's Next in Mind", description: 'Identify future opportunities and room to evolve.' },
             ].map((item, i) => (
               <div key={i} className="service-reveal">
-                <span className="font-mono text-xs text-[#108a93] font-bold tracking-widest">{item.step}</span>
+                <span className="font-mono text-xs text-[#3a863f] font-bold tracking-widest">{item.step}</span>
                 <h3 className="font-display italic text-xl text-black mt-2 mb-3">{item.title}</h3>
                 <p className="font-sans text-sm text-gray-600 leading-relaxed">{item.description}</p>
               </div>
@@ -116,16 +94,16 @@ export default function ServicesPage({ onBack, onNavigateToContact }: ServicesPa
         </div>
 
         {/* CTA */}
-        <div className="service-reveal bg-[#108a93] rounded-[2.5rem] p-8 sm:p-12 md:p-16 text-center">
+        <div className="service-reveal bg-[#3a863f] rounded-[2.5rem] p-8 sm:p-12 md:p-16 text-center">
           <h2 className="font-display italic text-3xl sm:text-5xl text-white mb-6">Ready to start?</h2>
           <p className="font-sans text-white/80 max-w-lg mx-auto mb-8">
             Let's discuss your project and see how we can help bring your vision to life.
           </p>
           <button
             onClick={onNavigateToContact}
-            className="inline-flex items-center gap-3 bg-white text-[#108a93] font-semibold py-4 px-10 rounded-full hover:bg-gray-100 transition-transform hover:scale-105 active:scale-95 shadow-lg"
+            className="inline-flex items-center gap-3 bg-white text-[#3a863f] font-semibold py-4 px-10 rounded-full hover:bg-gray-100 transition-transform hover:scale-105 active:scale-95 shadow-lg"
           >
-            <span>Get in touch</span>
+            <span>Let's Make It Exist.</span>
             <ArrowUpRight size={18} />
           </button>
         </div>

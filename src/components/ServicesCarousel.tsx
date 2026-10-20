@@ -3,28 +3,9 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowUpRight } from 'lucide-react';
 import type { Service } from '../types';
-
-import brandStrategyImg from '../assets/services/Brand strategy.jpg';
-import productDesignImg from '../assets/services/Product-design.jpg';
-import motionDesignImg from '../assets/services/Motion design.jpg';
-import digitalMarketingImg from '../assets/services/digital- marketing.jpg';
-import experientialImg from '../assets/services/Experiential.jpg';
-import seoImg from '../assets/services/seo.jpg';
+import { servicesData } from '../data';
 
 gsap.registerPlugin(ScrollTrigger);
-
-const SERVICES: Service[] = [
-  { id: 'brand-strategy', num: '01', title: 'Brand Strategy & Identity', shortTitle: 'Brand Strategy', description: 'We craft distinctive brand identities that resonate with your audience and stand apart in the market. From naming to full visual systems.', image: brandStrategyImg, accent: '#e11d48' },
-  { id: 'product-design', num: '02', title: 'Product & UX Design', shortTitle: 'Product Design', description: 'Human-centered interfaces designed with precision, tested with rigor, and built for delight across web and mobile platforms.', image: productDesignImg, accent: '#8b5cf6' },
-  { id: 'web-development', num: '03', title: 'Web Development & Engineering', shortTitle: 'Web Dev', description: 'Performant, scalable web applications built with modern architecture, clean code, and sub-second load times.', image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=800&q=80', accent: '#10b981' },
-  { id: 'mobile-apps', num: '04', title: 'Mobile App Development', shortTitle: 'Mobile Apps', description: 'Native and cross-platform mobile applications with fluid gesture physics, ambient interactions, and buttery 120fps performance.', image: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=800&q=80', accent: '#f59e0b' },
-  { id: 'motion-interaction', num: '05', title: 'Motion & Interaction Design', shortTitle: 'Motion Design', description: 'Fluid animations, micro-interactions, and scroll-driven experiences that bring digital products to life with cinematic quality.', image: motionDesignImg, accent: '#ec4899' },
-  { id: 'digital-marketing', num: '06', title: 'Digital Marketing & Growth', shortTitle: 'Digital Marketing', description: 'Data-driven campaigns, SEO, paid media, and conversion optimization that drive measurable business growth and ROI.', image: digitalMarketingImg, accent: '#06b6d4' },
-  { id: 'physical-marketing', num: '07', title: 'Physical & Experiential Marketing', shortTitle: 'Experiential', description: 'Event activations, pop-up experiences, billboard campaigns, and physical brand touchpoints that create lasting impressions.', image: experientialImg, accent: '#f97316' },
-  { id: 'content-creation', num: '08', title: 'Content Creation & Production', shortTitle: 'Content', description: 'Photography, videography, copywriting, and editorial content that tells your brand story with craft and authenticity.', image: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=800&q=80', accent: '#a855f7' },
-  { id: 'seo-analytics', num: '09', title: 'SEO & Analytics Intelligence', shortTitle: 'SEO & Analytics', description: 'Technical SEO, performance auditing, and analytics infrastructure that puts your product in front of the right audience.', image: seoImg, accent: '#14b8a6' },
-  { id: 'ai-integration', num: '10', title: 'AI & Machine Learning Integration', shortTitle: 'AI Integration', description: 'Custom AI pipelines, LLM integrations, and intelligent automation that transform how your business operates and serves users.', image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=800&q=80', accent: '#6366f1' },
-];
 
 interface ServicesCarouselProps {
   onSelectService: (service: Service) => void;
@@ -37,6 +18,7 @@ export default function ServicesCarousel({ onSelectService }: ServicesCarouselPr
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const section = sectionRef.current;
     const track = trackRef.current;
     if (!section || !track) return;
@@ -56,7 +38,7 @@ export default function ServicesCarousel({ onSelectService }: ServicesCarouselPr
           invalidateOnRefresh: true,
           onUpdate: (self) => {
             const progress = self.progress;
-            const idx = Math.round(progress * (SERVICES.length - 1));
+            const idx = Math.round(progress * (servicesData.length - 1));
             setActiveIndex(idx);
           },
         },
@@ -105,10 +87,10 @@ export default function ServicesCarousel({ onSelectService }: ServicesCarouselPr
               <div className="w-24 h-[2px] bg-white/10 relative rounded-full overflow-hidden">
                 <div
                   className="absolute inset-y-0 left-0 bg-[#3a863f] rounded-full transition-all duration-300"
-                  style={{ width: `${((activeIndex + 1) / SERVICES.length) * 100}%` }}
+                  style={{ width: `${((activeIndex + 1) / servicesData.length) * 100}%` }}
                 />
               </div>
-              <span className="text-white/40 text-sm font-sans font-mono">{String(SERVICES.length).padStart(2, '0')}</span>
+              <span className="text-white/40 text-sm font-sans font-mono">{String(servicesData.length).padStart(2, '0')}</span>
             </div>
           </div>
         </div>
@@ -120,7 +102,7 @@ export default function ServicesCarousel({ onSelectService }: ServicesCarouselPr
             className="flex items-center gap-8 pl-[50vw] pr-[30vw] h-full"
             style={{ transformStyle: 'preserve-3d' }}
           >
-            {SERVICES.map((service, i) => {
+            {servicesData.map((service, i) => {
               const offset = i - activeIndex;
               const absOffset = Math.abs(offset);
               const rotateY = offset * -8;
@@ -198,7 +180,7 @@ export default function ServicesCarousel({ onSelectService }: ServicesCarouselPr
 
         {/* Bottom progress dots */}
         <div className="absolute bottom-8 left-0 right-0 z-20 flex justify-center gap-2">
-          {SERVICES.map((_, i) => (
+          {servicesData.map((_, i) => (
             <div
               key={i}
               className="rounded-full transition-all duration-300"
