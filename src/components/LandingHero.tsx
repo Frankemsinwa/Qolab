@@ -68,14 +68,16 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
 
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let removeGlow: (() => void) | undefined;
     const ctx = gsap.context(() => {
       // Hero content entrance
       const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
       heroTl
-        .from('.hero-bg-image', { scale: 1.12, opacity: 0, duration: 1.8, ease: 'power2.out' }, 0)
+        .from('.hero-bg-wrap', { opacity: 0, duration: 1.8, ease: 'power2.out' }, 0)
         .from('.hero-grid-rule', { scaleY: 0, opacity: 0, transformOrigin: 'top', duration: 1.1, stagger: { amount: 0.7 } }, 0.15)
         .from('.hero-nav-item', { y: -20, opacity: 0, duration: 0.8, stagger: 0.06 })
-        .from('.hero-headline', { y: 60, opacity: 0, duration: 1.2 }, '-=0.4')
+        .from('.hero-line', { yPercent: 115, duration: 1.2, stagger: 0.18, ease: 'power4.out' }, '-=0.5')
+        .from('.hero-underline', { scaleX: 0, duration: 0.9, ease: 'power3.out' }, '-=0.45')
         .from('.hero-subtext', { y: 30, opacity: 0, duration: 0.9 }, '-=0.7')
         .from('.hero-cta', { y: 20, opacity: 0, duration: 0.8 }, '-=0.5');
 
@@ -88,6 +90,43 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
         pinSpacing: false,
         scrub: 0.5,
       });
+
+      // ===== SCRUBBED HERO EXIT — the pin now does work =====
+      gsap.to('.hero-bg-wrap', {
+        scale: 1.08,
+        ease: 'none',
+        scrollTrigger: { trigger: heroRef.current, start: 'top top', end: () => `+=${window.innerHeight * 2}`, scrub: 0.5 },
+      });
+      gsap.to('.hero-grid', {
+        yPercent: -8,
+        ease: 'none',
+        scrollTrigger: { trigger: heroRef.current, start: 'top top', end: () => `+=${window.innerHeight * 2}`, scrub: 0.5 },
+      });
+      gsap.to('.hero-text-block', {
+        scale: 0.94,
+        ease: 'none',
+        scrollTrigger: { trigger: heroRef.current, start: 'top top', end: () => `+=${window.innerHeight * 2}`, scrub: 0.5 },
+      });
+      gsap.to('.hero-content-layer', {
+        autoAlpha: 0,
+        ease: 'none',
+        scrollTrigger: { trigger: heroRef.current, start: 'top top', end: () => `+=${window.innerHeight * 1.3}`, scrub: 0.5 },
+      });
+
+      // ===== CURSOR-RESPONSIVE GREEN GLOW =====
+      const heroEl = heroRef.current;
+      const glowEl = containerRef.current?.querySelector('.hero-glow') as HTMLElement | null;
+      if (heroEl && glowEl) {
+        const xTo = gsap.quickTo(glowEl, 'x', { duration: 0.9, ease: 'power3.out' });
+        const yTo = gsap.quickTo(glowEl, 'y', { duration: 0.9, ease: 'power3.out' });
+        const onMove = (e: PointerEvent) => {
+          const rect = heroEl.getBoundingClientRect();
+          xTo(e.clientX - rect.left - rect.width / 2);
+          yTo(e.clientY - rect.top - rect.height / 2);
+        };
+        heroEl.addEventListener('pointermove', onMove);
+        removeGlow = () => heroEl.removeEventListener('pointermove', onMove);
+      }
 
       // Section 2 scroll-triggered
       gsap.from('.s2-inner', {
@@ -117,7 +156,10 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
 
     }, containerRef);
 
-    return () => ctx.revert();
+    return () => {
+      removeGlow?.();
+      ctx.revert();
+    };
   }, []);
 
   return (
@@ -133,17 +175,20 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
 
         {/* ===== HERO BACKGROUND IMAGE + contrast scrims ===== */}
         <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden" aria-hidden="true">
-          <img
-            src={heroBg}
-            alt=""
-            className="hero-bg-image absolute inset-0 w-full h-full object-cover object-center"
-          />
+          <div className="hero-bg-wrap absolute inset-0">
+            <img
+              src={heroBg}
+              alt=""
+              className="hero-drift w-full h-full object-cover object-center"
+            />
+          </div>
           <div className="absolute inset-0 bg-black/50" />
           <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-transparent to-black/45" />
+          <div className="hero-grain absolute" />
         </div>
 
         {/* ===== EDITORIAL COLUMN GRID — faint blueprint rules ===== */}
-        <div className="absolute inset-0 z-0 pointer-events-none" aria-hidden="true">
+        <div className="hero-grid absolute inset-0 z-0 pointer-events-none" aria-hidden="true">
           <div className="h-full w-full grid grid-cols-4 md:grid-cols-6 lg:grid-cols-12 border-r-2 border-white/[0.07]">
             {Array.from({ length: 12 }).map((_, i) => (
               <div
@@ -152,6 +197,17 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
               />
             ))}
           </div>
+        </div>
+
+        {/* ===== CURSOR-RESPONSIVE GREEN GLOW ===== */}
+        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden" aria-hidden="true">
+          <div
+            className="hero-glow absolute left-1/2 top-1/2 -ml-[18rem] -mt-[18rem] md:-ml-[24rem] md:-mt-[24rem] w-[36rem] h-[36rem] md:w-[48rem] md:h-[48rem] rounded-full"
+            style={{
+              background: 'radial-gradient(circle, rgba(58,134,63,0.20) 0%, rgba(58,134,63,0.07) 45%, transparent 70%)',
+              filter: 'blur(50px)',
+            }}
+          />
         </div>
 
         {/* Hero text content */}
@@ -232,13 +288,21 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
           )}
 
           {/* Hero text content */}
-          <div className="flex-1 flex flex-col items-center justify-center px-6 md:px-12 lg:px-16 relative">
+          <div className="hero-text-block flex-1 flex flex-col items-center justify-center px-6 md:px-12 lg:px-16 relative">
             <div className="relative z-10 w-full max-w-5xl flex flex-col items-center text-center">
               <p className="hero-nav-item text-xs font-semibold tracking-[0.2em] uppercase text-gray-300 mb-6 font-display">
                 Creativity × Technology × Strategy
               </p>
               <h1 className="hero-headline font-display text-[3.2rem] sm:text-[5rem] lg:text-[7rem] leading-[0.92] tracking-tight text-white font-bold">
-                Some Ideas Deserve to <span className="italic font-light text-[#3a863f]">Exist.</span>
+                <span className="block overflow-hidden">
+                  <span className="hero-line block">Some Ideas Deserve to</span>
+                </span>
+                <span className="block overflow-hidden">
+                  <span className="hero-line block relative pb-[0.14em] w-fit mx-auto">
+                    <span className="italic font-light text-[#3a863f]">Exist.</span>
+                    <span className="hero-underline absolute left-0 bottom-0 block h-[0.05em] w-full origin-left bg-[#3a863f]" />
+                  </span>
+                </span>
               </h1>
               <p className="hero-subtext text-gray-300 text-base sm:text-lg mt-8 max-w-2xl mx-auto font-sans leading-relaxed text-center">
                 We don't follow the future. We make it. We bring creativity, technology, and strategy together to turn ambitious thinking into meaningful solutions.
