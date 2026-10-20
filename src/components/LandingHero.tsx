@@ -8,7 +8,7 @@ import ApproachSection from './ApproachSection';
 import { projectsData } from '../data';
 import { Service } from '../types';
 import QolabLogo from './QolabLogo';
-import heroBg from '../../assets/hero-imgs/bg.jpg';
+import heroBg from '../../assets/hero-imgs/Emerald Diagonals on Dark Canvas.jpg';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -74,8 +74,7 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
       const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
       heroTl
         .from('.hero-bg-wrap', { opacity: 0, duration: 1.8, ease: 'power2.out' }, 0)
-        .from('.hero-grid-rule', { scaleY: 0, opacity: 0, transformOrigin: 'top', duration: 1.1, stagger: { amount: 0.7 } }, 0.15)
-        .from('.hero-nav-item', { y: -20, opacity: 0, duration: 0.8, stagger: 0.06 })
+        .from('.hero-nav-item', { y: -20, opacity: 0, duration: 0.8, stagger: 0.06 }, 0.3)
         .from('.hero-line', { yPercent: 115, duration: 1.2, stagger: 0.18, ease: 'power4.out' }, '-=0.5')
         .from('.hero-underline', { scaleX: 0, duration: 0.9, ease: 'power3.out' }, '-=0.45')
         .from('.hero-subtext', { y: 30, opacity: 0, duration: 0.9 }, '-=0.7')
@@ -94,11 +93,6 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
       // ===== SCRUBBED HERO EXIT — the pin now does work =====
       gsap.to('.hero-bg-wrap', {
         scale: 1.08,
-        ease: 'none',
-        scrollTrigger: { trigger: heroRef.current, start: 'top top', end: () => `+=${window.innerHeight * 2}`, scrub: 0.5 },
-      });
-      gsap.to('.hero-grid', {
-        yPercent: -8,
         ease: 'none',
         scrollTrigger: { trigger: heroRef.current, start: 'top top', end: () => `+=${window.innerHeight * 2}`, scrub: 0.5 },
       });
@@ -182,21 +176,8 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
               className="hero-drift w-full h-full object-cover object-center"
             />
           </div>
-          <div className="absolute inset-0 bg-black/50" />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-transparent to-black/45" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-transparent to-black/45" />
           <div className="hero-grain absolute" />
-        </div>
-
-        {/* ===== EDITORIAL COLUMN GRID — faint blueprint rules ===== */}
-        <div className="hero-grid absolute inset-0 z-0 pointer-events-none" aria-hidden="true">
-          <div className="h-full w-full grid grid-cols-4 md:grid-cols-6 lg:grid-cols-12 border-r-2 border-white/[0.07]">
-            {Array.from({ length: 12 }).map((_, i) => (
-              <div
-                key={i}
-                className={`hero-grid-rule h-full border-l-2 border-white/[0.07] ${i >= 4 ? 'hidden md:block' : ''} ${i >= 6 ? 'lg:block' : ''}`}
-              />
-            ))}
-          </div>
         </div>
 
         {/* ===== CURSOR-RESPONSIVE GREEN GLOW ===== */}
@@ -212,44 +193,19 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
 
         {/* Hero text content */}
         <div className="hero-content-layer relative z-10 w-full h-full flex flex-col justify-between">
-          {/* Top nav */}
-          <div className="w-full flex items-center justify-between px-6 md:px-12 lg:px-16 pt-4 md:pt-6 relative z-20">
-            <div className="flex items-center">
-              <QolabLogo className="w-24 md:w-32" />
-            </div>
-            <nav className="hidden md:flex items-center gap-8">
-              {[
-                { label: 'Home', action: () => window.scrollTo({ top: 0, behavior: 'smooth' }) },
-                { label: 'About', action: () => onNavigate?.('about') },
-                { label: 'Services', action: () => onNavigate?.('services') },
-                { label: 'Works', action: () => onNavigate?.('projects') },
-                { label: 'Contact', action: () => onNavigate?.('contact') },
-              ].map((item) => (
-                <button
-                  key={item.label}
-                  type="button"
-                  onClick={item.action}
-                  className="hero-nav-item text-sm font-medium text-gray-300 hover:text-white transition-colors cursor-pointer font-display"
-                >
-                  {item.label}
-                </button>
-              ))}
-            </nav>
-            {/* Mobile hamburger */}
-            <div className="md:hidden flex items-center gap-3">
+          {/* Top bar — small logo left, meta right */}
+          <div className="w-full flex items-start justify-between px-6 md:px-12 lg:px-16 pt-6 md:pt-8 relative z-20">
+            <QolabLogo className="w-20 md:w-24" />
+            <div className="flex items-center gap-3 md:gap-4">
               <FlagPair size={16} />
+              <span className="hidden md:block text-[11px] tracking-[0.15em] uppercase text-gray-400 font-display">Nigeria &amp; UK</span>
               <button
                 onClick={() => setMobileMenuOpen(true)}
-                className="flex items-center justify-center w-10 h-10 text-white"
+                className="md:hidden flex items-center justify-center w-10 h-10 text-white"
                 aria-label="Open menu"
               >
                 <Menu size={24} />
               </button>
-            </div>
-            <div className="hidden md:flex items-center gap-4">
-              <FlagPair size={20} />
-              <span className="hidden lg:block text-xs text-gray-300 font-display">Nigeria &amp; UK</span>
-              <span className="hero-nav-item text-sm font-semibold text-white cursor-pointer font-display">EN . USD</span>
             </div>
           </div>
 
@@ -287,27 +243,30 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
             </div>
           )}
 
-          {/* Hero text content */}
-          <div className="hero-text-block flex-1 flex flex-col items-center justify-center px-6 md:px-12 lg:px-16 relative">
-            <div className="relative z-10 w-full max-w-5xl flex flex-col items-center text-center">
-              <p className="hero-nav-item text-xs font-semibold tracking-[0.2em] uppercase text-gray-300 mb-6 font-display">
+          {/* Hero text content — immersive left-aligned block */}
+          <div className="hero-text-block flex-1 flex flex-col justify-center px-6 md:px-12 lg:px-16 relative">
+            <div className="relative z-10 w-full max-w-6xl">
+              <p className="hero-nav-item text-[11px] md:text-xs font-semibold tracking-[0.2em] uppercase text-gray-300 mb-5 md:mb-7 font-display">
                 Creativity × Technology × Strategy
               </p>
-              <h1 className="hero-headline font-display text-[3.2rem] sm:text-[5rem] lg:text-[7rem] leading-[0.92] tracking-tight text-white font-bold">
+              <h1 className="hero-headline font-display text-[2.9rem] sm:text-[4.25rem] md:text-[5.5rem] lg:text-[7rem] xl:text-[8rem] leading-[0.9] tracking-tight text-white font-extrabold">
                 <span className="block overflow-hidden">
-                  <span className="hero-line block">Some Ideas Deserve to</span>
+                  <span className="hero-line block">Some Ideas</span>
                 </span>
                 <span className="block overflow-hidden">
-                  <span className="hero-line block relative pb-[0.14em] w-fit mx-auto">
+                  <span className="hero-line block">Deserve to</span>
+                </span>
+                <span className="block overflow-hidden">
+                  <span className="hero-line block relative pb-[0.14em] w-fit">
                     <span className="italic font-light text-[#3a863f]">Exist.</span>
                     <span className="hero-underline absolute left-0 bottom-0 block h-[0.05em] w-full origin-left bg-[#3a863f]" />
                   </span>
                 </span>
               </h1>
-              <p className="hero-subtext text-gray-300 text-base sm:text-lg mt-8 max-w-2xl mx-auto font-sans leading-relaxed text-center">
+              <p className="hero-subtext text-gray-300 text-base sm:text-lg mt-7 md:mt-9 max-w-2xl font-sans leading-relaxed">
                 We don't follow the future. We make it. We bring creativity, technology, and strategy together to turn ambitious thinking into meaningful solutions.
               </p>
-              <div className="hero-cta mt-12 flex items-center gap-4 justify-center">
+              <div className="hero-cta mt-9 md:mt-11 flex flex-wrap items-center gap-4">
                 <button
                   onClick={() => onNavigate?.('contact')}
                   className="flex items-center gap-2.5 bg-white text-[#1a1a1a] px-7 py-3.5 rounded-full text-sm font-semibold hover:bg-[#3a863f] hover:text-white transition-all hover:scale-105 active:scale-95 font-display"
@@ -323,9 +282,19 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
                   <ArrowRight size={16} />
                 </button>
               </div>
-              <p className="hero-nav-item mt-10 text-[11px] font-semibold tracking-[0.25em] uppercase text-gray-400 font-display">
-                QOLAB — Future Ready Solutions.
-              </p>
+            </div>
+          </div>
+
+          {/* Bottom meta — slogan + scroll cue */}
+          <div className="w-full flex items-end justify-between px-6 md:px-12 lg:px-16 pb-6 md:pb-8 relative z-20">
+            <p className="hero-nav-item text-[10px] md:text-[11px] font-semibold tracking-[0.25em] uppercase text-gray-400 font-display">
+              QOLAB — Future Ready Solutions.
+            </p>
+            <div className="hidden sm:flex flex-col items-center gap-3">
+              <span className="text-[10px] tracking-[0.3em] uppercase text-gray-400 font-display">Scroll</span>
+              <span className="scroll-cue-track" aria-hidden="true">
+                <span className="scroll-cue-dot" />
+              </span>
             </div>
           </div>
         </div>

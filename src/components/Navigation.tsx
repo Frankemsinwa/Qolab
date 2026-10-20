@@ -11,7 +11,7 @@ export default function Navigation({ onNavigate }: NavigationProps) {
 
   return (
     <>
-      <header className="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-6 sm:px-12 py-6 pointer-events-none">
+      <header className="nav-reveal fixed top-0 left-0 w-full z-50 flex items-center justify-between px-6 sm:px-12 py-6 pointer-events-none">
         {/* Brand Logo - Left */}
         <div
           onClick={() => onNavigate('landing')}

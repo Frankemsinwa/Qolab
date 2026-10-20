@@ -62,6 +62,19 @@ export default function App() {
     setView('landing');
   };
 
+  // Global nav: hidden during hero on landing, appears once scrolled past it
+  const [showLandingNav, setShowLandingNav] = useState(false);
+  useEffect(() => {
+    if (view !== 'landing') {
+      setShowLandingNav(false);
+      return;
+    }
+    const onScroll = () => setShowLandingNav(window.scrollY > window.innerHeight * 1.9);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [view]);
+
   // Initialize Lenis smooth scrolling
   useEffect(() => {
     const lenis = new Lenis({
@@ -94,8 +107,8 @@ export default function App() {
       {/* Global transition overlay for service card zoom */}
       <TransitionOverlay ref={transitionRef} />
 
-      {/* Header Navigation - hidden on landing since hero has its own nav */}
-      {view !== 'landing' && view !== 'service-detail' && view !== 'not-found' && (
+      {/* Header Navigation — appears on landing only after scrolling past the hero */}
+      {view !== 'service-detail' && view !== 'not-found' && (view !== 'landing' || showLandingNav) && (
         <Navigation onNavigate={(target) => setView(target)} />
       )}
 
