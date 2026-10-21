@@ -50,6 +50,12 @@ html.lenis, html.lenis body {
   scroll-behavior: clip;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .hero-hold-spacer {
+    display: none;
+  }
+}
+
 ::-webkit-scrollbar {
   display: none;
 }

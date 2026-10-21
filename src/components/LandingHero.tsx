@@ -83,13 +83,16 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
           .from('.hero-subtext', { y: 30, opacity: 0, duration: 0.9 }, '-=0.7')
           .from('.hero-cta', { y: 20, opacity: 0, duration: 0.8 }, '-=0.5');
 
-        // Scrubbed pin — hero holds 2vh: bg zooms 1.0→1.08, headline block shrinks & fades before s2 slides over
+        // Scrubbed pin — hero holds 2vh: bg zooms 1.0→1.08, headline shrinks & fades
+        // while s2 (z-20) slides OVER the still-pinned hero (pinSpacing: false)
         gsap.timeline({
           scrollTrigger: {
             trigger: hero,
             start: 'top top',
             end: '+=200%',
             pin: true,
+            pinSpacing: false,
+            anticipatePin: 1,
             scrub: 1,
           }
         })
@@ -290,6 +293,9 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
           </div>
         </div>
       </section>
+
+      {/* Hold spacer — gives the pin a 1vh pause before s2 starts sliding over the hero */}
+      <div className="hero-hold-spacer h-screen" aria-hidden="true" />
 
       {/* ===== SECTION 2: WHY QOLAB — backdrop blur over fixed silhouette ===== */}
       <section

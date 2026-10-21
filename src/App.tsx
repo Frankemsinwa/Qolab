@@ -1,5 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import Lenis from 'lenis';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Navigation from './components/Navigation';
 import LandingHero from './components/LandingHero';
 import ProjectDetail from './components/ProjectDetail';
@@ -69,14 +71,15 @@ export default function App() {
       setShowLandingNav(false);
       return;
     }
-    const onScroll = () => setShowLandingNav(window.scrollY > window.innerHeight * 2.5);
+    const onScroll = () => setShowLandingNav(window.scrollY > window.innerHeight * 1.7);
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, [view]);
 
-  // Initialize Lenis smooth scrolling
+  // Initialize Lenis smooth scrolling — synced with GSAP ScrollTrigger
   useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -85,16 +88,13 @@ export default function App() {
       smoothWheel: true,
     });
 
-    let rafId: number;
-    function raf(time: number) {
-      lenis.raf(time);
-      rafId = requestAnimationFrame(raf);
-    }
-
-    rafId = requestAnimationFrame(raf);
+    lenis.on('scroll', ScrollTrigger.update);
+    const raf = (time: number) => lenis.raf(time * 1000);
+    gsap.ticker.add(raf);
+    gsap.ticker.lagSmoothing(0);
 
     return () => {
-      cancelAnimationFrame(rafId);
+      gsap.ticker.remove(raf);
       lenis.destroy();
     };
   }, []);
