@@ -154,7 +154,9 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
           {mobileMenuOpen && (
             <div className="fixed inset-0 z-[100] bg-white flex flex-col px-6 md:hidden">
               <div className="flex items-center justify-between pt-4">
-                <QolabLogo className="w-18" />
+                <span className="inline-flex bg-[#0f0f11] rounded-full px-4 py-2.5 border border-white/10 shadow-md">
+                  <QolabLogo className="w-24" />
+                </span>
                 <button
                   onClick={() => setMobileMenuOpen(false)}
                   className="flex items-center justify-center w-10 h-10 text-[#1a1a1a]"
@@ -348,92 +350,6 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
                 </div>
               ))}
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ===== SECTION 7C: PACKAGES (SOP Pricing Reference) ===== */}
-      <section className="relative w-full py-24 md:py-32 px-6 md:px-12 lg:px-16 bg-[#f4f3ef] z-20">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-end mb-14 md:mb-20">
-            <div className="lg:col-span-7">
-              <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[#3a863f] mb-4 font-sans">Investment</p>
-              <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl text-[#1a1a1a] leading-[1.05]">
-                Three Ways to <span className="italic text-[#3a863f]">Start.</span>
-              </h2>
-            </div>
-            <div className="lg:col-span-5">
-              <p className="text-gray-600 text-base sm:text-lg leading-relaxed font-sans">
-                These are our standard starting packages. Every project still gets a proposal
-                scoped around your goals — but most engagements begin here.
-              </p>
-            </div>
-          </div>
-
-          {/* Editorial pricing columns */}
-          <div className="grid grid-cols-1 md:grid-cols-3">
-            {[
-              {
-                tier: 'GOOD',
-                num: '01',
-                name: 'Starter Brand Build',
-                price: '₦500,000 – ₦1,500,000',
-                usd: '$300 – $1,000',
-                items: ['Logo', 'Brand guide', 'Social media kit'],
-              },
-              {
-                tier: 'BETTER',
-                num: '02',
-                name: 'Full Brand Build',
-                price: '₦1,500,000 – ₦3,500,000',
-                usd: '$1,000 – $2,300',
-                items: ['Full brand identity', 'Website'],
-              },
-              {
-                tier: 'BEST',
-                num: '03',
-                name: 'Complete Brand System',
-                price: '₦3,500,000+',
-                usd: '$2,300+',
-                items: ['Brand identity', 'Website', 'Marketing setup'],
-              },
-            ].map((pkg, i) => (
-              <div
-                key={pkg.name}
-                className={`py-10 md:py-0 md:px-10 first:md:pl-0 last:md:pr-0 border-t-2 border-black/[0.12] md:border-t-0 ${
-                  i > 0 ? 'md:border-l-2 md:border-black/[0.08]' : ''
-                }`}
-              >
-                <div className="flex items-center justify-between mb-8">
-                  <span className="font-mono text-[10px] font-bold tracking-[0.25em] text-gray-400">{pkg.tier}</span>
-                  <span className="font-mono text-xs font-bold text-white bg-[#3a863f] w-7 h-7 rounded-full flex items-center justify-center">{pkg.num}</span>
-                </div>
-                <h3 className="font-display italic text-2xl sm:text-3xl text-[#1a1a1a] leading-tight mb-6">{pkg.name}</h3>
-                <p className="font-display text-xl sm:text-2xl text-[#1a1a1a] font-semibold leading-snug">{pkg.price}</p>
-                <p className="font-sans text-sm text-gray-500 mt-1">{pkg.usd}</p>
-                <ul className="mt-8">
-                  {pkg.items.map((item) => (
-                    <li key={item} className="font-sans text-sm text-gray-700 py-3 border-t border-black/[0.08] last:border-b last:border-black/[0.08]">
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-14 md:mt-20 flex flex-col items-center text-center">
-            <p className="font-sans text-xs text-gray-500 max-w-xl leading-relaxed mb-8">
-              Prices are in Naira with indicative USD equivalents. Your proposal confirms
-              the final scope, timeline, and investment.
-            </p>
-            <button
-              onClick={() => onNavigate?.('contact')}
-              className="flex items-center gap-2.5 bg-[#1a1a1a] text-white px-8 py-4 rounded-full text-sm font-semibold hover:bg-[#3a863f] transition-all hover:scale-105 active:scale-95 font-display"
-            >
-              Let's Make It Exist.
-              <ArrowUpRight size={16} />
-            </button>
           </div>
         </div>
       </section>

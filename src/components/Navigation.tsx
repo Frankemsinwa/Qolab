@@ -15,7 +15,7 @@ export default function Navigation({ onNavigate }: NavigationProps) {
         {/* Brand Logo - Left */}
         <div
           onClick={() => onNavigate('landing')}
-          className="pointer-events-auto cursor-pointer bg-white rounded-full px-4 py-2 border border-black/5 shadow-sm"
+          className="pointer-events-auto cursor-pointer bg-[#0f0f11] rounded-full px-5 py-2.5 border border-white/10 shadow-md"
         >
           <QolabLogo className="w-16 md:w-20" />
         </div>
