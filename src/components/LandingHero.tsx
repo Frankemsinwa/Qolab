@@ -192,7 +192,7 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
               <p className="hero-nav-item text-[11px] md:text-xs font-semibold tracking-[0.2em] uppercase text-gray-300 mb-5 md:mb-7 font-display">
                 Creativity × Technology × Strategy
               </p>
-              <h1 className="hero-headline font-display text-[2.9rem] sm:text-[4.25rem] md:text-[5.5rem] lg:text-[7rem] xl:text-[8rem] leading-[0.9] tracking-tight text-white font-bold">
+              <h1 className="hero-headline font-display text-[2.9rem] sm:text-[4.25rem] md:text-[5.5rem] lg:text-[7rem] xl:text-[8rem] leading-[0.9] tracking-tight text-white font-medium">
                 <span className="block">Some Ideas</span>
                 <span className="block">
                   Deserve to{' '}
@@ -201,7 +201,7 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
                   </span>
                 </span>
               </h1>
-              <p className="hero-subtext text-gray-300 text-base sm:text-lg mt-7 md:mt-9 max-w-2xl font-sans leading-relaxed">
+              <p className="hero-subtext text-gray-300 text-base sm:text-lg mt-7 md:mt-9 max-w-2xl font-display leading-relaxed">
                 We don't follow the future. We make it. We bring creativity, technology, and strategy together to turn ambitious thinking into meaningful solutions.
               </p>
               <div className="hero-cta mt-9 md:mt-11 flex flex-wrap items-center gap-4">
