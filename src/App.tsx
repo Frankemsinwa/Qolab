@@ -69,7 +69,7 @@ export default function App() {
       setShowLandingNav(false);
       return;
     }
-    const onScroll = () => setShowLandingNav(window.scrollY > window.innerHeight * 0.85);
+    const onScroll = () => setShowLandingNav(window.scrollY > window.innerHeight * 2.5);
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);

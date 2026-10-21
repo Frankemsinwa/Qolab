@@ -64,49 +64,90 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
 
   const approachRef = useRef<HTMLDivElement>(null);
   const s8Ref = useRef<HTMLDivElement>(null);
+  const spotlightRef = useRef<HTMLDivElement>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const ctx = gsap.context(() => {
-      // Hero content entrance
-      const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-      heroTl
-        .from('.hero-bg-wrap', { opacity: 0, duration: 1.8, ease: 'power2.out' }, 0)
-        .from('.hero-nav-item', { y: -20, opacity: 0, duration: 0.8, stagger: 0.06 }, 0.3)
-        .from('.hero-headline', { y: 40, opacity: 0, duration: 1.1 }, '-=0.5')
-        .from('.hero-subtext', { y: 30, opacity: 0, duration: 0.9 }, '-=0.7')
-        .from('.hero-cta', { y: 20, opacity: 0, duration: 0.8 }, '-=0.5');
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let onHeroMove: ((e: MouseEvent) => void) | null = null;
+    const hero = heroRef.current;
 
-      // Section 2 scroll-triggered
-      gsap.from('.s2-inner', {
-        y: 50, opacity: 0, duration: 1, stagger: 0.15,
-        scrollTrigger: { trigger: s2Ref.current, start: 'top 75%' }
-      });
+    if (!reduced) {
+      const ctx = gsap.context(() => {
+        // Hero content entrance
+        const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+        heroTl
+          .from('.hero-bg-wrap', { opacity: 0, duration: 1.8, ease: 'power2.out' }, 0)
+          .from('.hero-nav-item', { y: -20, opacity: 0, duration: 0.8, stagger: 0.06 }, 0.3)
+          .from('.hero-headline', { y: 40, opacity: 0, duration: 1.1 }, '-=0.5')
+          .from('.hero-subtext', { y: 30, opacity: 0, duration: 0.9 }, '-=0.7')
+          .from('.hero-cta', { y: 20, opacity: 0, duration: 0.8 }, '-=0.5');
 
-      // Section 5 parallax
-      gsap.utils.toArray('.parallax-card').forEach((card: any) => {
-        gsap.fromTo(card, { y: -50 }, {
-          y: 50, ease: 'none',
-          scrollTrigger: { trigger: card, start: 'top bottom', end: 'bottom top', scrub: 1 }
+        // Scrubbed pin — hero holds 2vh: bg zooms 1.0→1.08, headline block shrinks & fades before s2 slides over
+        gsap.timeline({
+          scrollTrigger: {
+            trigger: hero,
+            start: 'top top',
+            end: '+=200%',
+            pin: true,
+            scrub: 1,
+          }
+        })
+          .to('.hero-bg-wrap', { scale: 1.08, ease: 'none' }, 0)
+          .to('.hero-text-block', { scale: 0.94, opacity: 0, ease: 'power1.in' }, 0);
+
+        // Green flare spotlight follows mouse (matches bg image flare)
+        const spotlight = spotlightRef.current;
+        if (spotlight && hero) {
+          gsap.set(spotlight, { xPercent: -50, yPercent: -50, x: hero.offsetWidth / 2, y: hero.offsetHeight / 2 });
+          const xTo = gsap.quickTo(spotlight, 'x', { duration: 0.65, ease: 'power3.out' });
+          const yTo = gsap.quickTo(spotlight, 'y', { duration: 0.65, ease: 'power3.out' });
+          onHeroMove = (e: MouseEvent) => {
+            const rect = hero.getBoundingClientRect();
+            xTo(e.clientX - rect.left);
+            yTo(e.clientY - rect.top);
+            gsap.to(spotlight, { opacity: 1, duration: 0.4, overwrite: 'auto' });
+          };
+          hero.addEventListener('mousemove', onHeroMove);
+        }
+
+        // Section 2 scroll-triggered
+        gsap.from('.s2-inner', {
+          y: 50, opacity: 0, duration: 1, stagger: 0.15,
+          scrollTrigger: { trigger: s2Ref.current, start: 'top 75%' }
         });
-      });
 
-      // Section 8
-      gsap.from('.s8-content', {
-        y: 60, opacity: 0, duration: 1.2,
-        scrollTrigger: { trigger: s8Ref.current, start: 'top 75%' }
-      });
+        // Section 5 parallax
+        gsap.utils.toArray('.parallax-card').forEach((card: any) => {
+          gsap.fromTo(card, { y: -50 }, {
+            y: 50, ease: 'none',
+            scrollTrigger: { trigger: card, start: 'top bottom', end: 'bottom top', scrub: 1 }
+          });
+        });
 
-      // Footer
-      gsap.from('.footer-col', {
-        y: 30, opacity: 0, duration: 0.8, stagger: 0.1,
-        scrollTrigger: { trigger: '.site-footer', start: 'top 92%' }
-      });
+        // Section 8
+        gsap.from('.s8-content', {
+          y: 60, opacity: 0, duration: 1.2,
+          scrollTrigger: { trigger: s8Ref.current, start: 'top 75%' }
+        });
 
-    }, containerRef);
+        // Footer
+        gsap.from('.footer-col', {
+          y: 30, opacity: 0, duration: 0.8, stagger: 0.1,
+          scrollTrigger: { trigger: '.site-footer', start: 'top 92%' }
+        });
 
-    return () => ctx.revert();
+      }, containerRef);
+
+      return () => {
+        if (onHeroMove && hero) hero.removeEventListener('mousemove', onHeroMove);
+        ctx.revert();
+      };
+    }
+
+    return () => {
+      if (onHeroMove && hero) hero.removeEventListener('mousemove', onHeroMove);
+    };
   }, []);
 
   return (
@@ -131,6 +172,17 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
           </div>
           <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-black/20 to-black/65" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/10 to-transparent" />
+          {/* Mouse-following green flare spotlight — matches bg image flare */}
+          <div
+            ref={spotlightRef}
+            aria-hidden="true"
+            className="absolute top-0 left-0 w-[42rem] h-[42rem] rounded-full opacity-0 pointer-events-none hidden md:block"
+            style={{
+              background: 'radial-gradient(circle, rgba(196, 226, 74, 0.22) 0%, rgba(160, 210, 55, 0.12) 35%, rgba(58, 134, 63, 0.05) 55%, transparent 70%)',
+              filter: 'blur(60px)',
+              mixBlendMode: 'screen',
+            }}
+          />
         </div>
 
         {/* Hero text content */}
