@@ -8,7 +8,7 @@ import ApproachSection from './ApproachSection';
 import { projectsData } from '../data';
 import { Service } from '../types';
 import QolabLogo from './QolabLogo';
-import heroBg from '../../assets/hero-imgs/Emerald Diagonals on Dark Canvas.jpg';
+import heroBg from '../../assets/hero-imgs/bright-light-dark-background.jpg';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -129,7 +129,8 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
               className="w-full h-full object-cover object-center"
             />
           </div>
-          <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-transparent to-black/45" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-black/20 to-black/65" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/10 to-transparent" />
         </div>
 
         {/* Hero text content */}
