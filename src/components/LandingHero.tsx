@@ -8,7 +8,7 @@ import ApproachSection from './ApproachSection';
 import { projectsData } from '../data';
 import { Service } from '../types';
 import QolabLogo from './QolabLogo';
-import heroBg from '../../assets/hero-imgs/bright-light-dark-background.jpg';
+import heroBg from '../../assets/hero-imgs/neon-orbital-hero.jpg';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -173,15 +173,15 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
               className="w-full h-full object-cover object-center"
             />
           </div>
-          <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-black/20 to-black/65" />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/10 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-transparent to-black/45" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/45 via-transparent to-transparent" />
           {/* Mouse-following green flare spotlight — matches bg image flare */}
           <div
             ref={spotlightRef}
             aria-hidden="true"
             className="absolute top-0 left-0 w-[42rem] h-[42rem] rounded-full opacity-0 pointer-events-none hidden md:block"
             style={{
-              background: 'radial-gradient(circle, rgba(196, 226, 74, 0.22) 0%, rgba(160, 210, 55, 0.12) 35%, rgba(58, 134, 63, 0.05) 55%, transparent 70%)',
+              background: 'radial-gradient(circle, rgba(110, 230, 90, 0.2) 0%, rgba(70, 190, 70, 0.1) 35%, rgba(58, 134, 63, 0.05) 55%, transparent 70%)',
               filter: 'blur(60px)',
               mixBlendMode: 'screen',
             }}
