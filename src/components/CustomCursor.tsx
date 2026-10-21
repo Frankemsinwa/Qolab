@@ -10,8 +10,24 @@ export default function CustomCursor() {
   const [state, setState] = useState<'default' | 'hover' | 'view' | 'magnetic'>('default');
   const [cursorText, setCursorText] = useState('');
   const [isVisible, setIsVisible] = useState(false);
+  const [enabled, setEnabled] = useState(true);
 
-  const isHovering = useRef(false);
+  const isPressed = useRef(false);
+  const magneticEls = useRef<Set<HTMLElement>>(new Set());
+
+  // Disable on reduced-motion or coarse pointers — native cursor takes over
+  useEffect(() => {
+    const rm = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const coarse = window.matchMedia('(pointer: coarse)');
+    const update = () => setEnabled(!rm.matches && !coarse.matches);
+    update();
+    rm.addEventListener('change', update);
+    coarse.addEventListener('change', update);
+    return () => {
+      rm.removeEventListener('change', update);
+      coarse.removeEventListener('change', update);
+    };
+  }, []);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -33,24 +49,38 @@ export default function CustomCursor() {
     };
   }, [isVisible]);
 
-  // Hover detection
+  // Press feedback
+  useEffect(() => {
+    const down = () => { isPressed.current = true; };
+    const up = () => { isPressed.current = false; };
+    window.addEventListener('mousedown', down);
+    window.addEventListener('mouseup', up);
+    return () => {
+      window.removeEventListener('mousedown', down);
+      window.removeEventListener('mouseup', up);
+    };
+  }, []);
+
+  // Hover + magnetic binding
   useEffect(() => {
     const addHoverListeners = () => {
       document.querySelectorAll('a, button, [data-cursor], .project-card, [data-project-card]').forEach((el) => {
-        if ((el as HTMLElement)._cursorBound) return;
-        (el as HTMLElement)._cursorBound = true;
+        const htmlEl = el as HTMLElement;
+        if (htmlEl._cursorBound) return;
+        htmlEl._cursorBound = true;
 
-        el.addEventListener('mouseenter', () => {
-          isHovering.current = true;
-          const text = el.getAttribute('data-cursor-text') || '';
-          const type = el.getAttribute('data-cursor') || 'hover';
+        htmlEl.addEventListener('mouseenter', () => {
+          const text = htmlEl.getAttribute('data-cursor-text') || '';
+          const type = htmlEl.getAttribute('data-cursor') || 'hover';
           setState(type as any);
           setCursorText(text);
+          if (type === 'magnetic') magneticEls.current.add(htmlEl);
         });
-        el.addEventListener('mouseleave', () => {
-          isHovering.current = false;
+        htmlEl.addEventListener('mouseleave', () => {
           setState('default');
           setCursorText('');
+          magneticEls.current.delete(htmlEl);
+          htmlEl.style.transform = '';
         });
       });
     };
@@ -58,59 +88,77 @@ export default function CustomCursor() {
     addHoverListeners();
     const observer = new MutationObserver(addHoverListeners);
     observer.observe(document.body, { childList: true, subtree: true });
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      magneticEls.current.forEach((el) => { el.style.transform = ''; });
+      magneticEls.current.clear();
+    };
   }, []);
 
-  // Animation loop
+  // Animation loop — dot snaps, glass ring springs and rotates, magnetic pull
   useEffect(() => {
+    if (!enabled) return;
     let animId: number;
+    let rotation = 0;
+
     const render = () => {
-      // Arrow snaps instantly to the exact cursor position (Figma-style precision)
       pos.current.x = target.current.x;
       pos.current.y = target.current.y;
 
-      // Ring spring (slower, trailing) — contextual hover feedback
       const ringEase = 0.14;
-      ringPos.current.x += (target.current.x - ringPos.current.x) * ringEase;
-      ringPos.current.y += (target.current.y - ringPos.current.y) * ringEase;
+      const dx = target.current.x - ringPos.current.x;
+      const dy = target.current.y - ringPos.current.y;
+      ringPos.current.x += dx * ringEase;
+      ringPos.current.y += dy * ringEase;
+
+      // Ring spins gently with movement speed — glass feels alive
+      rotation += Math.hypot(dx, dy) * 0.25;
+
+      // Magnetic pull for CTA buttons
+      magneticEls.current.forEach((el) => {
+        const r = el.getBoundingClientRect();
+        const cx = r.left + r.width / 2;
+        const cy = r.top + r.height / 2;
+        const dist = Math.hypot(target.current.x - cx, target.current.y - cy);
+        const radius = Math.max(r.width, r.height) / 2 + 80;
+        if (dist < radius) {
+          const pull = (1 - dist / radius) * 0.35;
+          el.style.transform = `translate3d(${(target.current.x - cx) * pull}px, ${(target.current.y - cy) * pull}px, 0)`;
+        } else if (el.style.transform) {
+          el.style.transform = '';
+        }
+      });
+
+      const dotScale = isPressed.current ? 0.75 : 1;
+      const ringScale = isPressed.current ? 0.9 : 1;
 
       if (dotRef.current) {
-        dotRef.current.style.transform = `translate3d(${pos.current.x}px, ${pos.current.y}px, 0)`;
+        dotRef.current.style.transform =
+          `translate3d(${pos.current.x}px, ${pos.current.y}px, 0) translate(-50%, -50%) scale(${dotScale})`;
       }
       if (ringRef.current) {
-        ringRef.current.style.transform = `translate3d(${ringPos.current.x}px, ${ringPos.current.y}px, 0)`;
+        ringRef.current.style.transform =
+          `translate3d(${ringPos.current.x}px, ${ringPos.current.y}px, 0) translate(-50%, -50%) rotate(${rotation}deg) scale(${ringScale})`;
       }
 
       animId = requestAnimationFrame(render);
     };
     render();
     return () => cancelAnimationFrame(animId);
-  }, []);
+  }, [enabled]);
 
-  if (!isVisible) return null;
+  if (!enabled || !isVisible) return null;
 
   const getStyles = () => {
     switch (state) {
       case 'hover':
-        return {
-          dot: 'w-3 h-3',
-          ring: 'w-10 h-10 border border-[#3a863f]/60 bg-[#3a863f]/10',
-        };
+        return { ring: 'w-12 h-12 border border-[#3a863f]/60 bg-white/5 backdrop-blur-md' };
       case 'view':
-        return {
-          dot: 'w-3 h-3',
-          ring: 'w-14 h-14 border border-[#3a863f]/50 bg-[#3a863f]/15',
-        };
+        return { ring: 'w-28 h-28 border border-[#3a863f]/50 bg-white/5 backdrop-blur-md' };
       case 'magnetic':
-        return {
-          dot: 'w-3 h-3',
-          ring: 'w-12 h-12 border border-[#3a863f]/45 bg-[#3a863f]/10',
-        };
+        return { ring: 'w-16 h-16 border border-[#6ee05a]/70 bg-[#3a863f]/15 backdrop-blur-md' };
       default:
-        return {
-          dot: 'w-3 h-3',
-          ring: 'w-0 h-0 border-transparent bg-transparent',
-        };
+        return { ring: 'w-0 h-0 border-transparent bg-transparent' };
     }
   };
 
@@ -118,38 +166,27 @@ export default function CustomCursor() {
 
   return (
     <>
-      {/* Trailing ring — contextual hover feedback */}
+      {/* Glass ring — spring-lagged, spins with movement */}
       <div
         ref={ringRef}
-        className={`fixed top-0 left-0 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-[9999] rounded-full transition-[width,height,border,background-color] duration-300 ease-out ${s.ring}`}
-      />
-      {/* Figma-style arrow pointer — no offset, snaps to exact pixel */}
+        className={`fixed top-0 left-0 pointer-events-none z-[9999] rounded-full transition-[width,height,border,background-color] duration-300 ease-out ${s.ring}`}
+      >
+        {state === 'view' && cursorText && (
+          <span className="absolute inset-0 flex items-center justify-center font-display text-[10px] font-semibold uppercase tracking-[0.25em] text-[#6ee05a] select-none">
+            {cursorText}
+          </span>
+        )}
+      </div>
+
+      {/* Neon green core dot — instant, glowing */}
       <div
         ref={dotRef}
-        className="fixed top-0 left-0 pointer-events-none z-[10000] transition-[width,height] duration-200 ease-out"
-        style={{ width: '20px', height: '20px' }}
+        className="fixed top-0 left-0 pointer-events-none z-[10000] w-2 h-2 rounded-full bg-[#6ee05a]"
+        style={{ boxShadow: '0 0 10px rgba(110, 224, 90, 0.9), 0 0 28px rgba(110, 224, 90, 0.4)' }}
       >
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 20 20"
-          fill="none"
-          style={{ filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.45))' }}
-        >
-          <path
-            d="M3 2.5 L3 16.5 L7.2 12.7 L9.6 18.2 L12 17.2 L9.6 11.8 L15.4 11.6 Z"
-            fill="#111111"
-            stroke="#ffffff"
-            strokeWidth="1.1"
-            strokeLinejoin="round"
-          />
-        </svg>
-        {/* Contextual label bubble (Figma-style) */}
-        {cursorText && state !== 'default' && (
-          <span
-            className="absolute top-5 left-4 whitespace-nowrap rounded-md bg-[#111111] text-white text-[10px] font-semibold tracking-wide px-2 py-1 shadow-lg select-none pointer-events-none"
-            style={{ fontFamily: '"Instrument Sans", system-ui, sans-serif' }}
-          >
+        {/* Side label bubble for non-view contextual text */}
+        {cursorText && state !== 'view' && state !== 'default' && (
+          <span className="absolute top-4 left-4 whitespace-nowrap rounded-md bg-[#111111]/90 backdrop-blur-sm text-white text-[10px] font-semibold tracking-wide px-2 py-1 shadow-lg select-none font-display">
             {cursorText}
           </span>
         )}

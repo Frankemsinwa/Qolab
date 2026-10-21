@@ -12,33 +12,6 @@ interface ProjectGridProps {
 
 export default function ProjectGrid({ onSelectProject }: ProjectGridProps) {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const cursorRef = useRef<HTMLDivElement>(null);
-  const cursorTextRef = useRef<HTMLSpanElement>(null);
-
-  // Magnetic cursor
-  useEffect(() => {
-    const cursor = cursorRef.current;
-    const text = cursorTextRef.current;
-    if (!cursor || !text) return;
-
-    const moveCursor = (e: MouseEvent) => {
-      const target = (e.target as HTMLElement).closest('[data-project-card]');
-      if (target) {
-        gsap.to(cursor, { opacity: 1, scale: 1, duration: 0.25, ease: 'power2.out' });
-        gsap.to(cursor, {
-          x: e.clientX,
-          y: e.clientY,
-          duration: 0.35,
-          ease: 'power2.out',
-        });
-      } else {
-        gsap.to(cursor, { opacity: 0, scale: 0.8, duration: 0.25, ease: 'power2.out' });
-      }
-    };
-
-    window.addEventListener('mousemove', moveCursor);
-    return () => window.removeEventListener('mousemove', moveCursor);
-  }, []);
 
   // GSAP parallax + scroll-triggered animations
   useEffect(() => {
@@ -102,6 +75,8 @@ export default function ProjectGrid({ onSelectProject }: ProjectGridProps) {
     <div
       key={project.id}
       data-project-card
+      data-cursor="view"
+      data-cursor-text="View"
       data-col={col}
       onClick={() => onSelectProject(project)}
       className={`pg-card group cursor-pointer ${col === 'left' && index > 0 ? 'pt-24 md:pt-32' : ''}`}
@@ -142,20 +117,6 @@ export default function ProjectGrid({ onSelectProject }: ProjectGridProps) {
       className="relative w-full py-28 md:py-36 px-6 md:px-12 lg:px-16 bg-[#f6f8f6] z-30"
       id="projects"
     >
-      {/* Magnetic cursor */}
-      <div
-        ref={cursorRef}
-        className="fixed pointer-events-none z-[100] flex items-center justify-center w-28 h-28 rounded-full bg-slate-900 text-white font-display text-xs tracking-[0.2em] uppercase font-semibold"
-        style={{
-          opacity: 0,
-          scale: 0.8,
-          transform: 'translate(-50%, -50%)',
-          willChange: 'transform',
-        }}
-      >
-        <span ref={cursorTextRef} className="block">View Case</span>
-      </div>
-
       <div className="max-w-7xl mx-auto">
         {/* Section header */}
         <div className="mb-16 md:mb-20">

@@ -263,6 +263,8 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
               <div className="hero-cta mt-9 md:mt-11 flex flex-wrap items-center gap-4">
                 <button
                   onClick={() => onNavigate?.('contact')}
+                  data-cursor="magnetic"
+                  data-cursor-text="Let's go"
                   className="flex items-center gap-2.5 bg-white text-[#1a1a1a] px-7 py-3.5 rounded-full text-sm font-semibold hover:bg-[#3a863f] hover:text-white transition-all hover:scale-105 active:scale-95 font-display"
                 >
                   Let's Make It Exist.
@@ -426,6 +428,8 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
           <div className="flex flex-col sm:flex-row justify-center gap-4 mt-12">
             <button
               onClick={() => onNavigate?.('contact')}
+              data-cursor="magnetic"
+              data-cursor-text="Start now"
               className="bg-[#3a863f] hover:bg-[#2f6d33] text-white font-semibold py-4 px-10 rounded-full text-base transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg font-display"
             >
               Start Something With Qolab.
