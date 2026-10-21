@@ -68,59 +68,15 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
 
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    let removeGlow: (() => void) | undefined;
     const ctx = gsap.context(() => {
       // Hero content entrance
       const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
       heroTl
         .from('.hero-bg-wrap', { opacity: 0, duration: 1.8, ease: 'power2.out' }, 0)
         .from('.hero-nav-item', { y: -20, opacity: 0, duration: 0.8, stagger: 0.06 }, 0.3)
-        .from('.hero-line', { yPercent: 115, duration: 1.2, stagger: 0.18, ease: 'power4.out' }, '-=0.5')
-        .from('.hero-underline', { scaleX: 0, duration: 0.9, ease: 'power3.out' }, '-=0.45')
+        .from('.hero-headline', { y: 40, opacity: 0, duration: 1.1 }, '-=0.5')
         .from('.hero-subtext', { y: 30, opacity: 0, duration: 0.9 }, '-=0.7')
         .from('.hero-cta', { y: 20, opacity: 0, duration: 0.8 }, '-=0.5');
-
-      // ===== PINNED HERO: 2x viewport =====
-      ScrollTrigger.create({
-        trigger: heroRef.current,
-        start: 'top top',
-        end: () => `+=${window.innerHeight * 2}`,
-        pin: true,
-        pinSpacing: false,
-        scrub: 0.5,
-      });
-
-      // ===== SCRUBBED HERO EXIT — the pin now does work =====
-      gsap.to('.hero-bg-wrap', {
-        scale: 1.08,
-        ease: 'none',
-        scrollTrigger: { trigger: heroRef.current, start: 'top top', end: () => `+=${window.innerHeight * 2}`, scrub: 0.5 },
-      });
-      gsap.to('.hero-text-block', {
-        scale: 0.94,
-        ease: 'none',
-        scrollTrigger: { trigger: heroRef.current, start: 'top top', end: () => `+=${window.innerHeight * 2}`, scrub: 0.5 },
-      });
-      gsap.to('.hero-content-layer', {
-        autoAlpha: 0,
-        ease: 'none',
-        scrollTrigger: { trigger: heroRef.current, start: 'top top', end: () => `+=${window.innerHeight * 1.3}`, scrub: 0.5 },
-      });
-
-      // ===== CURSOR-RESPONSIVE GREEN GLOW =====
-      const heroEl = heroRef.current;
-      const glowEl = containerRef.current?.querySelector('.hero-glow') as HTMLElement | null;
-      if (heroEl && glowEl) {
-        const xTo = gsap.quickTo(glowEl, 'x', { duration: 0.9, ease: 'power3.out' });
-        const yTo = gsap.quickTo(glowEl, 'y', { duration: 0.9, ease: 'power3.out' });
-        const onMove = (e: PointerEvent) => {
-          const rect = heroEl.getBoundingClientRect();
-          xTo(e.clientX - rect.left - rect.width / 2);
-          yTo(e.clientY - rect.top - rect.height / 2);
-        };
-        heroEl.addEventListener('pointermove', onMove);
-        removeGlow = () => heroEl.removeEventListener('pointermove', onMove);
-      }
 
       // Section 2 scroll-triggered
       gsap.from('.s2-inner', {
@@ -150,10 +106,7 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
 
     }, containerRef);
 
-    return () => {
-      removeGlow?.();
-      ctx.revert();
-    };
+    return () => ctx.revert();
   }, []);
 
   return (
@@ -173,22 +126,10 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
             <img
               src={heroBg}
               alt=""
-              className="hero-drift w-full h-full object-cover object-center"
+              className="w-full h-full object-cover object-center"
             />
           </div>
           <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-transparent to-black/45" />
-          <div className="hero-grain absolute" />
-        </div>
-
-        {/* ===== CURSOR-RESPONSIVE GREEN GLOW ===== */}
-        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden" aria-hidden="true">
-          <div
-            className="hero-glow absolute left-1/2 top-1/2 -ml-[18rem] -mt-[18rem] md:-ml-[24rem] md:-mt-[24rem] w-[36rem] h-[36rem] md:w-[48rem] md:h-[48rem] rounded-full"
-            style={{
-              background: 'radial-gradient(circle, rgba(58,134,63,0.20) 0%, rgba(58,134,63,0.07) 45%, transparent 70%)',
-              filter: 'blur(50px)',
-            }}
-          />
         </div>
 
         {/* Hero text content */}
@@ -249,17 +190,12 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
               <p className="hero-nav-item text-[11px] md:text-xs font-semibold tracking-[0.2em] uppercase text-gray-300 mb-5 md:mb-7 font-display">
                 Creativity × Technology × Strategy
               </p>
-              <h1 className="hero-headline font-display text-[2.9rem] sm:text-[4.25rem] md:text-[5.5rem] lg:text-[7rem] xl:text-[8rem] leading-[0.9] tracking-tight text-white font-extrabold">
-                <span className="block overflow-hidden">
-                  <span className="hero-line block">Some Ideas</span>
-                </span>
-                <span className="block overflow-hidden">
-                  <span className="hero-line block">Deserve to</span>
-                </span>
-                <span className="block overflow-hidden">
-                  <span className="hero-line block relative pb-[0.14em] w-fit">
-                    <span className="italic font-light text-[#3a863f]">Exist.</span>
-                    <span className="hero-underline absolute left-0 bottom-0 block h-[0.05em] w-full origin-left bg-[#3a863f]" />
+              <h1 className="hero-headline font-display text-[2.9rem] sm:text-[4.25rem] md:text-[5.5rem] lg:text-[7rem] xl:text-[8rem] leading-[0.9] tracking-tight text-white font-bold">
+                <span className="block">Some Ideas</span>
+                <span className="block">
+                  Deserve to{' '}
+                  <span className="italic font-light text-[#3a863f] underline decoration-[#3a863f] decoration-[0.04em] underline-offset-[0.12em]">
+                    Exist.
                   </span>
                 </span>
               </h1>
