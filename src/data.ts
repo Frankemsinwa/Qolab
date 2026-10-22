@@ -34,7 +34,7 @@ export const projectsData: Project[] = [
     color: 'bg-[#0a0f0d]',
     accentColor: '#3a863f',
     heroImage: proj1,
-    galleryImages: [proj1, proj2, proj3]
+    galleryImages: [proj2, proj3, proj1]
   },
   {
     id: 'aether-mobile',
@@ -56,7 +56,7 @@ export const projectsData: Project[] = [
     color: 'bg-[#0a0f0d]',
     accentColor: '#3a863f',
     heroImage: proj2,
-    galleryImages: [proj2, proj3, proj4]
+    galleryImages: [proj3, proj4, proj2]
   },
   {
     id: 'muse-web',
@@ -78,7 +78,7 @@ export const projectsData: Project[] = [
     color: 'bg-[#0a0f0d]',
     accentColor: '#3a863f',
     heroImage: proj3,
-    galleryImages: [proj3, proj4, proj1]
+    galleryImages: [proj4, proj1, proj3]
   },
   {
     id: 'apex-branding',
@@ -100,7 +100,7 @@ export const projectsData: Project[] = [
     color: 'bg-[#0a0f0d]',
     accentColor: '#3a863f',
     heroImage: proj4,
-    galleryImages: [proj4, proj1, proj2]
+    galleryImages: [proj1, proj2, proj4]
   }
 ];
 

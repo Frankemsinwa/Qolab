@@ -83,9 +83,9 @@ export default function ProjectGrid({ onSelectProject }: ProjectGridProps) {
             className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
           />
         </div>
-        <div className="pg-shot relative overflow-hidden rounded-2xl aspect-[16/10] md:aspect-auto bg-white/5">
+        <div className="pg-shot relative overflow-hidden rounded-2xl aspect-[3/4] md:aspect-auto w-[70%] ml-auto md:w-full bg-white/5">
           <img
-            src={project.galleryImages[0] || project.heroImage}
+            src={project.galleryImages.find((img) => img !== project.heroImage) || project.heroImage}
             alt={`${project.title} detail`}
             className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
           />
