@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useId } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -14,44 +14,6 @@ import ScrollMarquee from './ScrollMarquee';
 import heroBg from '../../assets/hero-imgs/bright-light-dark-background.jpg';
 
 gsap.registerPlugin(ScrollTrigger);
-
-function FlagPair({ size = 20 }: { size?: number }) {
-  const clipId = `uk-flag-${useId().replace(/:/g, '')}`;
-  return (
-    <span className="flex items-center" aria-label="Based in Nigeria and the United Kingdom">
-      <span
-        role="img"
-        aria-label="Nigeria"
-        title="Nigeria"
-        className="rounded-full border border-white/40 shrink-0"
-        style={{
-          width: size,
-          height: size,
-          background: 'linear-gradient(90deg, #008751 0 33.3%, #ffffff 33.3% 66.6%, #008751 66.6% 100%)',
-        }}
-      />
-      <svg
-        viewBox="0 0 60 60"
-        role="img"
-        aria-label="United Kingdom"
-        title="United Kingdom"
-        className="rounded-full border border-white/40 shrink-0"
-        style={{ width: size, height: size, marginLeft: -size * 0.28 }}
-      >
-        <defs>
-          <clipPath id={clipId}><circle cx="30" cy="30" r="30" /></clipPath>
-        </defs>
-        <g clipPath={`url(#${clipId})`}>
-          <rect width="60" height="60" fill="#012169" />
-          <path d="M0 0 L60 60 M60 0 L0 60" stroke="#fff" strokeWidth="12" />
-          <path d="M0 0 L60 60 M60 0 L0 60" stroke="#C8102E" strokeWidth="6" />
-          <path d="M30 0 V60 M0 30 H60" stroke="#fff" strokeWidth="20" />
-          <path d="M30 0 V60 M0 30 H60" stroke="#C8102E" strokeWidth="12" />
-        </g>
-      </svg>
-    </span>
-  );
-}
 
 interface LandingHeroProps {
   onSelectProject: (project: any) => void;
@@ -405,69 +367,58 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
 
         {/* Hero text content */}
         <div className="hero-content-layer relative z-10 w-full h-full flex flex-col justify-between">
-          {/* Top bar — logo centered (reference style), meta right (desktop only; mobile uses the sticky glass bar) */}
-          <div className="hidden md:flex w-full items-start justify-between px-6 md:px-12 lg:px-16 pt-6 md:pt-8 relative z-20">
-            <QolabLogo className="absolute left-1/2 -translate-x-1/2 w-20 md:w-24" />
-            <span aria-hidden="true" />
-            <div className="flex items-center gap-3 md:gap-4">
-              <FlagPair size={16} />
-              <span className="hidden md:block text-[11px] tracking-[0.15em] uppercase text-gray-400 font-display">Nigeria &amp; UK</span>
-            </div>
+          {/* Top bar — logo left, larger (desktop only; mobile uses the sticky glass bar) */}
+          <div className="hidden md:flex w-full items-center px-6 md:px-12 lg:px-16 pt-6 md:pt-8 relative z-20">
+            <QolabLogo className="w-24 md:w-28" />
           </div>
 
-          {/* Hero text — staggered centered composition (reference layout) */}
+          {/* Hero text — left-aligned composition */}
           <div className="hero-text-block flex-1 flex flex-col justify-center px-6 md:px-12 lg:px-16 relative">
-            <div className="relative z-10 w-full max-w-5xl mx-auto flex flex-col">
-              <h1 className="hero-headline font-sans text-[2.9rem] sm:text-[4.25rem] md:text-[5.5rem] lg:text-[7rem] xl:text-[8rem] leading-[0.95] tracking-[-0.03em] text-white font-normal flex flex-col">
-                <span className="block self-start pl-[4%] sm:pl-[8%] md:pl-[14%]">
-                  <CharLine text="Some Ideas" />
-                </span>
-                <span className="w-full flex flex-wrap items-end justify-end gap-x-6 gap-y-4 mt-1 md:mt-2">
-                  <span className="inline-block">
-                    <CharLine text="Deserve to" />{' '}
-                    <span
-                      className="hero-flip inline-grid overflow-hidden align-bottom"
-                      style={{ lineHeight: 1.05 }}
-                      aria-label="Exist."
-                    >
-                      {HERO_FLIP_WORDS.map((word, i) => (
-                        <span
-                          key={word}
-                          aria-hidden="true"
-                          className={`hero-flip-word font-serif italic text-[#6ee05a] [grid-area:1/1] ${i === 0 ? '' : 'opacity-0'}`}
-                        >
-                          {word}
-                        </span>
-                      ))}
-                    </span>
+            <div className="relative z-10 w-full max-w-6xl">
+              <h1 className="hero-headline font-sans text-[2.9rem] sm:text-[4.25rem] md:text-[5.5rem] lg:text-[7rem] xl:text-[8rem] leading-[0.95] tracking-[-0.03em] text-white font-medium">
+                <span className="block"><CharLine text="Some Ideas" /></span>
+                <span className="block mt-1 md:mt-2">
+                  <CharLine text="Deserve to" />{' '}
+                  <span
+                    className="hero-flip inline-grid overflow-hidden align-bottom"
+                    style={{ lineHeight: 1.05 }}
+                    aria-label="Exist."
+                  >
+                    {HERO_FLIP_WORDS.map((word, i) => (
+                      <span
+                        key={word}
+                        aria-hidden="true"
+                        className={`hero-flip-word font-serif italic text-[#6ee05a] [grid-area:1/1] ${i === 0 ? '' : 'opacity-0'}`}
+                      >
+                        {word}
+                      </span>
+                    ))}
                   </span>
                   <button
                     onClick={() => onNavigate?.('contact')}
                     data-cursor="magnetic"
                     data-cursor-text="Let's go"
-                    className="hero-pill shrink-0 inline-flex items-center gap-2.5 border border-white/60 rounded-full px-6 py-3 md:px-7 md:py-3.5 text-xs md:text-sm text-white hover:bg-white hover:text-[#0f0f11] transition-all font-sans font-medium"
+                    className="hero-pill align-bottom mb-1 md:mb-2 ml-5 md:ml-8 inline-flex items-center gap-2.5 border border-white/60 rounded-full px-6 py-3 md:px-7 md:py-3.5 text-xs md:text-sm text-white hover:bg-white hover:text-[#0f0f11] transition-all font-sans font-medium"
                   >
                     Let's Make It Exist.
                     <ArrowUpRight size={15} />
                   </button>
                 </span>
               </h1>
-              <div className="self-end flex flex-col items-end mt-7 md:mt-9 max-w-xs sm:max-w-sm md:max-w-md">
-                <p className="hero-subtext text-gray-300/90 text-sm sm:text-[15px] text-right font-sans leading-relaxed">
-                  <WordRoll
-                    cls="hero-subword"
-                    text="We don't follow the future. We make it. We bring creativity, technology, and strategy together to turn ambitious thinking into meaningful solutions."
-                  />
-                </p>
-                <div className="hero-cta mt-5 flex flex-wrap items-center justify-end gap-4">
-                  <button
-                    onClick={onViewAllProjects}
-                    className="flex items-center gap-2 text-sm font-medium text-white hover:text-[#6ee05a] transition-colors font-sans"
-                  >
-                    Explore Our Work.
-                    <ArrowRight size={15} />
-                  </button>
-                </div>
+              <p className="hero-subtext text-gray-300 text-base sm:text-lg mt-7 md:mt-9 max-w-2xl font-sans leading-relaxed">
+                <WordRoll
+                  cls="hero-subword"
+                  text="We don't follow the future. We make it. We bring creativity, technology, and strategy together to turn ambitious thinking into meaningful solutions."
+                />
+              </p>
+              <div className="hero-cta mt-7 md:mt-9 flex flex-wrap items-center gap-5">
+                <button
+                  onClick={onViewAllProjects}
+                  className="flex items-center gap-2 text-sm font-medium text-white hover:text-[#6ee05a] transition-colors font-sans"
+                >
+                  Explore Our Work.
+                  <ArrowRight size={15} />
+                </button>
               </div>
             </div>
           </div>

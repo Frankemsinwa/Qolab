@@ -15,7 +15,7 @@ export default function BottomPillNav({ onNavigate }: BottomPillNavProps) {
   return (
     <nav
       aria-label="Primary"
-      className="hidden md:flex fixed bottom-6 left-1/2 -translate-x-1/2 z-[90] items-center gap-1 bg-[#0f0f11]/85 backdrop-blur-xl border border-white/10 rounded-full px-2.5 py-2 shadow-[0_8px_40px_rgba(0,0,0,0.5)]"
+      className="hidden md:flex fixed bottom-6 right-6 md:right-12 lg:right-16 z-[90] items-center gap-1 bg-[#0f0f11]/85 backdrop-blur-xl border border-white/10 rounded-full px-2.5 py-2 shadow-[0_8px_40px_rgba(0,0,0,0.5)]"
     >
       <span className="inline-flex bg-white/[0.06] rounded-full px-3.5 py-2 border border-white/10 mr-1">
         <QolabLogo className="w-14" />
