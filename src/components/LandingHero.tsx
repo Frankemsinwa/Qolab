@@ -648,7 +648,7 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
         {/* Giant statement */}
         <div className="max-w-7xl mx-auto mb-16 md:mb-24">
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-10">
-            <h2 className="font-display italic font-light text-white text-[3.6rem] sm:text-[5.5rem] lg:text-[8rem] leading-[0.9] tracking-tight">
+            <h2 className="font-display font-normal text-white text-[3.6rem] sm:text-[5.5rem] lg:text-[8rem] leading-[0.9] tracking-tight">
               Get in touch
             </h2>
             <div className="flex flex-col gap-4 lg:items-end lg:pb-4">
@@ -681,12 +681,12 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
               <a
                 key={social.label}
                 href={social.href}
-                className="group flex flex-col justify-between aspect-[4/3] md:aspect-[5/4] p-5 md:p-6 border-r border-b border-white/10 md:border-b-0 hover:bg-white/[0.04] transition-colors last:border-r-0"
+                className="social-cell group flex flex-col justify-between aspect-[4/3] md:aspect-[5/4] p-5 md:p-6 border-r border-b border-white/10 md:border-b-0 transition-colors last:border-r-0"
               >
-                <span className="text-2xl md:text-3xl font-display text-gray-500 group-hover:text-[#6ee05a] transition-colors">
+                <span className="text-2xl md:text-3xl font-display text-gray-500 transition-colors">
                   {social.label[0]}
                 </span>
-                <span className="text-xs font-display text-gray-300 group-hover:text-white transition-colors">
+                <span className="text-xs font-display text-gray-300 transition-colors">
                   {social.label}
                 </span>
               </a>

@@ -196,6 +196,21 @@ html.lenis, html.lenis body {
   font-weight: 600;
 }
 
+/* ===== Footer social cells — same lemon-green gradient hover ===== */
+.social-cell {
+  transition: color 0.3s ease;
+}
+
+.social-cell:hover {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.3'/%3E%3C/svg%3E"), linear-gradient(115deg, #2fe862 0%, #6ee05a 48%, #d8f34b 100%);
+  background-blend-mode: overlay;
+  color: #0f0f11;
+}
+
+.social-cell:hover span {
+  color: #0f0f11;
+}
+
 /* Respect reduced-motion preferences */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
