@@ -16,16 +16,34 @@ export default function ProjectGrid({ onSelectProject }: ProjectGridProps) {
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const ctx = gsap.context(() => {
-      gsap.from('.pg-row', {
-        y: 70,
-        opacity: 0,
-        duration: 1.1,
-        stagger: 0.18,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top 65%',
-        },
+      // Per-row reveal: slanted wipe from the top-left sweeping right —
+      // the landscape shot leads, the portrait follows right behind it
+      const HIDDEN = 'polygon(0% 0%, 0% 0%, -20% 100%, -20% 100%)';
+      const FULL = 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)';
+
+      gsap.utils.toArray<HTMLElement>('.pg-row').forEach((row) => {
+        const shots = row.querySelectorAll<HTMLElement>('.pg-shot');
+        const imgs = row.querySelectorAll<HTMLElement>('.pg-shot img');
+        gsap.set(shots, { clipPath: HIDDEN });
+        gsap.set(imgs, { scale: 1.15, transition: 'none' });
+
+        const tl = gsap.timeline({
+          scrollTrigger: { trigger: row, start: 'top 78%', once: true },
+        });
+        tl.from(row, { y: 60, opacity: 0, duration: 0.9, ease: 'power3.out' }, 0);
+        shots.forEach((shot, i) => {
+          const at = 0.12 + i * 0.22;
+          tl.to(shot, { clipPath: FULL, duration: 1.1, ease: 'power3.inOut' }, at);
+          const img = imgs[i];
+          if (img) {
+            tl.to(img, {
+              scale: 1,
+              duration: 1.4,
+              ease: 'power2.out',
+              clearProps: 'transform,transition',
+            }, at);
+          }
+        });
       });
     }, sectionRef);
 
@@ -58,14 +76,14 @@ export default function ProjectGrid({ onSelectProject }: ProjectGridProps) {
 
       {/* Image strip */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-        <div className="md:col-span-2 relative overflow-hidden rounded-2xl aspect-[16/10] bg-white/5">
+        <div className="pg-shot md:col-span-2 relative overflow-hidden rounded-2xl aspect-[16/10] bg-white/5">
           <img
             src={project.heroImage}
             alt={project.title}
             className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
           />
         </div>
-        <div className="relative overflow-hidden rounded-2xl aspect-[16/10] md:aspect-auto bg-white/5">
+        <div className="pg-shot relative overflow-hidden rounded-2xl aspect-[16/10] md:aspect-auto bg-white/5">
           <img
             src={project.galleryImages[0] || project.heroImage}
             alt={`${project.title} detail`}
