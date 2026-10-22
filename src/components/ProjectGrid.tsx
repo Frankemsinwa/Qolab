@@ -64,7 +64,7 @@ export default function ProjectGrid({ onSelectProject }: ProjectGridProps) {
           <span className="inline-block text-[11px] font-display font-semibold tracking-[0.18em] uppercase text-gray-300 border border-white/15 rounded-full px-4 py-1.5">
             {project.category.split(' & ')[0]}
           </span>
-          <h3 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-white leading-[0.95] tracking-tight mt-4 group-hover:text-[#6ee05a] transition-colors duration-300">
+          <h3 className="font-display font-normal text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-white leading-[0.95] tracking-tight mt-4 group-hover:text-[#6ee05a] transition-colors duration-300">
             {project.title}
           </h3>
         </div>
@@ -96,9 +96,9 @@ export default function ProjectGrid({ onSelectProject }: ProjectGridProps) {
           <p className="font-display text-xs font-semibold tracking-[0.25em] uppercase text-[#6ee05a] mb-4">
             Selected Work
           </p>
-          <h2 className="font-display text-5xl sm:text-6xl md:text-7xl text-white leading-[0.9] tracking-tight">
+          <h2 className="font-display font-normal text-5xl sm:text-6xl md:text-7xl text-white leading-[0.9] tracking-tight">
             Projects that{' '}
-            <span className="italic font-light text-[#6ee05a]">speak</span>
+            <span className="text-[#6ee05a]">speak</span>
             <br className="hidden sm:block" /> for themselves
           </h2>
         </div>
