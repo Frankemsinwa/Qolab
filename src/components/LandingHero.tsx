@@ -60,15 +60,33 @@ interface LandingHeroProps {
 }
 
 /** Splits text into word spans for the scroll-driven highlight reveal */
-function WordRoll({ text }: { text: string }) {
+function WordRoll({ text, cls = 's2-word' }: { text: string; cls?: string }) {
   return (
     <>
       {text.split(' ').map((word, i) => (
-        <span key={i} className="s2-word">{word}{' '}</span>
+        <span key={i} className={cls}>{word}{' '}</span>
       ))}
     </>
   );
 }
+
+/** Per-character spans (word-grouped so wrapping still works) for the blur-type entrance */
+function CharLine({ text }: { text: string }) {
+  return (
+    <>
+      {text.split(' ').map((word, wi, arr) => (
+        <span key={wi} className="inline-block whitespace-nowrap">
+          {word.split('').map((c, ci) => (
+            <span key={ci} className="hero-char inline-block">{c}</span>
+          ))}
+          {wi < arr.length - 1 ? ' ' : ''}
+        </span>
+      ))}
+    </>
+  );
+}
+
+const HERO_FLIP_WORDS = ['Exist.', 'Thrive.', 'Matter.', 'Emerge.', 'Begin.'];
 
 /** Inline neon icon chips embedded in body copy (reference-site style) */
 function ChipDiamond() {
@@ -132,14 +150,41 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
 
     if (!reduced) {
       const ctx = gsap.context(() => {
-        // Hero content entrance
+        // Hero content entrance — blur-type reveal
         const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
         heroTl
           .from('.hero-bg-wrap', { opacity: 0, duration: 1.8, ease: 'power2.out' }, 0)
           .from('.hero-nav-item', { y: -20, opacity: 0, duration: 0.8, stagger: 0.06 }, 0.3)
-          .from('.hero-headline', { y: 40, opacity: 0, duration: 1.1 }, '-=0.5')
-          .from('.hero-subtext', { y: 30, opacity: 0, duration: 0.9 }, '-=0.7')
-          .from('.hero-cta', { y: 20, opacity: 0, duration: 0.8 }, '-=0.5');
+          .from('.hero-char', { opacity: 0, filter: 'blur(14px)', y: 16, duration: 0.5, stagger: 0.018, ease: 'power2.out' }, 0.45)
+          .from('.hero-flip', { opacity: 0, filter: 'blur(14px)', duration: 0.6, ease: 'power2.out' }, 1.1)
+          .from('.hero-subword', { opacity: 0, filter: 'blur(8px)', y: 8, duration: 0.4, stagger: 0.012, ease: 'power2.out' }, 1.35)
+          .from('.hero-cta', { y: 20, opacity: 0, duration: 0.8 }, 1.65);
+
+        // "Exist." word-flip — rolls through words that still complete the sentence
+        const flipWords = gsap.utils.toArray<HTMLElement>('.hero-flip-word');
+        if (flipWords.length > 1) {
+          gsap.set(flipWords.slice(1), { yPercent: 115, opacity: 1 });
+          const flipTl = gsap.timeline({ repeat: -1, paused: true });
+          const hold = 1.6;
+          for (let i = 1; i < flipWords.length; i++) {
+            flipTl
+              .to(flipWords[i - 1], { yPercent: -115, duration: 0.55, ease: 'power3.inOut' }, `+=${hold}`)
+              .fromTo(flipWords[i], { yPercent: 115 }, { yPercent: 0, duration: 0.55, ease: 'power3.inOut' }, '<');
+          }
+          flipTl
+            .to(flipWords[flipWords.length - 1], { yPercent: -115, duration: 0.55, ease: 'power3.inOut' }, `+=${hold}`)
+            .fromTo(flipWords[0], { yPercent: 115 }, { yPercent: 0, duration: 0.55, ease: 'power3.inOut' }, '<');
+          flipTl.play();
+          ScrollTrigger.create({
+            trigger: hero,
+            start: 'top top',
+            end: 'bottom top',
+            onToggle: (self) => {
+              if (self.isActive) flipTl.play();
+              else flipTl.pause();
+            },
+          });
+        }
 
         // Scrubbed pin — hero holds 2vh: bg zooms 1.0→1.08, headline shrinks & fades
         // while s2 (z-20) slides OVER the still-pinned hero (pinSpacing: false)
@@ -208,10 +253,10 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
         const eyeLids = gsap.utils.toArray('.chip-eye-lid');
         if (eyeLids.length) {
           gsap.set(eyeLids, { transformOrigin: '50% 50%' });
-          const eyeTl = gsap.timeline({ repeat: -1, repeatDelay: 2.8, paused: true });
+          const eyeTl = gsap.timeline({ repeat: -1, repeatDelay: 1.9, paused: true });
           eyeTl
-            .to(eyeLids, { scaleY: 0.06, duration: 0.13, ease: 'power2.in' })
-            .to(eyeLids, { scaleY: 1, duration: 0.22, ease: 'power2.out' });
+            .to(eyeLids, { scaleY: 0.06, duration: 0.09, ease: 'power2.in' })
+            .to(eyeLids, { scaleY: 1, duration: 0.15, ease: 'power2.out' });
           ScrollTrigger.create({
             trigger: s8Ref.current,
             start: 'top 85%',
@@ -349,16 +394,31 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
                 Creativity × Technology × Strategy
               </p>
               <h1 className="hero-headline font-display text-[2.9rem] sm:text-[4.25rem] md:text-[5.5rem] lg:text-[7rem] xl:text-[8rem] leading-[0.9] tracking-tight text-white font-medium">
-                <span className="block">Some Ideas</span>
+                <span className="block"><CharLine text="Some Ideas" /></span>
                 <span className="block">
-                  Deserve to{' '}
-                  <span className="italic font-light text-[#6ee05a]">
-                    Exist.
+                  <CharLine text="Deserve to" />{' '}
+                  <span
+                    className="hero-flip inline-grid overflow-hidden align-bottom"
+                    style={{ lineHeight: 1.05 }}
+                    aria-label="Exist."
+                  >
+                    {HERO_FLIP_WORDS.map((word, i) => (
+                      <span
+                        key={word}
+                        aria-hidden="true"
+                        className={`hero-flip-word italic font-light text-[#6ee05a] [grid-area:1/1] ${i === 0 ? '' : 'opacity-0'}`}
+                      >
+                        {word}
+                      </span>
+                    ))}
                   </span>
                 </span>
               </h1>
               <p className="hero-subtext text-gray-300 text-base sm:text-lg mt-7 md:mt-9 max-w-2xl font-display leading-relaxed">
-                We don't follow the future. We make it. We bring creativity, technology, and strategy together to turn ambitious thinking into meaningful solutions.
+                <WordRoll
+                  cls="hero-subword"
+                  text="We don't follow the future. We make it. We bring creativity, technology, and strategy together to turn ambitious thinking into meaningful solutions."
+                />
               </p>
               <div className="hero-cta mt-9 md:mt-11 flex flex-wrap items-center gap-4">
                 <button
@@ -393,10 +453,10 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
       {/* Hold spacer — gives the pin a 1vh pause before s2 starts sliding over the hero */}
       <div className="hero-hold-spacer h-screen" aria-hidden="true" />
 
-      {/* ===== SECTION 2: WHY QOLAB — backdrop blur over fixed silhouette ===== */}
+      {/* ===== SECTION 2: WHY QOLAB — giant scroll-reveal statement (reference layout) ===== */}
       <section
         ref={s2Ref}
-        className="relative w-full py-24 md:py-32 px-6 md:px-12 lg:px-16 z-20 overflow-hidden bg-[#0a0f0d]"
+        className="relative w-full py-28 md:py-40 px-6 md:px-12 lg:px-16 z-20 overflow-hidden bg-[#0a0f0d]"
       >
         {/* Green light flares */}
         <div className="absolute -top-32 -right-32 w-[34rem] h-[34rem] rounded-full pointer-events-none"
@@ -405,36 +465,37 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
         <div className="absolute -bottom-40 -left-40 w-[36rem] h-[36rem] rounded-full pointer-events-none"
           style={{ background: 'radial-gradient(circle, rgba(58,134,63,0.3) 0%, rgba(58,134,63,0.1) 45%, transparent 70%)' }}
         />
-        <div className="relative max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          <div>
-            <p className="s2-inner text-xs font-semibold tracking-[0.2em] uppercase text-[#3a863f] mb-4 font-display">Why Qolab</p>
-            <h2 className="s2-inner font-display text-4xl sm:text-5xl lg:text-6xl text-white leading-[1.05]">
-              We don't just design — <span className="italic text-[#3a863f]">we engineer</span> experiences.
-            </h2>
-            <p className="s2-inner text-gray-400 text-base sm:text-lg mt-6 leading-relaxed font-sans max-w-lg">
-              <WordRoll text="Every pixel, every interaction, every line of code is intentional." />{' '}
-              <ChipDiamond />{' '}
-              <WordRoll text="We blend creative direction with technical mastery" />{' '}
-              <ChipClover />{' '}
-              <WordRoll text="to build products people genuinely love." />{' '}
-              <ChipAsterisk />
-            </p>
-          </div>
-          <div>
-            <p className="s2-inner text-xs font-semibold tracking-[0.2em] uppercase text-gray-500 mb-4 font-display">Who We Build For</p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {[
-                { title: 'Founders & Entrepreneurs', desc: 'Early-stage ideas that need shaping, designing, or building.' },
-                { title: 'Established Businesses', desc: 'Teams improving their brand, digital presence, products, or operations.' },
-                { title: 'Marketing & Brand Teams', desc: 'Creative direction, identity systems, websites, campaigns, and strategic support.' },
-                { title: 'Product & Operations Teams', desc: 'Custom software, AI-assisted workflows, and business automation.' },
-              ].map((audience) => (
-                <div key={audience.title} className="s2-inner bg-white/[0.06] backdrop-blur-md rounded-2xl p-6 border border-[#3a863f]/25 hover:border-[#3a863f]/50 transition-colors shadow-[0_0_30px_rgba(58,134,63,0.08)]">
-                  <p className="text-white font-semibold text-sm font-display">{audience.title}</p>
-                  <p className="text-sm text-gray-400 mt-2 font-sans leading-relaxed">{audience.desc}</p>
-                </div>
-              ))}
-            </div>
+        <div className="relative max-w-5xl mx-auto">
+          <p className="s2-inner text-xs font-semibold tracking-[0.2em] uppercase text-[#6ee05a] mb-10 md:mb-14 font-display">Why Qolab</p>
+          <p
+            ref={s2TextRef}
+            className="s2-inner font-sans text-2xl sm:text-3xl md:text-4xl lg:text-[2.6rem] leading-[1.4] text-white font-medium tracking-tight"
+          >
+            <WordRoll text="We don't just design —" />{' '}
+            <span className="italic font-light text-[#6ee05a]">we engineer</span>{' '}
+            <WordRoll text="experiences." />{' '}
+            <ChipDiamond />{' '}
+            <WordRoll text="Every pixel, every interaction, every line of code is intentional." />{' '}
+            <ChipClover />{' '}
+            <WordRoll text="We blend creative direction with technical mastery to build products people genuinely love." />{' '}
+            <ChipAsterisk />
+          </p>
+        </div>
+        {/* Who we build for — bordered grid */}
+        <div className="relative max-w-7xl mx-auto mt-20 md:mt-28">
+          <p className="s2-inner text-xs font-semibold tracking-[0.2em] uppercase text-gray-500 mb-6 font-display">Who We Build For</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 border-t border-l border-white/10">
+            {[
+              { title: 'Founders & Entrepreneurs', desc: 'Early-stage ideas that need shaping, designing, or building.' },
+              { title: 'Established Businesses', desc: 'Teams improving their brand, digital presence, products, or operations.' },
+              { title: 'Marketing & Brand Teams', desc: 'Creative direction, identity systems, websites, campaigns, and strategic support.' },
+              { title: 'Product & Operations Teams', desc: 'Custom software, AI-assisted workflows, and business automation.' },
+            ].map((audience) => (
+              <div key={audience.title} className="s2-inner border-r border-b border-white/10 p-6 md:p-8 hover:bg-white/[0.03] transition-colors">
+                <p className="text-white font-semibold text-sm font-display">{audience.title}</p>
+                <p className="text-xs text-gray-400 mt-2 font-sans leading-relaxed">{audience.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
