@@ -16,8 +16,7 @@ export default function ProjectGrid({ onSelectProject }: ProjectGridProps) {
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const ctx = gsap.context(() => {
-      // Per-row reveal: slanted wipe from the top-left sweeping right —
-      // the landscape shot leads, the portrait follows right behind it
+      // Per-row reveal: slanted wipe from the top-left sweeping right across the shot
       const HIDDEN = 'polygon(0% 0%, 0% 0%, -20% 100%, -20% 100%)';
       const FULL = 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)';
 
@@ -74,22 +73,13 @@ export default function ProjectGrid({ onSelectProject }: ProjectGridProps) {
         </span>
       </div>
 
-      {/* Image strip */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-        <div className="pg-shot md:col-span-2 relative overflow-hidden rounded-2xl aspect-[16/10] bg-white/5">
-          <img
-            src={project.heroImage}
-            alt={project.title}
-            className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
-          />
-        </div>
-        <div className="pg-shot relative overflow-hidden rounded-2xl aspect-[3/4] md:aspect-auto w-[70%] ml-auto md:w-full bg-white/5">
-          <img
-            src={project.galleryImages.find((img) => img !== project.heroImage) || project.heroImage}
-            alt={`${project.title} detail`}
-            className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
-          />
-        </div>
+      {/* Image — single cinematic strip of the project's own hero shot */}
+      <div className="pg-shot relative overflow-hidden rounded-2xl aspect-[16/10] md:aspect-[21/9] bg-white/5">
+        <img
+          src={project.heroImage}
+          alt={project.title}
+          className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+        />
       </div>
     </div>
   );

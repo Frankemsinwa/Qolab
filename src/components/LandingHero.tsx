@@ -318,6 +318,54 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
       {/* ===== FIXED BACKGROUND — plain milky white behind hero + section 2 ===== */}
       <div className="fixed inset-0 z-0 pointer-events-none bg-[#f4f3ef] overflow-hidden" />
 
+      {/* ===== STICKY MOBILE NAV — backdrop glass, visible across every section ===== */}
+      <div className="fixed top-0 inset-x-0 z-[90] md:hidden flex items-center justify-between px-5 py-3 bg-black/55 backdrop-blur-xl border-b border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.35)]">
+        <QolabLogo className="w-20" />
+        <button
+          onClick={() => setMobileMenuOpen(true)}
+          className="flex items-center justify-center w-10 h-10 text-white"
+          aria-label="Open menu"
+        >
+          <Menu size={24} />
+        </button>
+      </div>
+
+      {/* ===== MOBILE MENU OVERLAY — root-level so it stacks above every section ===== */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-[100] bg-white flex flex-col px-6 md:hidden">
+          <div className="flex items-center justify-between pt-4">
+            <span className="inline-flex bg-[#0f0f11] rounded-full px-4 py-2.5 border border-white/10 shadow-md">
+              <QolabLogo className="w-24" />
+            </span>
+            <button
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center justify-center w-10 h-10 text-[#1a1a1a]"
+              aria-label="Close menu"
+            >
+              <X size={24} />
+            </button>
+          </div>
+          <nav className="flex flex-col gap-8 mt-16">
+            {[
+              { label: 'Home', action: () => { setMobileMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); } },
+              { label: 'About', action: () => { setMobileMenuOpen(false); onNavigate?.('about'); } },
+              { label: 'Services', action: () => { setMobileMenuOpen(false); onNavigate?.('services'); } },
+              { label: 'Works', action: () => { setMobileMenuOpen(false); onNavigate?.('projects'); } },
+              { label: 'Contact', action: () => { setMobileMenuOpen(false); onNavigate?.('contact'); } },
+            ].map((item) => (
+              <button
+                key={item.label}
+                type="button"
+                onClick={item.action}
+                className="font-display text-4xl text-[#1a1a1a] hover:text-[#3a863f] transition-colors cursor-pointer"
+              >
+                {item.label}
+              </button>
+            ))}
+          </nav>
+        </div>
+      )}
+
       {/* ===== PINNED HERO ===== */}
       <section 
         ref={heroRef} 
@@ -351,57 +399,14 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
 
         {/* Hero text content */}
         <div className="hero-content-layer relative z-10 w-full h-full flex flex-col justify-between">
-          {/* Top bar — small logo left, meta right */}
-          <div className="w-full flex items-start justify-between px-6 md:px-12 lg:px-16 pt-6 md:pt-8 relative z-20">
+          {/* Top bar — small logo left, meta right (desktop only; mobile uses the sticky glass bar) */}
+          <div className="hidden md:flex w-full items-start justify-between px-6 md:px-12 lg:px-16 pt-6 md:pt-8 relative z-20">
             <QolabLogo className="w-20 md:w-24" />
             <div className="flex items-center gap-3 md:gap-4">
               <FlagPair size={16} />
               <span className="hidden md:block text-[11px] tracking-[0.15em] uppercase text-gray-400 font-display">Nigeria &amp; UK</span>
-              <button
-                onClick={() => setMobileMenuOpen(true)}
-                className="md:hidden flex items-center justify-center w-10 h-10 text-white"
-                aria-label="Open menu"
-              >
-                <Menu size={24} />
-              </button>
             </div>
           </div>
-
-          {/* Mobile menu overlay */}
-          {mobileMenuOpen && (
-            <div className="fixed inset-0 z-[100] bg-white flex flex-col px-6 md:hidden">
-              <div className="flex items-center justify-between pt-4">
-                <span className="inline-flex bg-[#0f0f11] rounded-full px-4 py-2.5 border border-white/10 shadow-md">
-                  <QolabLogo className="w-24" />
-                </span>
-                <button
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center justify-center w-10 h-10 text-[#1a1a1a]"
-                  aria-label="Close menu"
-                >
-                  <X size={24} />
-                </button>
-              </div>
-              <nav className="flex flex-col gap-8 mt-16">
-                {[
-                  { label: 'Home', action: () => { setMobileMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); } },
-                  { label: 'About', action: () => { setMobileMenuOpen(false); onNavigate?.('about'); } },
-                  { label: 'Services', action: () => { setMobileMenuOpen(false); onNavigate?.('services'); } },
-                  { label: 'Works', action: () => { setMobileMenuOpen(false); onNavigate?.('projects'); } },
-                  { label: 'Contact', action: () => { setMobileMenuOpen(false); onNavigate?.('contact'); } },
-                ].map((item) => (
-                  <button
-                    key={item.label}
-                    type="button"
-                    onClick={item.action}
-                    className="font-display text-4xl text-[#1a1a1a] hover:text-[#3a863f] transition-colors cursor-pointer"
-                  >
-                    {item.label}
-                  </button>
-                ))}
-              </nav>
-            </div>
-          )}
 
           {/* Hero text content — immersive left-aligned block */}
           <div className="hero-text-block flex-1 flex flex-col justify-center px-6 md:px-12 lg:px-16 relative">
