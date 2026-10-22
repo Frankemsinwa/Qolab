@@ -91,7 +91,7 @@ const HERO_FLIP_WORDS = ['Exist.', 'Thrive.', 'Matter.', 'Emerge.', 'Begin.'];
 /** Inline neon icon chips embedded in body copy (reference-site style) */
 function ChipDiamond() {
   return (
-    <svg viewBox="0 0 24 24" className="inline-block w-[0.9em] h-[0.9em] mx-0.5 -translate-y-px" fill="none" aria-hidden="true">
+    <svg viewBox="0 0 24 24" className="s2-chip inline-block w-[0.9em] h-[0.9em] mx-0.5 -translate-y-px" fill="none" aria-hidden="true">
       <rect x="5" y="5" width="14" height="14" rx="2" transform="rotate(45 12 12)" stroke="#6ee05a" strokeWidth="2.4" />
     </svg>
   );
@@ -99,7 +99,7 @@ function ChipDiamond() {
 
 function ChipClover() {
   return (
-    <svg viewBox="0 0 24 24" className="inline-block w-[0.9em] h-[0.9em] mx-0.5 -translate-y-px" fill="#6ee05a" aria-hidden="true">
+    <svg viewBox="0 0 24 24" className="s2-chip inline-block w-[0.9em] h-[0.9em] mx-0.5 -translate-y-px" fill="#6ee05a" aria-hidden="true">
       <circle cx="12" cy="6.8" r="3.8" />
       <circle cx="12" cy="17.2" r="3.8" />
       <circle cx="6.8" cy="12" r="3.8" />
@@ -110,7 +110,7 @@ function ChipClover() {
 
 function ChipAsterisk() {
   return (
-    <svg viewBox="0 0 24 24" className="inline-block w-[0.9em] h-[0.9em] mx-0.5 -translate-y-px" fill="none" aria-hidden="true">
+    <svg viewBox="0 0 24 24" className="s2-chip inline-block w-[0.9em] h-[0.9em] mx-0.5 -translate-y-px" fill="none" aria-hidden="true">
       <g stroke="#6ee05a" strokeWidth="2.4" strokeLinecap="round">
         <path d="M12 3.5v17" />
         <path d="M3.5 12h17" />
@@ -160,20 +160,28 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
           .from('.hero-subword', { opacity: 0, filter: 'blur(8px)', y: 8, duration: 0.4, stagger: 0.012, ease: 'power2.out' }, 1.35)
           .from('.hero-cta', { y: 20, opacity: 0, duration: 0.8 }, 1.65);
 
-        // "Exist." word-flip — rolls through words that still complete the sentence
+        // "Exist." word-flip — seamless loop: words exit up, next enters from below,
+        // and each word is quietly parked off-screen (clipped) before its turn again.
         const flipWords = gsap.utils.toArray<HTMLElement>('.hero-flip-word');
         if (flipWords.length > 1) {
           gsap.set(flipWords.slice(1), { yPercent: 115, opacity: 1 });
           const flipTl = gsap.timeline({ repeat: -1, paused: true });
+          const dur = 0.55;
           const hold = 1.6;
-          for (let i = 1; i < flipWords.length; i++) {
-            flipTl
-              .to(flipWords[i - 1], { yPercent: -115, duration: 0.55, ease: 'power3.inOut' }, `+=${hold}`)
-              .fromTo(flipWords[i], { yPercent: 115 }, { yPercent: 0, duration: 0.55, ease: 'power3.inOut' }, '<');
+          let t = hold;
+          for (let i = 0; i < flipWords.length - 1; i++) {
+            const cur = flipWords[i];
+            const next = flipWords[i + 1];
+            flipTl.call(() => gsap.set(next, { yPercent: 115 }), [], t);
+            flipTl.to(cur, { yPercent: -115, duration: dur, ease: 'power3.inOut' }, t);
+            flipTl.to(next, { yPercent: 0, duration: dur, ease: 'power3.inOut' }, t + 0.01);
+            t += dur + hold;
           }
-          flipTl
-            .to(flipWords[flipWords.length - 1], { yPercent: -115, duration: 0.55, ease: 'power3.inOut' }, `+=${hold}`)
-            .fromTo(flipWords[0], { yPercent: 115 }, { yPercent: 0, duration: 0.55, ease: 'power3.inOut' }, '<');
+          const last = flipWords[flipWords.length - 1];
+          const first = flipWords[0];
+          flipTl.call(() => gsap.set(first, { yPercent: 115 }), [], t);
+          flipTl.to(last, { yPercent: -115, duration: dur, ease: 'power3.inOut' }, t);
+          flipTl.to(first, { yPercent: 0, duration: dur, ease: 'power3.inOut' }, t + 0.01);
           flipTl.play();
           ScrollTrigger.create({
             trigger: hero,
@@ -223,15 +231,23 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
           scrollTrigger: { trigger: s2Ref.current, start: 'top 75%' }
         });
 
-        // Section 2 word-by-word reveal (gray → white, scrubbed)
-        const s2Words = gsap.utils.toArray<HTMLElement>('.s2-word');
-        if (s2Words.length) {
-          gsap.set(s2Words, { opacity: 0.18 });
-          gsap.to(s2Words, {
-            opacity: 1,
-            stagger: 0.06,
-            ease: 'none',
+        // Section 2 word-by-word reveal (gray → white, scrubbed) — inline chips
+        // spin a full turn at the moment the light-up reaches them
+        const s2Seq: HTMLElement[] = [];
+        s2TextRef.current?.querySelectorAll('.s2-word, .s2-chip').forEach((el) => s2Seq.push(el as HTMLElement));
+        if (s2Seq.length) {
+          gsap.set(s2Seq.filter((el) => el.classList.contains('s2-word')), { opacity: 0.18 });
+          gsap.set(s2Seq.filter((el) => el.classList.contains('s2-chip')), { opacity: 0.18, rotation: 0, transformOrigin: '50% 50%' });
+          const s2Tl = gsap.timeline({
             scrollTrigger: { trigger: s2TextRef.current, start: 'top 85%', end: 'top 35%', scrub: true },
+          });
+          s2Seq.forEach((el, i) => {
+            const at = i * 0.06;
+            if (el.classList.contains('s2-chip')) {
+              s2Tl.to(el, { opacity: 1, rotation: 360, duration: 0.7, ease: 'power2.out' }, Math.max(0, at - 0.06));
+            } else {
+              s2Tl.to(el, { opacity: 1, duration: 0.5, ease: 'none' }, at);
+            }
           });
         }
 

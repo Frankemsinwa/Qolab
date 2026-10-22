@@ -107,10 +107,10 @@ export default function ApproachSection() {
 
       {/* Header */}
       <div className={prefersReducedMotion ? 'relative px-6 md:px-12 lg:px-16 mb-10' : 'absolute top-10 md:top-14 left-6 md:left-12 lg:left-16 z-30'}>
-        <p className="text-[10px] md:text-xs font-bold tracking-[0.3em] uppercase text-[#3a863f] mb-2 font-mono">
+        <p className="text-[10px] md:text-xs font-semibold tracking-[0.3em] uppercase text-[#3a863f] mb-2 font-mono">
           Process
         </p>
-        <h2 className="font-display text-4xl sm:text-5xl lg:text-[4rem] text-white leading-[0.95] tracking-tight font-bold">
+        <h2 className="font-display text-4xl sm:text-5xl lg:text-[4rem] text-white leading-[0.95] tracking-tight font-medium">
           How We Work
         </h2>
       </div>
@@ -121,32 +121,32 @@ export default function ApproachSection() {
           <div
             key={step.num}
             ref={(el) => { cardRefs.current[i] = el; }}
-            className={`${prefersReducedMotion ? 'relative w-full min-h-[520px]' : 'absolute inset-x-4 sm:inset-x-8 md:inset-x-12 lg:inset-x-16 bottom-0 h-[72vh] sm:h-[75vh] lg:h-[78vh]'} rounded-[32px] overflow-hidden will-change-transform border border-[#3a863f]/15 shadow-[0_-20px_50px_rgba(0,0,0,0.5)] group/card`}
+            className={`${prefersReducedMotion ? 'relative w-full min-h-[520px]' : 'absolute inset-x-4 sm:inset-x-8 md:inset-x-12 lg:inset-x-16 bottom-0 h-[72vh] sm:h-[75vh] lg:h-[78vh]'} rounded-[32px] overflow-hidden will-change-transform border border-white/10 shadow-[0_-20px_50px_rgba(0,0,0,0.5)] group/card`}
             style={{
               zIndex: 10 + i,
-              background: 'linear-gradient(135deg, rgba(18, 22, 17, 0.97) 0%, rgba(10, 12, 9, 0.99) 100%)',
+              background: 'linear-gradient(135deg, rgba(16,17,16,0.97) 0%, rgba(9,10,9,0.99) 100%)',
             }}
           >
-            {/* Top hairline — green gradient edge */}
+            {/* Top hairline — soft white edge */}
             <div className="absolute top-0 left-8 right-8 h-px z-30 pointer-events-none"
-              style={{ background: 'linear-gradient(90deg, transparent, rgba(58,134,63,0.7), transparent)' }}
+              style={{ background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.28), transparent)' }}
             />
 
-            {/* Green light flares */}
+            {/* Soft light glows — monochromatic, green kept for micro-accents only */}
             <div
-              className="absolute -right-40 -top-40 w-96 h-96 rounded-full blur-[140px] pointer-events-none transition-opacity duration-500 opacity-50 group-hover/card:opacity-80"
-              style={{ backgroundColor: step.accent }}
+              className="absolute -right-40 -top-40 w-96 h-96 rounded-full blur-[140px] pointer-events-none transition-opacity duration-500 opacity-[0.05] group-hover/card:opacity-[0.09]"
+              style={{ backgroundColor: 'rgba(255,255,255,0.55)' }}
             />
             <div
-              className="absolute -left-20 -bottom-20 w-80 h-80 rounded-full blur-[120px] pointer-events-none opacity-25 group-hover/card:opacity-50 transition-opacity duration-500"
-              style={{ backgroundColor: step.accent }}
+              className="absolute -left-20 -bottom-20 w-80 h-80 rounded-full blur-[120px] pointer-events-none opacity-[0.03] group-hover/card:opacity-[0.06] transition-opacity duration-500"
+              style={{ backgroundColor: 'rgba(255,255,255,0.55)' }}
             />
 
             {/* Subtle dotted grid texture */}
             <div
               className="absolute inset-0 pointer-events-none opacity-[0.05]"
               style={{
-                backgroundImage: 'radial-gradient(circle, rgba(58,134,63,1) 1px, transparent 1px)',
+                backgroundImage: 'radial-gradient(circle, rgba(255,255,255,1) 1px, transparent 1px)',
                 backgroundSize: '28px 28px',
               }}
             />
@@ -157,19 +157,19 @@ export default function ApproachSection() {
             </span>
 
             {/* Viewfinder corner brackets */}
-            <div className="absolute top-5 left-5 w-6 h-6 border-t-2 border-l-2 border-[#3a863f]/60 rounded-tl-md pointer-events-none z-30" />
-            <div className="absolute top-5 right-5 w-6 h-6 border-t-2 border-r-2 border-[#3a863f]/60 rounded-tr-md pointer-events-none z-30" />
-            <div className="absolute bottom-5 left-5 w-6 h-6 border-b-2 border-l-2 border-[#3a863f]/60 rounded-bl-md pointer-events-none z-30" />
-            <div className="absolute bottom-5 right-5 w-6 h-6 border-b-2 border-r-2 border-[#3a863f]/60 rounded-br-md pointer-events-none z-30" />
+            <div className="absolute top-5 left-5 w-6 h-6 border-t-2 border-l-2 border-white/25 rounded-tl-md pointer-events-none z-30" />
+            <div className="absolute top-5 right-5 w-6 h-6 border-t-2 border-r-2 border-white/25 rounded-tr-md pointer-events-none z-30" />
+            <div className="absolute bottom-5 left-5 w-6 h-6 border-b-2 border-l-2 border-white/25 rounded-bl-md pointer-events-none z-30" />
+            <div className="absolute bottom-5 right-5 w-6 h-6 border-b-2 border-r-2 border-white/25 rounded-br-md pointer-events-none z-30" />
 
             {/* Inner layout */}
             <div className="relative z-20 h-full grid grid-cols-1 items-center p-8 sm:p-12 md:p-16 lg:p-20">
               <div className="flex flex-col justify-center h-full max-w-3xl">
                 <div className="flex items-center gap-3 mb-6">
-                  <span className="font-mono text-xs font-bold tracking-widest px-3 py-1 rounded-full border border-[#3a863f]/40 bg-[#3a863f]/10 text-[#3a863f]">
+                  <span className="font-mono text-xs font-semibold tracking-widest px-3 py-1 rounded-full border border-[#6ee05a]/30 bg-[#6ee05a]/10 text-[#6ee05a]">
                     {step.num}
                   </span>
-                  <span className="flex items-center gap-2 text-[10px] tracking-[0.2em] font-bold text-gray-500 uppercase font-mono">
+                  <span className="flex items-center gap-2 text-[10px] tracking-[0.2em] font-semibold text-gray-500 uppercase font-mono">
                     <span className="relative flex h-1.5 w-1.5">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style={{ backgroundColor: step.accent }} />
                       <span className="relative inline-flex rounded-full h-1.5 w-1.5" style={{ backgroundColor: step.accent }} />
@@ -178,7 +178,7 @@ export default function ApproachSection() {
                   </span>
                 </div>
 
-                <h3 className="font-display text-3xl sm:text-4xl lg:text-[2.8rem] leading-[1.05] text-white font-bold mb-5 tracking-tight">
+                <h3 className="font-display text-3xl sm:text-4xl lg:text-[2.8rem] leading-[1.05] text-white font-medium mb-5 tracking-tight">
                   {step.title}
                 </h3>
 
@@ -200,7 +200,7 @@ export default function ApproachSection() {
                   className="h-[3px] rounded-full transition-all duration-500"
                   style={{
                     width: pi === i ? '28px' : '10px',
-                    backgroundColor: pi === i ? '#3a863f' : 'rgba(255,255,255,0.15)',
+                    backgroundColor: pi === i ? '#6ee05a' : 'rgba(255,255,255,0.15)',
                   }}
                 />
               ))}
