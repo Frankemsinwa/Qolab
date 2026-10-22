@@ -13,100 +13,65 @@ interface ProjectGridProps {
 export default function ProjectGrid({ onSelectProject }: ProjectGridProps) {
   const sectionRef = useRef<HTMLDivElement>(null);
 
-  // GSAP parallax + scroll-triggered animations
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const ctx = gsap.context(() => {
-      // Entrance stagger
-      gsap.from('.pg-card', {
-        y: 80,
+      gsap.from('.pg-row', {
+        y: 70,
         opacity: 0,
-        duration: 1.2,
-        stagger: 0.15,
+        duration: 1.1,
+        stagger: 0.18,
         ease: 'power3.out',
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: 'top 70%',
+          start: 'top 65%',
         },
-      });
-
-      // Parallax: left cards slower, right cards faster
-      gsap.utils.toArray('.pg-card').forEach((card: any) => {
-        const isLeft = card.dataset.col === 'left';
-        const speed = isLeft ? -12 : 14;
-
-        gsap.fromTo(card, { y: 0 }, {
-          yPercent: speed,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: card,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: 1.2,
-          },
-        });
-      });
-
-      // Inner image parallax — image shifts inside clipped container
-      gsap.utils.toArray('.pg-image-wrap').forEach((wrap: any) => {
-        const img = wrap.querySelector('.pg-image');
-        if (!img) return;
-        gsap.fromTo(img, { y: -30 }, {
-          y: 30,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: wrap,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: 1,
-          },
-        });
       });
     }, sectionRef);
 
     return () => ctx.revert();
   }, []);
 
-  // Card structure: left col gets pt-24 offset for stagger
-  const leftProjects = projectsData.filter((_, i) => i % 2 === 0);
-  const rightProjects = projectsData.filter((_, i) => i % 2 === 1);
-
-  const renderCard = (project: Project, col: 'left' | 'right', index: number) => (
+  const renderRow = (project: Project) => (
     <div
       key={project.id}
       data-project-card
       data-cursor="view"
       data-cursor-text="View"
-      data-col={col}
       onClick={() => onSelectProject(project)}
-      className={`pg-card group cursor-pointer ${col === 'left' && index > 0 ? 'pt-24 md:pt-32' : ''}`}
+      className="pg-row group cursor-pointer border-t border-white/10 py-12 md:py-16"
     >
-      {/* Image frame */}
-      <div className="pg-image-wrap relative overflow-hidden rounded-3xl shadow-xl aspect-[4/5]">
-        <img
-          src={project.heroImage}
-          alt={project.title}
-          className="pg-image w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
-      </div>
-
-      {/* Metadata */}
-      <div className="mt-5 flex items-start justify-between">
+      {/* Row header — pill, title, link */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8 md:mb-10">
         <div>
-          <p className="font-mono text-[10px] md:text-xs tracking-[0.25em] uppercase text-slate-400">
-            {String(index + 1).padStart(2, '0')} / {project.category.split(' ')[0]}
-          </p>
-          <h3 className="font-display text-2xl sm:text-3xl md:text-4xl text-slate-900 leading-[0.95] tracking-tighter mt-1.5">
+          <span className="inline-block text-[11px] font-display font-semibold tracking-[0.18em] uppercase text-gray-300 border border-white/15 rounded-full px-4 py-1.5">
+            {project.category.split(' & ')[0]}
+          </span>
+          <h3 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-white leading-[0.95] tracking-tight mt-4 group-hover:text-[#6ee05a] transition-colors duration-300">
             {project.title}
           </h3>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1.5 font-display leading-relaxed max-w-xs">
-            {project.subtitle}
-          </p>
         </div>
-        <span className="font-mono text-xs tracking-wider text-slate-400 mt-1 flex-shrink-0">
-          {project.year}
+        <span className="text-sm font-display text-gray-300 underline underline-offset-4 decoration-white/30 group-hover:decoration-[#6ee05a] transition-colors flex-shrink-0 md:pb-3">
+          View project
         </span>
+      </div>
+
+      {/* Image strip */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+        <div className="md:col-span-2 relative overflow-hidden rounded-2xl aspect-[16/10] bg-white/5">
+          <img
+            src={project.heroImage}
+            alt={project.title}
+            className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+          />
+        </div>
+        <div className="relative overflow-hidden rounded-2xl aspect-[16/10] md:aspect-auto bg-white/5">
+          <img
+            src={project.galleryImages[0] || project.heroImage}
+            alt={`${project.title} detail`}
+            className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+          />
+        </div>
       </div>
     </div>
   );
@@ -114,31 +79,25 @@ export default function ProjectGrid({ onSelectProject }: ProjectGridProps) {
   return (
     <section
       ref={sectionRef}
-      className="relative w-full py-28 md:py-36 px-6 md:px-12 lg:px-16 bg-[#f6f8f6] z-30"
+      className="relative w-full py-28 md:py-36 px-6 md:px-12 lg:px-16 bg-[#0a0d0c] z-30"
       id="projects"
     >
       <div className="max-w-7xl mx-auto">
         {/* Section header */}
-        <div className="mb-16 md:mb-20">
-          <p className="font-mono text-xs tracking-[0.25em] uppercase text-slate-400 mb-3">
+        <div className="mb-14 md:mb-20">
+          <p className="font-display text-xs font-semibold tracking-[0.25em] uppercase text-[#6ee05a] mb-4">
             Selected Work
           </p>
-          <h2 className="font-display text-5xl sm:text-6xl md:text-7xl text-slate-900 leading-[0.88] tracking-tighter">
-            Projects that<br />speak for themselves
+          <h2 className="font-display text-5xl sm:text-6xl md:text-7xl text-white leading-[0.9] tracking-tight">
+            Projects that{' '}
+            <span className="italic font-light text-[#6ee05a]">speak</span>
+            <br className="hidden sm:block" /> for themselves
           </h2>
         </div>
 
-        {/* Asymmetric staggered grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-start">
-          {/* Left column — offset cards */}
-          <div className="flex flex-col gap-12 md:gap-16">
-            {leftProjects.map((p, i) => renderCard(p, 'left', i))}
-          </div>
-
-          {/* Right column — staggered start */}
-          <div className="flex flex-col gap-12 md:gap-16 pt-0 md:pt-24">
-            {rightProjects.map((p, i) => renderCard(p, 'right', i))}
-          </div>
+        {/* Case rows */}
+        <div className="border-b border-white/10">
+          {projectsData.map((p) => renderRow(p))}
         </div>
       </div>
     </section>

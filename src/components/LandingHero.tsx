@@ -8,7 +8,8 @@ import ApproachSection from './ApproachSection';
 import { projectsData } from '../data';
 import { Service } from '../types';
 import QolabLogo from './QolabLogo';
-import heroBg from '../../assets/hero-imgs/neon-orbital-hero.jpg';
+import AuroraBeams from './AuroraBeams';
+import heroBg from '../../assets/hero-imgs/bg.jpg';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -57,6 +58,59 @@ interface LandingHeroProps {
   onNavigate?: (view: 'about' | 'projects' | 'services' | 'contact') => void;
 }
 
+/** Splits text into word spans for the scroll-driven highlight reveal */
+function WordRoll({ text }: { text: string }) {
+  return (
+    <>
+      {text.split(' ').map((word, i) => (
+        <span key={i} className="s2-word">{word}{' '}</span>
+      ))}
+    </>
+  );
+}
+
+/** Inline neon icon chips embedded in body copy (reference-site style) */
+function ChipDiamond() {
+  return (
+    <svg viewBox="0 0 24 24" className="inline-block w-[0.9em] h-[0.9em] mx-0.5 -translate-y-px" fill="none" aria-hidden="true">
+      <rect x="5" y="5" width="14" height="14" rx="2" transform="rotate(45 12 12)" stroke="#6ee05a" strokeWidth="2.4" />
+    </svg>
+  );
+}
+
+function ChipClover() {
+  return (
+    <svg viewBox="0 0 24 24" className="inline-block w-[0.9em] h-[0.9em] mx-0.5 -translate-y-px" fill="#6ee05a" aria-hidden="true">
+      <circle cx="12" cy="6.8" r="3.8" />
+      <circle cx="12" cy="17.2" r="3.8" />
+      <circle cx="6.8" cy="12" r="3.8" />
+      <circle cx="17.2" cy="12" r="3.8" />
+    </svg>
+  );
+}
+
+function ChipAsterisk() {
+  return (
+    <svg viewBox="0 0 24 24" className="inline-block w-[0.9em] h-[0.9em] mx-0.5 -translate-y-px" fill="none" aria-hidden="true">
+      <g stroke="#6ee05a" strokeWidth="2.4" strokeLinecap="round">
+        <path d="M12 3.5v17" />
+        <path d="M3.5 12h17" />
+        <path d="M5.9 5.9l12.2 12.2" />
+        <path d="M18.1 5.9L5.9 18.1" />
+      </g>
+    </svg>
+  );
+}
+
+function ChipEye() {
+  return (
+    <svg viewBox="0 0 24 24" className="inline-block w-[0.95em] h-[0.95em] mx-1 -translate-y-px" fill="none" aria-hidden="true">
+      <path d="M2 12s3.5-6.5 10-6.5S22 12 22 12s-3.5 6.5-10 6.5S2 12 2 12z" stroke="#6ee05a" strokeWidth="2" />
+      <circle cx="12" cy="12" r="2.8" fill="#6ee05a" />
+    </svg>
+  );
+}
+
 export default function LandingHero({ onSelectProject, onViewAllProjects, onSelectService, onNavigate }: LandingHeroProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLDivElement>(null);
@@ -64,6 +118,7 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
 
   const approachRef = useRef<HTMLDivElement>(null);
   const s8Ref = useRef<HTMLDivElement>(null);
+  const s2TextRef = useRef<HTMLParagraphElement>(null);
   const spotlightRef = useRef<HTMLDivElement>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -120,6 +175,18 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
           scrollTrigger: { trigger: s2Ref.current, start: 'top 75%' }
         });
 
+        // Section 2 word-by-word reveal (gray → white, scrubbed)
+        const s2Words = gsap.utils.toArray<HTMLElement>('.s2-word');
+        if (s2Words.length) {
+          gsap.set(s2Words, { opacity: 0.18 });
+          gsap.to(s2Words, {
+            opacity: 1,
+            stagger: 0.06,
+            ease: 'none',
+            scrollTrigger: { trigger: s2TextRef.current, start: 'top 85%', end: 'top 35%', scrub: true },
+          });
+        }
+
         // Section 5 parallax
         gsap.utils.toArray('.parallax-card').forEach((card: any) => {
           gsap.fromTo(card, { y: -50 }, {
@@ -170,11 +237,12 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
             <img
               src={heroBg}
               alt=""
-              className="w-full h-full object-cover object-center"
+              className="w-full h-full object-cover object-center scale-x-[-1]"
             />
+            <AuroraBeams />
           </div>
-          <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-transparent to-black/45" />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/45 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/45" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/65 via-black/25 to-transparent" />
           {/* Mouse-following green flare spotlight — matches bg image flare */}
           <div
             ref={spotlightRef}
@@ -252,7 +320,7 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
                 <span className="block">Some Ideas</span>
                 <span className="block">
                   Deserve to{' '}
-                  <span className="italic font-light text-[#3a863f] underline decoration-[#3a863f] decoration-[0.04em] underline-offset-[0.12em]">
+                  <span className="italic font-light text-[#6ee05a]">
                     Exist.
                   </span>
                 </span>
@@ -265,7 +333,7 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
                   onClick={() => onNavigate?.('contact')}
                   data-cursor="magnetic"
                   data-cursor-text="Let's go"
-                  className="flex items-center gap-2.5 bg-white text-[#1a1a1a] px-7 py-3.5 rounded-full text-sm font-semibold hover:bg-[#3a863f] hover:text-white transition-all hover:scale-105 active:scale-95 font-display"
+                  className="flex items-center gap-2.5 border border-white/40 bg-white/5 backdrop-blur-sm text-white px-7 py-3.5 rounded-full text-sm font-semibold hover:bg-white hover:text-[#0f0f11] transition-all font-display"
                 >
                   Let's Make It Exist.
                   <ArrowUpRight size={16} />
@@ -281,17 +349,11 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
             </div>
           </div>
 
-          {/* Bottom meta — slogan + scroll cue */}
-          <div className="w-full flex items-end justify-between px-6 md:px-12 lg:px-16 pb-6 md:pb-8 relative z-20">
+          {/* Bottom meta — slogan */}
+          <div className="w-full flex items-end px-6 md:px-12 lg:px-16 pb-6 md:pb-8 relative z-20">
             <p className="hero-nav-item text-[10px] md:text-[11px] font-semibold tracking-[0.25em] uppercase text-gray-400 font-display">
               QOLAB — Future Ready Solutions.
             </p>
-            <div className="hidden sm:flex flex-col items-center gap-3">
-              <span className="text-[10px] tracking-[0.3em] uppercase text-gray-400 font-display">Scroll</span>
-              <span className="scroll-cue-track" aria-hidden="true">
-                <span className="scroll-cue-dot" />
-              </span>
-            </div>
           </div>
         </div>
       </section>
@@ -318,7 +380,12 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
               We don't just design — <span className="italic text-[#3a863f]">we engineer</span> experiences.
             </h2>
             <p className="s2-inner text-gray-400 text-base sm:text-lg mt-6 leading-relaxed font-sans max-w-lg">
-              Every pixel, every interaction, every line of code is intentional. We blend creative direction with technical mastery to build products people genuinely love.
+              <WordRoll text="Every pixel, every interaction, every line of code is intentional." />{' '}
+              <ChipDiamond />{' '}
+              <WordRoll text="We blend creative direction with technical mastery" />{' '}
+              <ChipClover />{' '}
+              <WordRoll text="to build products people genuinely love." />{' '}
+              <ChipAsterisk />
             </p>
           </div>
           <div>
@@ -415,28 +482,34 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
         </div>
       </section>
 
-      {/* ===== SECTION 8: CTA ===== */}
-      <section ref={s8Ref} className="relative w-full py-24 md:py-32 px-6 md:px-12 lg:px-16 bg-[#0f0f11] text-white overflow-hidden z-20">
-        <div className="s8-content max-w-7xl mx-auto text-center relative z-10">
-          <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[#3a863f] mb-6 font-display">Ready to start?</p>
-          <h2 className="font-display text-[3.2rem] sm:text-[5rem] lg:text-[7rem] leading-[0.92] tracking-tight text-white">
-            The Future Is Not a <span className="italic font-light text-[#3a863f]">Spectator</span> Sport.
+      {/* ===== SECTION 8: STATEMENT CTA ===== */}
+      <section ref={s8Ref} className="relative w-full py-28 md:py-40 px-6 md:px-12 lg:px-16 bg-[#0a0d0c] text-white overflow-hidden z-20 border-t border-white/10">
+        <div className="s8-content max-w-6xl mx-auto">
+          <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[#6ee05a] mb-8 font-display">Ready to start?</p>
+          <h2 className="font-display text-[3.4rem] sm:text-[5.5rem] lg:text-[8rem] leading-[0.9] tracking-tight text-white">
+            The Future Is
+            <br />
+            Not a <ChipEye />{' '}
+            <span className="italic font-light text-[#6ee05a]">Spectator</span>
+            <br className="hidden sm:block" /> Sport.
           </h2>
-          <p className="text-gray-400 text-base sm:text-lg mt-8 max-w-2xl mx-auto font-display leading-relaxed">
-            We help turn imagination into tangible brands, products, platforms, and smarter ways of working.
-          </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4 mt-12">
+          <div className="mt-12 flex flex-col sm:flex-row sm:items-center gap-6">
+            <p className="text-gray-400 text-base sm:text-lg font-display leading-relaxed max-w-xl">
+              We help turn imagination into tangible brands, products, platforms, and smarter ways of working.
+            </p>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-4 mt-10">
             <button
               onClick={() => onNavigate?.('contact')}
               data-cursor="magnetic"
               data-cursor-text="Start now"
-              className="bg-[#3a863f] hover:bg-[#2f6d33] text-white font-semibold py-4 px-10 rounded-full text-base transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg font-display"
+              className="bg-white hover:bg-[#6ee05a] text-[#0f0f11] font-semibold py-4 px-10 rounded-full text-base transition-colors duration-300 font-display"
             >
               Start Something With Qolab.
             </button>
             <button
               onClick={onViewAllProjects}
-              className="border border-white/20 hover:border-white/40 text-white font-semibold py-4 px-10 rounded-full text-base transition-all duration-300 hover:bg-white/5 font-display"
+              className="border border-white/20 hover:border-white/50 text-white font-semibold py-4 px-10 rounded-full text-base transition-colors duration-300 hover:bg-white/5 font-display"
             >
               View Our Work
             </button>
@@ -445,7 +518,57 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
       </section>
 
       {/* ===== FOOTER ===== */}
-      <footer className="site-footer w-full bg-[#0f0f11] text-gray-400 pt-16 pb-8 px-6 md:px-12 lg:px-16 border-t border-white/5 z-20 relative">
+      <footer className="site-footer w-full bg-[#0a0d0c] text-gray-400 pt-24 md:pt-32 pb-8 px-6 md:px-12 lg:px-16 border-t border-white/10 z-20 relative overflow-hidden">
+        {/* Giant statement */}
+        <div className="max-w-7xl mx-auto mb-16 md:mb-24">
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-10">
+            <h2 className="font-display italic font-light text-white text-[3.6rem] sm:text-[5.5rem] lg:text-[8rem] leading-[0.9] tracking-tight">
+              Get in touch
+            </h2>
+            <div className="flex flex-col gap-4 lg:items-end lg:pb-4">
+              <p className="text-gray-400 text-sm font-display max-w-sm">
+                Have an idea that deserves to exist? We reply within one working day.
+              </p>
+              <button
+                onClick={() => onNavigate?.('contact')}
+                data-cursor="magnetic"
+                data-cursor-text="Contact"
+                className="self-start lg:self-auto flex items-center gap-2 border border-white/30 hover:border-white hover:bg-white hover:text-[#0f0f11] text-white font-display font-semibold py-3.5 px-8 rounded-full text-sm transition-colors"
+              >
+                Contact
+                <ArrowUpRight size={15} />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Bordered socials grid */}
+        <div className="max-w-7xl mx-auto mb-16 md:mb-20">
+          <div className="grid grid-cols-2 md:grid-cols-5 border border-white/10 rounded-2xl overflow-hidden">
+            {[
+              { label: 'LinkedIn', href: '#' },
+              { label: 'X', href: '#' },
+              { label: 'Instagram', href: '#' },
+              { label: 'Dribbble', href: '#' },
+              { label: 'Email', href: 'mailto:hello.qolab@gmail.com' },
+            ].map((social) => (
+              <a
+                key={social.label}
+                href={social.href}
+                className="group flex flex-col justify-between aspect-[4/3] md:aspect-[5/4] p-5 md:p-6 border-r border-b border-white/10 md:border-b-0 hover:bg-white/[0.04] transition-colors last:border-r-0"
+              >
+                <span className="text-2xl md:text-3xl font-display text-gray-500 group-hover:text-[#6ee05a] transition-colors">
+                  {social.label[0]}
+                </span>
+                <span className="text-xs font-display text-gray-300 group-hover:text-white transition-colors">
+                  {social.label}
+                </span>
+              </a>
+            ))}
+          </div>
+        </div>
+
+        {/* Link columns */}
         <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
           <div className="footer-col">
             <h5 className="text-white text-xs font-mono uppercase tracking-widest mb-5 font-display">Work</h5>
@@ -486,7 +609,7 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
             </ul>
           </div>
         </div>
-        <div className="max-w-7xl mx-auto pt-8 border-t border-white/5 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs">
+        <div className="max-w-7xl mx-auto pt-8 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs">
           <div className="flex items-center">
             <QolabLogo className="w-20" />
           </div>

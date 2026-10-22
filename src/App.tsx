@@ -3,6 +3,7 @@ import Lenis from 'lenis';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Navigation from './components/Navigation';
+import BottomPillNav from './components/BottomPillNav';
 import LandingHero from './components/LandingHero';
 import ProjectDetail from './components/ProjectDetail';
 import ProjectShowcase from './components/ProjectShowcase';
@@ -65,17 +66,7 @@ export default function App() {
   };
 
   // Global nav: hidden during hero on landing, appears once scrolled past it
-  const [showLandingNav, setShowLandingNav] = useState(false);
-  useEffect(() => {
-    if (view !== 'landing') {
-      setShowLandingNav(false);
-      return;
-    }
-    const onScroll = () => setShowLandingNav(window.scrollY > window.innerHeight * 1.7);
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, [view]);
+  // (landing now uses the floating BottomPillNav instead)
 
   // Initialize Lenis smooth scrolling — synced with GSAP ScrollTrigger
   useEffect(() => {
@@ -107,9 +98,12 @@ export default function App() {
       {/* Global transition overlay for service card zoom */}
       <TransitionOverlay ref={transitionRef} />
 
-      {/* Header Navigation — appears on landing only after scrolling past the hero */}
-      {view !== 'service-detail' && view !== 'not-found' && (view !== 'landing' || showLandingNav) && (
+      {/* Header Navigation — inner views only; landing uses BottomPillNav */}
+      {view !== 'service-detail' && view !== 'not-found' && view !== 'landing' && (
         <Navigation onNavigate={(target) => setView(target)} />
+      )}
+      {view === 'landing' && (
+        <BottomPillNav onNavigate={(target) => setView(target)} />
       )}
 
       {/* Main presentation grid layout routing */}

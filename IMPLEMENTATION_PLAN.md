@@ -157,3 +157,18 @@
 6. Phase F (polish, 404, microcopy, motion)
 
 *Copy decisions follow the writing rule: memorable headline, plain-language body, zero unsupported claims.*
+
+---
+
+## Phase G — "Award-Site Evolution" (Inspiration: kstoimenov.com reference recording, 2026-10-22)
+
+Theme: black `#0a0d0c` + neon green light + hairline borders. Keep all QOLAB copy; adopt reference layout/motion language.
+
+- [x] **G1. Hero v3:** `bg.jpg` (green light-curtain) mirrored so beams sit right / text stays left; animated canvas shimmer overlay (breathing blooms, screen blend, static frame under reduced motion); mixed roman/italic headline (drop underline on "Exist."); outline pill primary CTA.
+- [x] **G2. Floating bottom pill nav** on landing (dark glass, logo chip + Work/Services/About + white "Let's talk" pill); top Navigation removed from landing; mobile keeps hamburger overlay.
+- [x] **G3. Word-by-word scroll reveal** on Why-Qolab paragraph (gray?white, scrubbed) + inline neon icon chips (diamond/clover/asterisk) inside the text.
+- [x] **G4. Work ? case rows:** hairline separators, category pill, oversized title, "View project" link, 2-up image strip, glass VIEW cursor retained; section goes dark.
+- [x] **G5. Statement CTA:** giant mixed-italic line with inline eye chip; white pill primary.
+- [x] **G6. Footer:** giant italic "Get in touch" statement + Contact pill + bordered socials grid (LinkedIn/X/Instagram/Dribbble/Email) + copyright row.
+- [ ] **G7. Polish:** reduced-motion parity, perf check, lint/build green.
+
