@@ -483,14 +483,14 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
       {/* ===== SECTION 2: WHY QOLAB — giant scroll-reveal statement (reference layout) ===== */}
       <section
         ref={s2Ref}
-        className="relative w-full py-28 md:py-40 px-6 md:px-12 lg:px-16 z-20 overflow-hidden bg-[#0a0f0d]"
+        className="relative w-full py-28 md:py-40 px-6 md:px-12 lg:px-16 z-20 overflow-hidden bg-[#0a0d0c]"
       >
-        {/* Green light flares */}
+        {/* Monochromatic depth — soft neutral glows instead of green */}
         <div className="absolute -top-32 -right-32 w-[34rem] h-[34rem] rounded-full pointer-events-none"
-          style={{ background: 'radial-gradient(circle, rgba(58,134,63,0.35) 0%, rgba(58,134,63,0.12) 45%, transparent 70%)' }}
+          style={{ background: 'radial-gradient(circle, rgba(255,255,255,0.045) 0%, rgba(255,255,255,0.015) 45%, transparent 70%)' }}
         />
         <div className="absolute -bottom-40 -left-40 w-[36rem] h-[36rem] rounded-full pointer-events-none"
-          style={{ background: 'radial-gradient(circle, rgba(58,134,63,0.3) 0%, rgba(58,134,63,0.1) 45%, transparent 70%)' }}
+          style={{ background: 'radial-gradient(circle, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 45%, transparent 70%)' }}
         />
         <div className="relative max-w-5xl mx-auto">
           <p className="s2-inner text-xs font-semibold tracking-[0.2em] uppercase text-[#6ee05a] mb-10 md:mb-14 font-display">Why Qolab</p>
