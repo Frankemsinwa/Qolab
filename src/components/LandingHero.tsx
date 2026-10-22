@@ -612,11 +612,11 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
       <section ref={s8Ref} className="relative w-full py-28 md:py-40 px-6 md:px-12 lg:px-16 bg-[#0a0d0c] text-white overflow-hidden z-20 border-t border-white/10">
         <div className="s8-content max-w-6xl mx-auto">
           <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[#6ee05a] mb-8 font-display">Ready to start?</p>
-          <h2 className="font-display text-[3.4rem] sm:text-[5.5rem] lg:text-[8rem] leading-[0.9] tracking-tight text-white">
+          <h2 className="font-display font-normal text-[3.4rem] sm:text-[5.5rem] lg:text-[8rem] leading-[0.9] tracking-tight text-white">
             The Future Is
             <br />
             Not a <ChipEye />{' '}
-            <span className="italic font-light text-[#6ee05a]">Spectator</span>
+            <span className="italic text-[#6ee05a]">Spectator</span>
             <br className="hidden sm:block" /> Sport.
           </h2>
           <div className="mt-12 flex flex-col sm:flex-row sm:items-center gap-6">
