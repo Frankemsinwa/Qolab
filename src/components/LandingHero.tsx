@@ -540,34 +540,49 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
       </div>
 
       {/* ===== SECTION 7B: COLLABORATION (PRD 7.6) ===== */}
-      <section className="relative w-full py-24 md:py-32 px-6 md:px-12 lg:px-16 bg-white z-20 overflow-hidden">
+      <section className="relative w-full py-24 md:py-32 px-6 md:px-12 lg:px-16 bg-[#0a0d0c] z-20 overflow-hidden">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-14 lg:gap-20 items-center">
           <div>
-            <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[#3a863f] mb-4 font-sans">Collaboration</p>
-            <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl text-[#1a1a1a] leading-[1.05] mb-6">
-              No Great Thing Is Built <span className="italic text-[#3a863f]">From One Piece.</span>
+            <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[#6ee05a] mb-4 font-sans">Collaboration</p>
+            <h2 className="font-display font-normal text-4xl sm:text-5xl lg:text-6xl text-white leading-[1.05] tracking-tight mb-6">
+              No Great Thing Is Built <span className="text-[#6ee05a]">From One Piece.</span>
             </h2>
-            <p className="text-gray-600 text-base sm:text-lg leading-relaxed font-sans max-w-xl">
+            <p className="text-gray-400 text-base sm:text-lg leading-relaxed font-sans max-w-xl">
               Great outcomes come from different disciplines and perspectives working as one. That's why we don't assign you one person — we build you a team around your brand: strategists, designers, engineers, and marketers, aligned on one point of contact and one outcome.
             </p>
             <p className="text-sm text-gray-500 font-sans mt-4 max-w-xl">
               One team, one point of contact, aligned on one outcome.
             </p>
           </div>
+
+          {/* Interactive orbit — disciplines revolving around your brand */}
           <div className="flex items-center justify-center lg:justify-end">
-            <div className="flex items-center -space-x-8 md:-space-x-10">
-              {[
-                { label: 'Strategy', bg: 'bg-[#3a863f]' },
-                { label: 'Design', bg: 'bg-[#2f6d33]' },
-                { label: 'Technology', bg: 'bg-[#1a1a1a]' },
-              ].map((piece) => (
-                <div
-                  key={piece.label}
-                  className={`w-32 h-32 md:w-44 md:h-44 rounded-full ${piece.bg} border-4 border-white flex items-center justify-center text-white font-display text-sm md:text-base shadow-lg`}
-                >
-                  {piece.label}
-                </div>
-              ))}
+            <div className="group/orbit relative w-[19rem] h-[19rem] md:w-[25rem] md:h-[25rem]">
+              {/* Orbit rings */}
+              <div className="absolute inset-0 rounded-full border border-white/10" />
+              <div className="absolute inset-[16%] rounded-full border border-dashed border-white/[0.06]" />
+              {/* Center core */}
+              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 md:w-40 md:h-40 rounded-full bg-[#111312] border border-white/15 flex items-center justify-center text-center px-4 shadow-[0_0_60px_rgba(110,230,90,0.1)]">
+                <span>
+                  <span className="block text-white text-xs md:text-sm font-sans font-medium uppercase tracking-[0.18em]">Your Brand</span>
+                  <span className="block text-gray-500 text-[10px] md:text-[11px] font-sans uppercase tracking-[0.2em] mt-1.5">one outcome</span>
+                </span>
+              </div>
+              {/* Orbiting nodes — pause on hover */}
+              <div className="orbit-spin absolute inset-0 group-hover/orbit:[animation-play-state:paused]">
+                {['Strategy', 'Design', 'Engineering', 'Marketing'].map((discipline, i) => (
+                  <div key={discipline} className="absolute inset-0" style={{ transform: `rotate(${i * 90}deg)` }}>
+                    <div className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2">
+                      <div className="orbit-counter group-hover/orbit:[animation-play-state:paused]">
+                        <span className="flex items-center gap-2 whitespace-nowrap rounded-full border border-white/15 bg-[#0f1110]/90 backdrop-blur px-4 py-2 text-[11px] md:text-xs font-sans uppercase tracking-[0.15em] text-gray-200 shadow-[0_8px_30px_rgba(0,0,0,0.5)] cursor-default">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#6ee05a]" />
+                          {discipline}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>

@@ -169,6 +169,21 @@ html.lenis, html.lenis body {
   50% { transform: scale(1.03); opacity: 1; }
 }
 
+/* ===== Collaboration orbit ===== */
+@keyframes orbitRotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.orbit-spin {
+  animation: orbitRotate 32s linear infinite;
+}
+
+.orbit-counter {
+  animation: orbitRotate 32s linear infinite reverse;
+}
+
 /* Respect reduced-motion preferences */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
