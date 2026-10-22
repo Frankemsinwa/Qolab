@@ -297,14 +297,14 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
           </div>
 
           {mobileMenuOpen && (
-            <div className="fixed inset-0 z-[100] bg-white flex flex-col px-6 md:hidden">
+            <div className="fixed inset-0 z-[100] bg-[#0a0d0c] text-white flex flex-col px-6 md:hidden">
               <div className="flex items-center justify-between pt-4">
                 <span className="inline-flex bg-[#0f0f11] rounded-full px-4 py-2.5 border border-white/10 shadow-md">
                   <QolabLogo className="w-24" />
                 </span>
                 <button
                   onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center justify-center w-10 h-10 text-[#1a1a1a]"
+                  className="flex items-center justify-center w-10 h-10 text-white"
                   aria-label="Close menu"
                 >
                   <X size={24} />
@@ -322,7 +322,7 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
                     key={item.label}
                     type="button"
                     onClick={item.action}
-                    className="font-display text-4xl text-[#1a1a1a] hover:text-[#3a863f] transition-colors cursor-pointer"
+                    className="font-display font-normal tracking-tight text-4xl text-white hover:text-[#6ee05a] transition-colors cursor-pointer"
                   >
                     {item.label}
                   </button>

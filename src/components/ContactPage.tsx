@@ -144,11 +144,11 @@ export default function ContactPage({ onBack }: ContactPageProps) {
     setSubmitted(true);
   };
 
-  const labelCls = 'font-mono text-xs text-black/40 uppercase tracking-widest mb-2 block';
-  const star = <span className="text-[#3a863f]">*</span>;
+  const labelCls = 'font-mono text-xs text-white/40 uppercase tracking-widest mb-2 block';
+  const star = <span className="text-[#6ee05a]">*</span>;
   const inputCls = (hasError?: string) =>
-    `w-full bg-white/50 border rounded-xl px-6 py-4 text-black font-sans focus:outline-none transition-colors ${
-      hasError ? 'border-red-400 focus:border-red-500' : 'border-black/10 focus:border-[#3a863f]'
+    `w-full bg-white/[0.03] border rounded-xl px-6 py-4 text-white placeholder:text-white/35 font-sans focus:outline-none transition-colors ${
+      hasError ? 'border-red-400 focus:border-red-500' : 'border-white/10 focus:border-[#6ee05a]'
     }`;
 
   const textField = (key: keyof FormState, label: string, placeholder: string, type = 'text') => (
@@ -166,7 +166,7 @@ export default function ContactPage({ onBack }: ContactPageProps) {
         aria-describedby={errors[key] ? `${key}-error` : undefined}
         className={inputCls(errors[key])}
       />
-      {errors[key] && <p id={`${key}-error`} className="text-red-600 text-xs mt-1.5 font-sans">{errors[key]}</p>}
+      {errors[key] && <p id={`${key}-error`} className="text-red-400 text-xs mt-1.5 font-sans">{errors[key]}</p>}
     </div>
   );
 
@@ -185,7 +185,7 @@ export default function ContactPage({ onBack }: ContactPageProps) {
         aria-describedby={errors[key] ? `${key}-error` : undefined}
         className={`${inputCls(errors[key])} resize-none`}
       />
-      {errors[key] && <p id={`${key}-error`} className="text-red-600 text-xs mt-1.5 font-sans">{errors[key]}</p>}
+      {errors[key] && <p id={`${key}-error`} className="text-red-400 text-xs mt-1.5 font-sans">{errors[key]}</p>}
     </div>
   );
 
@@ -198,10 +198,10 @@ export default function ContactPage({ onBack }: ContactPageProps) {
         {options.map((option) => (
           <label
             key={option}
-            className={`cursor-pointer rounded-full border px-5 py-2.5 text-sm font-sans transition-colors focus-within:ring-2 focus-within:ring-[#3a863f]/40 ${
+            className={`cursor-pointer rounded-full border px-5 py-2.5 text-sm font-sans transition-colors focus-within:ring-2 focus-within:ring-[#6ee05a]/40 ${
               form[key] === option
-                ? 'border-[#3a863f] bg-[#3a863f]/10 text-[#2f6d33] font-semibold'
-                : 'border-black/10 bg-white/50 text-gray-700 hover:border-[#3a863f]/40'
+                ? 'border-[#6ee05a] bg-[#6ee05a]/10 text-[#6ee05a] font-semibold'
+                : 'border-white/10 bg-white/[0.03] text-gray-300 hover:border-[#6ee05a]/40'
             }`}
           >
             <input
@@ -216,69 +216,69 @@ export default function ContactPage({ onBack }: ContactPageProps) {
           </label>
         ))}
       </div>
-      {errors[key] && <p id={`${key}-error`} className="text-red-600 text-xs mt-1.5 font-sans">{errors[key]}</p>}
+      {errors[key] && <p id={`${key}-error`} className="text-red-400 text-xs mt-1.5 font-sans">{errors[key]}</p>}
     </fieldset>
   );
 
   const sectionLabel = (letter: string, title: string) => (
-    <div className="flex items-center gap-3 mb-6 pt-8 border-t border-black/10 first:border-t-0 first:pt-0">
-      <span className="font-mono text-xs font-bold text-white bg-[#3a863f] w-7 h-7 rounded-full flex items-center justify-center">
+    <div className="flex items-center gap-3 mb-6 pt-8 border-t border-white/10 first:border-t-0 first:pt-0">
+      <span className="lime-grad w-7 h-7 font-bold rounded-full flex items-center justify-center">
         {letter}
       </span>
-      <h3 className="font-mono text-xs text-black/60 uppercase tracking-widest font-bold">{title}</h3>
+      <h3 className="font-mono text-xs text-white/60 uppercase tracking-widest font-bold">{title}</h3>
     </div>
   );
 
   return (
     <div ref={containerRef} className="w-full pt-32 pb-24 px-6 sm:px-12 md:px-16 min-h-screen">
       {/* Header */}
-      <div className="max-w-6xl mx-auto flex justify-between items-center mb-16 border-b border-black/10 pb-6">
+      <div className="max-w-6xl mx-auto flex justify-between items-center mb-16 border-b border-white/10 pb-6">
         <button
           onClick={onBack}
-          className="flex items-center gap-2 text-sm font-semibold text-[#3a863f] hover:text-[#2f6d33] transition-colors group"
+          className="flex items-center gap-2 text-sm font-semibold text-[#6ee05a] hover:text-white transition-colors group"
         >
           <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
           <span>Return Home</span>
         </button>
-        <span className="font-mono text-xs text-black/40 uppercase tracking-widest">
+        <span className="font-mono text-xs text-white/40 uppercase tracking-widest">
           Contact
         </span>
       </div>
 
       <div className="max-w-6xl mx-auto">
         {/* Page intro (E1) */}
-        <h1 className="contact-reveal font-display italic text-5xl sm:text-7xl md:text-8xl text-black leading-[0.9] mb-8">
+        <h1 className="contact-reveal font-display font-normal tracking-tight text-5xl sm:text-7xl md:text-8xl text-white leading-[0.9] mb-8">
           So, What's the Big Idea?
         </h1>
-        <p className="contact-reveal font-sans text-lg sm:text-xl text-gray-600 max-w-2xl mb-16 leading-relaxed">
+        <p className="contact-reveal font-sans text-lg sm:text-xl text-gray-400 max-w-2xl mb-16 leading-relaxed">
           Bring the question. Bring the ambition. Bring the unfinished idea. Let's see what it could become.
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-12 lg:gap-16 items-start">
           {/* Contact details rail (E5 — no WhatsApp) */}
           <div className="contact-reveal flex flex-col gap-6 md:sticky md:top-8">
-            <div className="bg-white/50 rounded-2xl p-6 border border-black/5">
-              <span className="font-mono text-xs text-[#3a863f] font-bold uppercase tracking-widest mb-2 block">Email</span>
-              <a href="mailto:hello.qolab@gmail.com" className="font-sans text-lg text-black hover:text-[#3a863f] transition-colors break-all">
+            <div className="bg-white/[0.03] rounded-2xl p-6 border border-white/10">
+              <span className="font-mono text-xs text-[#6ee05a] font-bold uppercase tracking-widest mb-2 block">Email</span>
+              <a href="mailto:hello.qolab@gmail.com" className="font-sans text-lg text-white hover:text-[#6ee05a] transition-colors break-all">
                 hello.qolab@gmail.com
               </a>
             </div>
-            <div className="bg-white/50 rounded-2xl p-6 border border-black/5">
-              <span className="font-mono text-xs text-[#3a863f] font-bold uppercase tracking-widest mb-2 block">Location</span>
-              <p className="font-sans text-lg text-black">Nigeria &amp; UK</p>
-              <p className="font-sans text-sm text-gray-500 mt-1">Working globally</p>
+            <div className="bg-white/[0.03] rounded-2xl p-6 border border-white/10">
+              <span className="font-mono text-xs text-[#6ee05a] font-bold uppercase tracking-widest mb-2 block">Location</span>
+              <p className="font-sans text-lg text-white">Nigeria &amp; UK</p>
+              <p className="font-sans text-sm text-gray-400 mt-1">Working globally</p>
             </div>
-            <div className="bg-white/50 rounded-2xl p-6 border border-black/5">
-              <span className="font-mono text-xs text-[#3a863f] font-bold uppercase tracking-widest mb-2 block">Follow Us</span>
+            <div className="bg-white/[0.03] rounded-2xl p-6 border border-white/10">
+              <span className="font-mono text-xs text-[#6ee05a] font-bold uppercase tracking-widest mb-2 block">Follow Us</span>
               <div className="flex gap-4 mt-2">
-                <a href="#" className="font-sans text-black hover:text-[#3a863f] transition-colors">Instagram</a>
-                <a href="#" className="font-sans text-black hover:text-[#3a863f] transition-colors">LinkedIn</a>
-                <a href="#" className="font-sans text-black hover:text-[#3a863f] transition-colors">Twitter</a>
+                <a href="#" className="font-sans text-white hover:text-[#6ee05a] transition-colors">Instagram</a>
+                <a href="#" className="font-sans text-white hover:text-[#6ee05a] transition-colors">LinkedIn</a>
+                <a href="#" className="font-sans text-white hover:text-[#6ee05a] transition-colors">Twitter</a>
               </div>
             </div>
-            <div className="bg-[#f5f5f5] rounded-2xl p-6 border border-black/5">
-              <span className="font-mono text-xs text-[#3a863f] font-bold uppercase tracking-widest mb-2 block">What happens next</span>
-              <p className="font-sans text-sm text-gray-600 leading-relaxed">
+            <div className="bg-white/[0.04] rounded-2xl p-6 border border-white/10">
+              <span className="font-mono text-xs text-[#6ee05a] font-bold uppercase tracking-widest mb-2 block">What happens next</span>
+              <p className="font-sans text-sm text-gray-400 leading-relaxed">
                 Every application is reviewed by our lead strategist. If there is a strong fit,
                 you will receive a personalised invitation to a Strategy Session.
               </p>
@@ -289,11 +289,11 @@ export default function ContactPage({ onBack }: ContactPageProps) {
           <div className="contact-reveal">
             {!submitted ? (
               <>
-                <h2 className="font-display italic text-3xl sm:text-4xl text-black mb-2">
+                <h2 className="font-display font-normal tracking-tight text-3xl sm:text-4xl text-white mb-2">
                   Tell us what you're imagining.
                 </h2>
-                <p className="font-sans text-sm text-gray-500 mb-10">
-                  Fields marked <span className="text-[#3a863f]">*</span> are required.
+                <p className="font-sans text-sm text-gray-400 mb-10">
+                  Fields marked <span className="text-[#6ee05a]">*</span> are required.
                 </p>
 
                 <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-0">
@@ -336,10 +336,10 @@ export default function ContactPage({ onBack }: ContactPageProps) {
                         return (
                           <label
                             key={need}
-                            className={`cursor-pointer rounded-xl border px-5 py-4 text-sm font-sans transition-colors flex items-start gap-3 focus-within:ring-2 focus-within:ring-[#3a863f]/40 ${
+                            className={`cursor-pointer rounded-xl border px-5 py-4 text-sm font-sans transition-colors flex items-start gap-3 focus-within:ring-2 focus-within:ring-[#6ee05a]/40 ${
                               checked
-                                ? 'border-[#3a863f] bg-[#3a863f]/10 text-[#2f6d33] font-semibold'
-                                : 'border-black/10 bg-white/50 text-gray-700 hover:border-[#3a863f]/40'
+                                ? 'border-[#6ee05a] bg-[#6ee05a]/10 text-[#6ee05a] font-semibold'
+                                : 'border-white/10 bg-white/[0.03] text-gray-300 hover:border-[#6ee05a]/40'
                             }`}
                           >
                             <input
@@ -350,7 +350,7 @@ export default function ContactPage({ onBack }: ContactPageProps) {
                             />
                             <span
                               className={`w-4 h-4 mt-0.5 rounded border flex-shrink-0 flex items-center justify-center ${
-                                checked ? 'bg-[#3a863f] border-[#3a863f]' : 'border-black/30 bg-white'
+                                checked ? 'bg-[#6ee05a] border-[#6ee05a]' : 'border-white/30 bg-white/[0.06]'
                               }`}
                             >
                               {checked && <Check size={12} className="text-white" strokeWidth={3} />}
@@ -360,7 +360,7 @@ export default function ContactPage({ onBack }: ContactPageProps) {
                         );
                       })}
                     </div>
-                    {errors.needs && <p id="needs-error" className="text-red-600 text-xs mt-1.5 font-sans">{errors.needs}</p>}
+                    {errors.needs && <p id="needs-error" className="text-red-400 text-xs mt-1.5 font-sans">{errors.needs}</p>}
                   </fieldset>
 
                   {/* D — The current state */}
@@ -399,13 +399,13 @@ export default function ContactPage({ onBack }: ContactPageProps) {
                   </div>
 
                   {/* Privacy notice + submit (E3) */}
-                  <p className="font-sans text-xs text-gray-500 leading-relaxed mt-10 pt-8 border-t border-black/10">
+                  <p className="font-sans text-xs text-gray-400 leading-relaxed mt-10 pt-8 border-t border-white/10">
                     We'll only use your details to review your application and reply to you.
                     Your information stays private — never shared, never added to mailing lists.
                   </p>
                   <button
                     type="submit"
-                    className="flex items-center justify-center gap-3 bg-[#3a863f] hover:bg-[#2f6d33] text-white font-semibold py-4 px-8 rounded-full transition-transform hover:scale-105 active:scale-95 shadow-md mt-6 font-display"
+                    className="flex items-center justify-center gap-3 lime-grad font-display font-semibold py-4 px-8 rounded-full transition-all hover:opacity-90 hover:scale-105 active:scale-95 shadow-md mt-6"
                   >
                     <span>Let's Make It Exist.</span>
                     <ArrowUpRight size={18} />
@@ -414,21 +414,21 @@ export default function ContactPage({ onBack }: ContactPageProps) {
               </>
             ) : (
               /* Success state (E4) */
-              <div className="bg-white/50 rounded-[2rem] p-10 sm:p-14 border border-black/5 text-center">
-                <div className="w-16 h-16 rounded-full bg-[#3a863f] flex items-center justify-center mx-auto mb-6">
-                  <Check size={28} className="text-white" />
+              <div className="bg-white/[0.03] rounded-[2rem] p-10 sm:p-14 border border-white/10 text-center">
+                <div className="w-16 h-16 rounded-full lime-grad flex items-center justify-center mx-auto mb-6">
+                  <Check size={28} className="text-[#0f0f11]" strokeWidth={3} />
                 </div>
-                <h2 className="font-display italic text-3xl sm:text-4xl text-black mb-4">
+                <h2 className="font-display font-normal tracking-tight text-3xl sm:text-4xl text-white mb-4">
                   Something's in motion. We'll be in touch.
                 </h2>
-                <p className="font-sans text-gray-600 leading-relaxed max-w-xl mx-auto mb-8">
+                <p className="font-sans text-gray-400 leading-relaxed max-w-xl mx-auto mb-8">
                   Your application has been received and will be reviewed by our lead strategist.
                   If we believe there is a strong fit, you will receive a personalised invitation
                   to a Strategy Session within 24 to 48 hours.
                 </p>
                 <button
                   onClick={onBack}
-                  className="inline-flex items-center gap-2 text-sm font-semibold text-[#3a863f] hover:text-[#2f6d33] transition-colors font-sans"
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-[#6ee05a] hover:text-[#6ee05a] transition-colors font-sans"
                 >
                   <ArrowLeft size={16} />
                   <span>Back to home</span>

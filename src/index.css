@@ -17,8 +17,8 @@
 html, body {
   margin: 0;
   padding: 0;
-  background-color: #ffffff;
-  color: #1a1a1a;
+  background-color: #0a0d0c;
+  color: #d1d5db;
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -208,6 +208,28 @@ html.lenis, html.lenis body {
 }
 
 .social-cell:hover span {
+  color: #0f0f11;
+}
+
+/* ===== Inner pages — shared dark + lime gradient utilities ===== */
+.lime-grad {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.3'/%3E%3C/svg%3E"), linear-gradient(115deg, #2fe862 0%, #6ee05a 48%, #d8f34b 100%);
+  background-blend-mode: overlay;
+  color: #0f0f11;
+}
+
+.lime-card {
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.lime-card:hover {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.3'/%3E%3C/svg%3E"), linear-gradient(115deg, #2fe862 0%, #6ee05a 48%, #d8f34b 100%);
+  background-blend-mode: overlay;
+  background-color: transparent;
+  border-color: transparent;
+}
+
+.lime-card:hover :is(h1, h2, h3, h4, h5, p, span, a, div, li, button) {
   color: #0f0f11;
 }
 

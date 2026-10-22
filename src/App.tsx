@@ -116,7 +116,7 @@ export default function App() {
   }, []);
 
   return (
-    <div id="app-root-container" className="min-h-screen bg-white text-[#1a1a1a] overflow-x-hidden selection:bg-accent-green selection:text-white cursor-none md:cursor-none">
+    <div id="app-root-container" className="min-h-screen bg-[#0a0d0c] text-gray-300 overflow-x-hidden selection:bg-accent-green selection:text-white cursor-none md:cursor-none">
       {/* Custom cursor */}
       <CustomCursor />
 
@@ -174,14 +174,14 @@ export default function App() {
           />
         )}
         {view === 'not-found' && (
-          <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center bg-white">
+          <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center bg-[#0a0d0c]">
             <div className="mb-10 bg-[#0f0f11] rounded-full px-6 py-3.5 border border-white/10 shadow-md">
               <QolabLogo className="w-32 md:w-36" />
             </div>
-            <h1 className="font-display italic text-4xl sm:text-5xl text-black leading-tight mb-4">
+            <h1 className="font-display font-normal tracking-tight text-4xl sm:text-5xl text-white leading-tight mb-4">
               Looks like this piece doesn't fit.
             </h1>
-            <p className="font-sans text-gray-600 mb-10 max-w-md">
+            <p className="font-sans text-gray-400 mb-10 max-w-md">
               The page you're looking for doesn't exist — but the way back is easy.
             </p>
             <button
@@ -189,7 +189,7 @@ export default function App() {
                 window.history.replaceState(null, '', '/');
                 setView('landing');
               }}
-              className="inline-flex items-center gap-2 bg-[#3a863f] hover:bg-[#2f6d33] text-white font-semibold py-4 px-10 rounded-full transition-all duration-300 hover:scale-105 active:scale-95 shadow-md font-display"
+              className="inline-flex items-center gap-2 lime-grad font-display font-semibold py-4 px-10 rounded-full transition-all duration-300 hover:opacity-90 hover:scale-105 active:scale-95 shadow-md"
             >
               Find your way back.
             </button>

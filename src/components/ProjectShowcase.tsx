@@ -36,28 +36,28 @@ export default function ProjectShowcase({ onSelectProject, onBack }: ProjectShow
   return (
     <div ref={containerRef} className="w-full pt-32 pb-24 px-6 sm:px-12 md:px-16 min-h-screen">
       {/* Top Header Controls */}
-      <div className="max-w-6xl mx-auto flex justify-between items-center mb-16 border-b border-black/10 pb-6">
+      <div className="max-w-6xl mx-auto flex justify-between items-center mb-16 border-b border-white/10 pb-6">
         <button
           onClick={onBack}
-          className="flex items-center gap-2 text-sm font-semibold text-[#3a863f] hover:text-[#2f6d33] transition-colors group"
+          className="flex items-center gap-2 text-sm font-semibold text-[#6ee05a] hover:text-white transition-colors group"
         >
           <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
           <span>Return Home</span>
         </button>
-        <span className="font-mono text-xs text-black/40 uppercase tracking-widest">
+        <span className="font-mono text-xs text-white/40 uppercase tracking-widest">
           {projectsData.length} Case Studies Available
         </span>
       </div>
 
       {/* Main Title */}
       <div className="max-w-6xl mx-auto text-left mb-16">
-        <span className="font-mono text-xs text-[#3a863f] font-bold uppercase tracking-widest block mb-4">
+        <span className="font-mono text-xs text-[#6ee05a] font-bold uppercase tracking-widest block mb-4">
           // Selected Portfolio
         </span>
-        <h1 className="font-display text-5xl sm:text-7xl md:text-[5.5rem] tracking-tight leading-[0.95] text-black">
-          Selected <span className="italic font-light text-black/80">Works</span>
+        <h1 className="font-display text-5xl sm:text-7xl md:text-[5.5rem] tracking-tight leading-[0.95] text-white">
+          Selected <span className="font-light text-white/50">Works</span>
         </h1>
-        <p className="font-sans text-lg text-gray-600 mt-4 max-w-xl">
+        <p className="font-sans text-lg text-gray-400 mt-4 max-w-xl">
           Proof that ideas have a way of becoming real.
         </p>
       </div>
@@ -84,15 +84,15 @@ export default function ProjectShowcase({ onSelectProject, onBack }: ProjectShow
                     <ArrowUpRight size={24} />
                   </div>
                   <div>
-                    <h3 className="text-3xl font-display italic">{project.title}</h3>
+                    <h3 className="text-3xl font-display font-normal tracking-tight">{project.title}</h3>
                     <p className="text-sm opacity-95 mt-2">{project.subtitle}</p>
                   </div>
                 </div>
               </div>
               <div className="flex justify-between items-center px-2">
                 <div>
-                  <h4 className="font-bold text-lg text-black">{project.title}</h4>
-                  <p className="text-sm text-gray-500">{project.subtitle}</p>
+                  <h4 className="font-display font-semibold text-lg text-white">{project.title}</h4>
+                  <p className="text-sm text-gray-400">{project.subtitle}</p>
                 </div>
                 <span className="text-xs text-gray-400 uppercase tracking-widest font-mono">{project.year}</span>
               </div>

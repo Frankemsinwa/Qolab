@@ -113,7 +113,7 @@ export default function ServiceDetail({ service, onBack, onNavigateToContact }: 
   }, []);
 
   return (
-    <div ref={pageRef} className="w-full min-h-screen bg-white">
+    <div ref={pageRef} className="w-full min-h-screen bg-[#0a0d0c] text-gray-300">
       {/* Hero */}
       <section className="relative w-full h-[70vh] md:h-[80vh] overflow-hidden">
         <img
@@ -142,9 +142,9 @@ export default function ServiceDetail({ service, onBack, onNavigateToContact }: 
           <div className="max-w-7xl mx-auto">
             <div className="flex items-center gap-3 mb-4">
               <span className="font-mono text-sm text-white/50">{service.num}</span>
-              <div className="w-12 h-[1px]" style={{ backgroundColor: service.accent }} />
+              <div className="w-12 h-[1px]" style={{ backgroundColor: '#6ee05a' }} />
             </div>
-            <h1 className="sd-hero-title font-display text-4xl sm:text-5xl md:text-7xl text-white leading-[0.95]">
+            <h1 className="sd-hero-title font-display font-normal tracking-tight text-4xl sm:text-5xl md:text-7xl text-white leading-[0.95]">
               {service.title}
             </h1>
             <p className="sd-hero-desc text-white/70 text-lg md:text-xl mt-6 max-w-2xl font-sans leading-relaxed">
@@ -165,18 +165,18 @@ export default function ServiceDetail({ service, onBack, onNavigateToContact }: 
       <section className="sd-section w-full py-20 md:py-28 px-6 md:px-12 lg:px-16">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
           <div>
-            <p className="text-xs font-semibold tracking-[0.2em] uppercase mb-4 font-sans" style={{ color: service.accent }}>Overview</p>
-            <h2 className="font-display text-3xl sm:text-4xl text-[#1a1a1a] leading-tight">
+            <p className="text-xs font-semibold tracking-[0.2em] uppercase mb-4 font-sans" style={{ color: '#6ee05a' }}>Overview</p>
+            <h2 className="font-display font-normal tracking-tight text-3xl sm:text-4xl text-white leading-tight">
               What's included in<br />this service
             </h2>
           </div>
           <div className="space-y-6">
             {content.overview.map((item, i) => (
               <div key={i} className="flex items-start gap-4">
-                <div className="w-6 h-6 rounded-full flex-shrink-0 flex items-center justify-center mt-0.5" style={{ backgroundColor: `${service.accent}15` }}>
-                  <span className="text-xs font-bold font-mono" style={{ color: service.accent }}>{i + 1}</span>
+                <div className="w-6 h-6 rounded-full flex-shrink-0 flex items-center justify-center mt-0.5" style={{ backgroundColor: '#6ee05a15' }}>
+                  <span className="text-xs font-bold font-mono" style={{ color: '#6ee05a' }}>{i + 1}</span>
                 </div>
-                <p className="text-gray-600 text-base font-sans leading-relaxed">{item}</p>
+                <p className="text-gray-400 text-base font-sans leading-relaxed">{item}</p>
               </div>
             ))}
           </div>
@@ -184,18 +184,18 @@ export default function ServiceDetail({ service, onBack, onNavigateToContact }: 
       </section>
 
       {/* Process */}
-      <section className="sd-section w-full py-20 md:py-28 px-6 md:px-12 lg:px-16 bg-[#f5f5f5]">
+      <section className="sd-section w-full py-20 md:py-28 px-6 md:px-12 lg:px-16 bg-white/[0.03]">
         <div className="max-w-7xl mx-auto">
-          <p className="text-xs font-semibold tracking-[0.2em] uppercase mb-4 font-sans" style={{ color: service.accent }}>Our Process</p>
-          <h2 className="font-display text-3xl sm:text-4xl text-[#1a1a1a] leading-tight mb-16">
+          <p className="text-xs font-semibold tracking-[0.2em] uppercase mb-4 font-sans" style={{ color: '#6ee05a' }}>Our Process</p>
+          <h2 className="font-display font-normal tracking-tight text-3xl sm:text-4xl text-white leading-tight mb-16">
             How we deliver results
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {content.process.map((step, i) => (
-              <div key={i} className="bg-white rounded-3xl p-8 border border-black/5">
-                <span className="font-mono text-xs font-bold" style={{ color: service.accent }}>Phase {String(i + 1).padStart(2, '0')}</span>
-                <h3 className="font-display text-2xl text-[#1a1a1a] mt-3 mb-4">{step.phase}</h3>
-                <p className="text-gray-500 text-sm font-sans leading-relaxed">{step.desc}</p>
+              <div key={i} className="lime-card bg-white/[0.03] rounded-[2rem] p-8 border border-white/10">
+                <span className="font-mono text-xs font-bold" style={{ color: '#6ee05a' }}>Phase {String(i + 1).padStart(2, '0')}</span>
+                <h3 className="font-display font-normal tracking-tight text-2xl text-white mt-3 mb-4">{step.phase}</h3>
+                <p className="text-gray-400 text-sm font-sans leading-relaxed">{step.desc}</p>
               </div>
             ))}
           </div>
@@ -206,15 +206,15 @@ export default function ServiceDetail({ service, onBack, onNavigateToContact }: 
       <section className="sd-section w-full py-20 md:py-28 px-6 md:px-12 lg:px-16">
         <div className="max-w-7xl mx-auto">
           <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[#3a863f] mb-4 font-sans">Related</p>
-          <h2 className="font-display text-3xl sm:text-4xl text-[#1a1a1a] leading-tight mb-12">
+          <h2 className="font-display font-normal tracking-tight text-3xl sm:text-4xl text-white leading-tight mb-12">
             Explore more services
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {relatedServices.map((rel, i) => (
-              <div key={i} className="group bg-[#f5f5f5] rounded-3xl p-6 hover:bg-[#1a1a1a] transition-colors duration-500 cursor-pointer">
-                <h3 className="font-display text-xl text-[#1a1a1a] group-hover:text-white transition-colors">{rel.title}</h3>
-                <p className="text-gray-500 group-hover:text-gray-400 text-sm mt-3 font-sans leading-relaxed transition-colors">{rel.desc}</p>
-                <div className="mt-6 flex items-center gap-2 text-sm font-semibold text-[#1a1a1a] group-hover:text-white transition-colors font-sans">
+              <div key={i} className="group bg-white/[0.03] border border-white/10 rounded-[2rem] p-6 hover:border-[#6ee05a]/50 transition-colors duration-500 cursor-pointer">
+                <h3 className="font-display font-normal tracking-tight text-xl text-white transition-colors">{rel.title}</h3>
+                <p className="text-gray-400 text-sm mt-3 font-sans leading-relaxed transition-colors">{rel.desc}</p>
+                <div className="mt-6 flex items-center gap-2 text-sm font-semibold text-white transition-colors font-sans">
                   Learn more <ArrowUpRight size={14} />
                 </div>
               </div>
@@ -226,8 +226,8 @@ export default function ServiceDetail({ service, onBack, onNavigateToContact }: 
       {/* CTA */}
       <section className="sd-section w-full py-20 md:py-28 px-6 md:px-12 lg:px-16 bg-[#0f0f11] text-white">
         <div className="max-w-4xl mx-auto text-center">
-          <p className="text-xs font-semibold tracking-[0.2em] uppercase mb-6 font-sans" style={{ color: service.accent }}>Ready to start?</p>
-          <h2 className="font-display text-4xl sm:text-5xl md:text-6xl text-white leading-tight italic">
+          <p className="text-xs font-semibold tracking-[0.2em] uppercase mb-6 font-sans" style={{ color: '#6ee05a' }}>Ready to start?</p>
+          <h2 className="font-display font-normal tracking-tight text-4xl sm:text-5xl md:text-6xl text-white leading-tight">
             The Future Is Not a<br />Spectator Sport.
           </h2>
           <div className="flex flex-col sm:flex-row justify-center gap-4 mt-12">
