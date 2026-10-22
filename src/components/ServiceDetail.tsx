@@ -30,34 +30,19 @@ const SERVICE_CONTENT: Record<string, { overview: string[]; process: { phase: st
       { phase: 'Rollout', desc: 'We apply the identity across your touchpoints and equip your team to keep it consistent.' },
     ],
   },
-  'website-design-development': {
+  'web-app-development': {
     overview: [
-      'Business websites built to convert, not just to look good',
-      'E-commerce storefronts with smooth product and checkout flows',
-      'Web applications and digital platforms tailored to your operations',
-      'Responsive design across phones, tablets, and desktops',
-      'Performance, accessibility, and SEO foundations built in',
-      'Content management setup so your team can update with ease',
-    ],
-    process: [
-      { phase: 'Plan', desc: 'We map pages, content, and goals before design begins.' },
-      { phase: 'Design & Build', desc: 'Interface and engineering move together, with previews at every step.' },
-      { phase: 'Launch', desc: 'Testing, performance tuning, and a smooth handover — with support after go-live.' },
-    ],
-  },
-  'software-app-development': {
-    overview: [
-      'Custom software shaped around how your business actually works',
-      'Web and mobile applications built for real-world use',
-      'Product discovery: scope, architecture, and roadmap',
-      'Iterative builds with working demos from early on',
+      'Business websites and e-commerce storefronts built to convert, not just to look good',
+      'Web and mobile applications shaped around how your business actually works',
+      'Custom software and product discovery: scope, architecture, and roadmap',
+      'Responsive design with performance, accessibility, and SEO foundations built in',
       'Integrations with the tools and services you already use',
       'Testing, launch support, and a path for future releases',
     ],
     process: [
-      { phase: 'Scope', desc: 'We define the problem, the users, and the smallest version worth shipping.' },
-      { phase: 'Build', desc: 'Short development cycles with working demos, feedback, and quality checks.' },
-      { phase: 'Evolve', desc: 'Post-launch iterations and new features driven by how people actually use the product.' },
+      { phase: 'Plan', desc: 'We map pages, content, scope, and goals — from site architecture to product roadmap — before design begins.' },
+      { phase: 'Design & Build', desc: 'Interface and engineering move together in short cycles, with working demos and previews at every step.' },
+      { phase: 'Launch & Evolve', desc: 'Testing, performance tuning, and handover — then post-launch iterations driven by real usage.' },
     ],
   },
   'ai-solutions-automation': {
@@ -75,34 +60,19 @@ const SERVICE_CONTENT: Record<string, { overview: string[]; process: { phase: st
       { phase: 'Operate', desc: 'Monitoring, tuning, and guardrails keep the system reliable in production.' },
     ],
   },
-  'digital-marketing-growth': {
+  'growth-strategy': {
     overview: [
+      'Business analysis: where you are, what is working, what is not',
       'Brand positioning and messaging that sharpen your market fit',
       'Marketing strategy and channel planning around real goals',
       'Campaign concepting and execution across your chosen channels',
-      'Content and creative direction that stays on brand',
-      'Measurement setup so you know what is working',
-      'Growth planning: reviews, priorities, and next moves',
-    ],
-    process: [
-      { phase: 'Position', desc: 'Clarify the message and the market you are speaking to.' },
-      { phase: 'Plan', desc: 'Choose channels, set priorities, and build the campaign calendar.' },
-      { phase: 'Grow', desc: 'Launch, measure, and move budget to what is actually performing.' },
-    ],
-  },
-  'business-strategy-consulting': {
-    overview: [
-      'Business analysis: where you are, what is working, what is not',
-      'Operational direction and practical recommendations',
-      'Opportunity identification in your market and beyond',
-      'Growth planning with clear priorities and next steps',
-      'Workshops with your team to align on the plan',
-      'One accountable team turning thinking into action',
+      'Opportunity identification and growth planning with clear priorities',
+      'Measurement setup and reviews so you know what is working',
     ],
     process: [
       { phase: 'Analyse', desc: 'A clear read of your business, market, and current bottlenecks.' },
-      { phase: 'Direct', desc: 'Practical recommendations on operations, positioning, and priorities.' },
-      { phase: 'Plan', desc: 'A roadmap of opportunities with concrete next steps.' },
+      { phase: 'Position & Plan', desc: 'Sharpen the message, choose channels, and set priorities around real goals.' },
+      { phase: 'Grow', desc: 'Launch campaigns, measure performance, and move budget to what is actually performing.' },
     ],
   },
 };

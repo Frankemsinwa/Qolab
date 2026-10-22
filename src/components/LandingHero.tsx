@@ -596,7 +596,7 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
             One team, <span className="text-[#6ee05a]">every discipline.</span>
           </h2>
           <div className="cap-grid grid grid-cols-2 md:grid-cols-4 border-t border-l border-white/10">
-            {['Brand Identity', 'Web Design', 'Software & Apps', 'AI & Automation', 'Digital Marketing', 'Business Strategy', 'Motion Design', 'Consulting'].map((cap) => (
+            {['Brand Identity', 'Web & App Development', 'AI & Automation', 'Growth & Strategy', 'Motion Design', 'Consulting', 'E-Commerce', 'UX / UI Design'].map((cap) => (
               <div
                 key={cap}
                 className="cap-cell flex items-center justify-center aspect-[4/3] p-6 border-r border-b border-white/10 font-display font-normal text-base md:text-lg text-gray-300 text-center"
@@ -708,11 +708,9 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
             <h5 className="text-white text-xs font-mono uppercase tracking-widest mb-5 font-display">Services</h5>
             <ul className="flex flex-col gap-2.5 text-sm font-display">
               <li><a href="#" className="hover:text-white transition-colors">Brand Identity & Design</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Website Design & Development</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Software & App Development</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Web & App Development</a></li>
               <li><a href="#" className="hover:text-white transition-colors">AI Solutions & Automation</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Digital Marketing & Growth Strategy</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Business Strategy & Consulting</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Growth & Strategy</a></li>
             </ul>
           </div>
           <div className="footer-col">
