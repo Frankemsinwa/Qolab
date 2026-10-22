@@ -592,14 +592,14 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
       <section className="relative w-full py-24 md:py-32 px-6 md:px-12 lg:px-16 bg-[#0a0d0c] z-20 border-t border-white/10">
         <div className="max-w-7xl mx-auto">
           <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[#6ee05a] mb-4 font-display">Capabilities</p>
-          <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl text-white leading-[1.05] mb-12">
-            One team, <span className="italic font-light text-[#6ee05a]">every discipline.</span>
+          <h2 className="font-display font-normal text-4xl sm:text-5xl lg:text-6xl text-white leading-[1.05] tracking-tight mb-12">
+            One team, <span className="text-[#6ee05a]">every discipline.</span>
           </h2>
           <div className="cap-grid grid grid-cols-2 md:grid-cols-4 border-t border-l border-white/10">
             {['Brand Identity', 'Web Design', 'Software & Apps', 'AI & Automation', 'Digital Marketing', 'Business Strategy', 'Motion Design', 'Consulting'].map((cap) => (
               <div
                 key={cap}
-                className="cap-cell flex items-center justify-center aspect-[4/3] p-6 border-r border-b border-white/10 font-display text-base md:text-lg text-gray-300 hover:text-[#6ee05a] hover:bg-white/[0.03] transition-colors text-center"
+                className="cap-cell flex items-center justify-center aspect-[4/3] p-6 border-r border-b border-white/10 font-display font-normal text-base md:text-lg text-gray-300 text-center"
               >
                 {cap}
               </div>
