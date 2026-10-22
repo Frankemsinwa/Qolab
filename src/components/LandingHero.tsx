@@ -381,7 +381,7 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
                   <CharLine text="Deserve to" />{' '}
                   <span
                     className="hero-flip inline-grid overflow-hidden align-bottom"
-                    style={{ lineHeight: 1.05 }}
+                    style={{ lineHeight: 1.05, marginTop: '-0.17em' }}
                     aria-label="Exist."
                   >
                     {HERO_FLIP_WORDS.map((word, i) => (
