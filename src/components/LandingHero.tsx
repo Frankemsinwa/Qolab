@@ -476,9 +476,9 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
               { title: 'Marketing & Brand Teams', desc: 'Creative direction, identity systems, websites, campaigns, and strategic support.' },
               { title: 'Product & Operations Teams', desc: 'Custom software, AI-assisted workflows, and business automation.' },
             ].map((audience) => (
-              <div key={audience.title} className="s2-inner border-r border-b border-white/10 p-6 md:p-8 hover:bg-white/[0.03] transition-colors">
-                <p className="text-white font-semibold text-sm font-display">{audience.title}</p>
-                <p className="text-xs text-gray-400 mt-2 font-sans leading-relaxed">{audience.desc}</p>
+              <div key={audience.title} className="s2-inner border-r border-b border-white/10 p-6 md:p-8 lg:p-10 hover:bg-white/[0.03] transition-colors">
+                <p className="text-white font-semibold text-xl sm:text-2xl md:text-3xl lg:text-[2.2rem] font-display leading-tight">{audience.title}</p>
+                <p className="text-base sm:text-lg md:text-xl lg:text-[1.5rem] text-gray-400 mt-3 md:mt-4 font-sans leading-snug">{audience.desc}</p>
               </div>
             ))}
           </div>
