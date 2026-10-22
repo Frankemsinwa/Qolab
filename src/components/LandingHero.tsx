@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useId } from 'react';
+import { createPortal } from 'react-dom';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowUpRight, ArrowRight, Menu, X } from 'lucide-react';
@@ -318,52 +319,57 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
       {/* ===== FIXED BACKGROUND — plain milky white behind hero + section 2 ===== */}
       <div className="fixed inset-0 z-0 pointer-events-none bg-[#f4f3ef] overflow-hidden" />
 
-      {/* ===== STICKY MOBILE NAV — backdrop glass, visible across every section ===== */}
-      <div className="fixed top-0 inset-x-0 z-[90] md:hidden flex items-center justify-between px-5 py-3 bg-black/55 backdrop-blur-xl border-b border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.35)]">
-        <QolabLogo className="w-20" />
-        <button
-          onClick={() => setMobileMenuOpen(true)}
-          className="flex items-center justify-center w-10 h-10 text-white"
-          aria-label="Open menu"
-        >
-          <Menu size={24} />
-        </button>
-      </div>
-
-      {/* ===== MOBILE MENU OVERLAY — root-level so it stacks above every section ===== */}
-      {mobileMenuOpen && (
-        <div className="fixed inset-0 z-[100] bg-white flex flex-col px-6 md:hidden">
-          <div className="flex items-center justify-between pt-4">
-            <span className="inline-flex bg-[#0f0f11] rounded-full px-4 py-2.5 border border-white/10 shadow-md">
-              <QolabLogo className="w-24" />
-            </span>
+      {/* ===== STICKY MOBILE NAV + MENU OVERLAY — portaled to body so GSAP's
+             pin-spacer DOM mutations can't break React's reconciliation ===== */}
+      {createPortal(
+        <>
+          <div className="fixed top-0 inset-x-0 z-[90] md:hidden flex items-center justify-between px-5 py-3 bg-black/55 backdrop-blur-xl border-b border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.35)]">
+            <QolabLogo className="w-20" />
             <button
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center justify-center w-10 h-10 text-[#1a1a1a]"
-              aria-label="Close menu"
+              onClick={() => setMobileMenuOpen(true)}
+              className="flex items-center justify-center w-10 h-10 text-white"
+              aria-label="Open menu"
             >
-              <X size={24} />
+              <Menu size={24} />
             </button>
           </div>
-          <nav className="flex flex-col gap-8 mt-16">
-            {[
-              { label: 'Home', action: () => { setMobileMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); } },
-              { label: 'About', action: () => { setMobileMenuOpen(false); onNavigate?.('about'); } },
-              { label: 'Services', action: () => { setMobileMenuOpen(false); onNavigate?.('services'); } },
-              { label: 'Works', action: () => { setMobileMenuOpen(false); onNavigate?.('projects'); } },
-              { label: 'Contact', action: () => { setMobileMenuOpen(false); onNavigate?.('contact'); } },
-            ].map((item) => (
-              <button
-                key={item.label}
-                type="button"
-                onClick={item.action}
-                className="font-display text-4xl text-[#1a1a1a] hover:text-[#3a863f] transition-colors cursor-pointer"
-              >
-                {item.label}
-              </button>
-            ))}
-          </nav>
-        </div>
+
+          {mobileMenuOpen && (
+            <div className="fixed inset-0 z-[100] bg-white flex flex-col px-6 md:hidden">
+              <div className="flex items-center justify-between pt-4">
+                <span className="inline-flex bg-[#0f0f11] rounded-full px-4 py-2.5 border border-white/10 shadow-md">
+                  <QolabLogo className="w-24" />
+                </span>
+                <button
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center justify-center w-10 h-10 text-[#1a1a1a]"
+                  aria-label="Close menu"
+                >
+                  <X size={24} />
+                </button>
+              </div>
+              <nav className="flex flex-col gap-8 mt-16">
+                {[
+                  { label: 'Home', action: () => { setMobileMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); } },
+                  { label: 'About', action: () => { setMobileMenuOpen(false); onNavigate?.('about'); } },
+                  { label: 'Services', action: () => { setMobileMenuOpen(false); onNavigate?.('services'); } },
+                  { label: 'Works', action: () => { setMobileMenuOpen(false); onNavigate?.('projects'); } },
+                  { label: 'Contact', action: () => { setMobileMenuOpen(false); onNavigate?.('contact'); } },
+                ].map((item) => (
+                  <button
+                    key={item.label}
+                    type="button"
+                    onClick={item.action}
+                    className="font-display text-4xl text-[#1a1a1a] hover:text-[#3a863f] transition-colors cursor-pointer"
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </nav>
+            </div>
+          )}
+        </>,
+        document.body
       )}
 
       {/* ===== PINNED HERO ===== */}
