@@ -2,6 +2,7 @@
 
 @theme {
   --font-sans: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+  --font-serif: "Instrument Serif", Georgia, serif;
   --font-display: "Clash Grotesk", "Instrument Sans", sans-serif;
   --font-mono: "Instrument Sans", ui-monospace, monospace;
 

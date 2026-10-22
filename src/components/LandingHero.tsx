@@ -11,7 +11,7 @@ import { Service } from '../types';
 import QolabLogo from './QolabLogo';
 import AuroraBeams from './AuroraBeams';
 import ScrollMarquee from './ScrollMarquee';
-import heroBg from '../../assets/hero-imgs/bg.jpg';
+import heroBg from '../../assets/hero-imgs/bright-light-dark-background.jpg';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -155,9 +155,9 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
         const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
         heroTl
           .from('.hero-bg-wrap', { opacity: 0, duration: 1.8, ease: 'power2.out' }, 0)
-          .from('.hero-nav-item', { y: -20, opacity: 0, duration: 0.8, stagger: 0.06 }, 0.3)
+          .from('.hero-nav-item', { y: 16, opacity: 0, duration: 0.8, stagger: 0.08 }, 0.3)
           .from('.hero-char', { opacity: 0, filter: 'blur(14px)', y: 16, duration: 0.5, stagger: 0.018, ease: 'power2.out' }, 0.45)
-          .from('.hero-flip', { opacity: 0, filter: 'blur(14px)', duration: 0.6, ease: 'power2.out' }, 1.1)
+          .from('.hero-flip, .hero-pill', { opacity: 0, filter: 'blur(14px)', duration: 0.6, ease: 'power2.out' }, 1.1)
           .from('.hero-subword', { opacity: 0, filter: 'blur(8px)', y: 8, duration: 0.4, stagger: 0.012, ease: 'power2.out' }, 1.35)
           .from('.hero-cta', { y: 20, opacity: 0, duration: 0.8 }, 1.65);
 
@@ -388,8 +388,8 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
             />
             <AuroraBeams />
           </div>
-          <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/45" />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/65 via-black/25 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/15 via-transparent to-black/55" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/15 to-transparent" />
           {/* Mouse-following green flare spotlight — matches bg image flare */}
           <div
             ref={spotlightRef}
@@ -405,72 +405,79 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
 
         {/* Hero text content */}
         <div className="hero-content-layer relative z-10 w-full h-full flex flex-col justify-between">
-          {/* Top bar — small logo left, meta right (desktop only; mobile uses the sticky glass bar) */}
+          {/* Top bar — logo centered (reference style), meta right (desktop only; mobile uses the sticky glass bar) */}
           <div className="hidden md:flex w-full items-start justify-between px-6 md:px-12 lg:px-16 pt-6 md:pt-8 relative z-20">
-            <QolabLogo className="w-20 md:w-24" />
+            <QolabLogo className="absolute left-1/2 -translate-x-1/2 w-20 md:w-24" />
+            <span aria-hidden="true" />
             <div className="flex items-center gap-3 md:gap-4">
               <FlagPair size={16} />
               <span className="hidden md:block text-[11px] tracking-[0.15em] uppercase text-gray-400 font-display">Nigeria &amp; UK</span>
             </div>
           </div>
 
-          {/* Hero text content — immersive left-aligned block */}
+          {/* Hero text — staggered centered composition (reference layout) */}
           <div className="hero-text-block flex-1 flex flex-col justify-center px-6 md:px-12 lg:px-16 relative">
-            <div className="relative z-10 w-full max-w-6xl">
-              <p className="hero-nav-item text-[11px] md:text-xs font-semibold tracking-[0.2em] uppercase text-gray-300 mb-5 md:mb-7 font-display">
-                Creativity × Technology × Strategy
-              </p>
-              <h1 className="hero-headline font-display text-[2.9rem] sm:text-[4.25rem] md:text-[5.5rem] lg:text-[7rem] xl:text-[8rem] leading-[0.9] tracking-tight text-white font-medium">
-                <span className="block"><CharLine text="Some Ideas" /></span>
-                <span className="block">
-                  <CharLine text="Deserve to" />{' '}
-                  <span
-                    className="hero-flip inline-grid overflow-hidden align-bottom"
-                    style={{ lineHeight: 1.05 }}
-                    aria-label="Exist."
-                  >
-                    {HERO_FLIP_WORDS.map((word, i) => (
-                      <span
-                        key={word}
-                        aria-hidden="true"
-                        className={`hero-flip-word italic font-light text-[#6ee05a] [grid-area:1/1] ${i === 0 ? '' : 'opacity-0'}`}
-                      >
-                        {word}
-                      </span>
-                    ))}
+            <div className="relative z-10 w-full max-w-5xl mx-auto flex flex-col">
+              <h1 className="hero-headline font-sans text-[2.9rem] sm:text-[4.25rem] md:text-[5.5rem] lg:text-[7rem] xl:text-[8rem] leading-[0.95] tracking-[-0.03em] text-white font-normal flex flex-col">
+                <span className="block self-start pl-[4%] sm:pl-[8%] md:pl-[14%]">
+                  <CharLine text="Some Ideas" />
+                </span>
+                <span className="w-full flex flex-wrap items-end justify-end gap-x-6 gap-y-4 mt-1 md:mt-2">
+                  <span className="inline-block">
+                    <CharLine text="Deserve to" />{' '}
+                    <span
+                      className="hero-flip inline-grid overflow-hidden align-bottom"
+                      style={{ lineHeight: 1.05 }}
+                      aria-label="Exist."
+                    >
+                      {HERO_FLIP_WORDS.map((word, i) => (
+                        <span
+                          key={word}
+                          aria-hidden="true"
+                          className={`hero-flip-word font-serif italic text-[#6ee05a] [grid-area:1/1] ${i === 0 ? '' : 'opacity-0'}`}
+                        >
+                          {word}
+                        </span>
+                      ))}
+                    </span>
                   </span>
+                  <button
+                    onClick={() => onNavigate?.('contact')}
+                    data-cursor="magnetic"
+                    data-cursor-text="Let's go"
+                    className="hero-pill shrink-0 inline-flex items-center gap-2.5 border border-white/60 rounded-full px-6 py-3 md:px-7 md:py-3.5 text-xs md:text-sm text-white hover:bg-white hover:text-[#0f0f11] transition-all font-sans font-medium"
+                  >
+                    Let's Make It Exist.
+                    <ArrowUpRight size={15} />
+                  </button>
                 </span>
               </h1>
-              <p className="hero-subtext text-gray-300 text-base sm:text-lg mt-7 md:mt-9 max-w-2xl font-display leading-relaxed">
-                <WordRoll
-                  cls="hero-subword"
-                  text="We don't follow the future. We make it. We bring creativity, technology, and strategy together to turn ambitious thinking into meaningful solutions."
-                />
-              </p>
-              <div className="hero-cta mt-9 md:mt-11 flex flex-wrap items-center gap-4">
-                <button
-                  onClick={() => onNavigate?.('contact')}
-                  data-cursor="magnetic"
-                  data-cursor-text="Let's go"
-                  className="flex items-center gap-2.5 border border-white/40 bg-white/5 backdrop-blur-sm text-white px-7 py-3.5 rounded-full text-sm font-semibold hover:bg-white hover:text-[#0f0f11] transition-all font-display"
-                >
-                  Let's Make It Exist.
-                  <ArrowUpRight size={16} />
-                </button>
-                <button
-                  onClick={onViewAllProjects}
-                  className="flex items-center gap-2 text-sm font-semibold text-white hover:text-[#3a863f] transition-colors font-display"
-                >
-                  Explore Our Work.
-                  <ArrowRight size={16} />
-                </button>
+              <div className="self-end flex flex-col items-end mt-7 md:mt-9 max-w-xs sm:max-w-sm md:max-w-md">
+                <p className="hero-subtext text-gray-300/90 text-sm sm:text-[15px] text-right font-sans leading-relaxed">
+                  <WordRoll
+                    cls="hero-subword"
+                    text="We don't follow the future. We make it. We bring creativity, technology, and strategy together to turn ambitious thinking into meaningful solutions."
+                  />
+                </p>
+                <div className="hero-cta mt-5 flex flex-wrap items-center justify-end gap-4">
+                  <button
+                    onClick={onViewAllProjects}
+                    className="flex items-center gap-2 text-sm font-medium text-white hover:text-[#6ee05a] transition-colors font-sans"
+                  >
+                    Explore Our Work.
+                    <ArrowRight size={15} />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Bottom meta — slogan */}
-          <div className="w-full flex items-end px-6 md:px-12 lg:px-16 pb-6 md:pb-8 relative z-20">
-            <p className="hero-nav-item text-[10px] md:text-[11px] font-semibold tracking-[0.25em] uppercase text-gray-400 font-display">
+          {/* Bottom meta — captions stacked like the reference */}
+          <div className="w-full flex flex-col gap-1.5 items-start px-6 md:px-12 lg:px-16 pb-6 md:pb-8 relative z-20">
+            <p className="hero-nav-item text-[10px] md:text-[11px] font-medium tracking-[0.2em] uppercase text-gray-400 font-sans">
+              Creativity × Technology × Strategy
+            </p>
+            <p className="hero-nav-item text-[10px] md:text-[11px] font-medium tracking-[0.25em] uppercase text-gray-500 font-sans">
               QOLAB — Future Ready Solutions.
             </p>
           </div>
