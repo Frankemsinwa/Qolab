@@ -9,6 +9,7 @@ import { projectsData } from '../data';
 import { Service } from '../types';
 import QolabLogo from './QolabLogo';
 import AuroraBeams from './AuroraBeams';
+import ScrollMarquee from './ScrollMarquee';
 import heroBg from '../../assets/hero-imgs/bg.jpg';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -105,8 +106,10 @@ function ChipAsterisk() {
 function ChipEye() {
   return (
     <svg viewBox="0 0 24 24" className="inline-block w-[0.95em] h-[0.95em] mx-1 -translate-y-px" fill="none" aria-hidden="true">
-      <path d="M2 12s3.5-6.5 10-6.5S22 12 22 12s-3.5 6.5-10 6.5S2 12 2 12z" stroke="#6ee05a" strokeWidth="2" />
-      <circle cx="12" cy="12" r="2.8" fill="#6ee05a" />
+      <g className="chip-eye-lid">
+        <path d="M2 12s3.5-6.5 10-6.5S22 12 22 12s-3.5 6.5-10 6.5S2 12 2 12z" stroke="#6ee05a" strokeWidth="2" />
+        <circle cx="12" cy="12" r="2.8" fill="#6ee05a" />
+      </g>
     </svg>
   );
 }
@@ -199,6 +202,35 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
         gsap.from('.s8-content', {
           y: 60, opacity: 0, duration: 1.2,
           scrollTrigger: { trigger: s8Ref.current, start: 'top 75%' }
+        });
+
+        // Eye chip — smooth blink loop while the CTA statement is in view
+        const eyeLids = gsap.utils.toArray('.chip-eye-lid');
+        if (eyeLids.length) {
+          gsap.set(eyeLids, { transformOrigin: '50% 50%' });
+          const eyeTl = gsap.timeline({ repeat: -1, repeatDelay: 2.8, paused: true });
+          eyeTl
+            .to(eyeLids, { scaleY: 0.06, duration: 0.13, ease: 'power2.in' })
+            .to(eyeLids, { scaleY: 1, duration: 0.22, ease: 'power2.out' });
+          ScrollTrigger.create({
+            trigger: s8Ref.current,
+            start: 'top 85%',
+            end: 'bottom top',
+            onToggle: (self) => {
+              if (self.isActive) eyeTl.play();
+              else eyeTl.pause();
+            },
+          });
+        }
+
+        // Capabilities grid entrance
+        gsap.from('.cap-cell', {
+          opacity: 0,
+          y: 30,
+          duration: 0.7,
+          stagger: 0.05,
+          ease: 'power2.out',
+          scrollTrigger: { trigger: '.cap-grid', start: 'top 80%' },
         });
 
         // Footer
@@ -414,9 +446,14 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
         }}
       />
 
-      {/* ===== SECTION 4: PROJECTS (Asymmetric Parallax Grid) ===== */}
+      {/* ===== SECTION 4: PROJECTS (Case Rows) ===== */}
       <ProjectGrid
         onSelectProject={onSelectProject}
+      />
+
+      {/* ===== SCROLL MARQUEE — giant scrubbed text band ===== */}
+      <ScrollMarquee
+        words={['Some Ideas', 'Deserve to Exist', 'Future Ready', 'Built With Intent']}
       />
 
       {/* ===== SECTION 7A: DIFFERENTIATION (PRD 7.5) ===== */}
@@ -478,6 +515,26 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== CAPABILITIES — bordered grid (reference-style partners grid) ===== */}
+      <section className="relative w-full py-24 md:py-32 px-6 md:px-12 lg:px-16 bg-[#0a0d0c] z-20 border-t border-white/10">
+        <div className="max-w-7xl mx-auto">
+          <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[#6ee05a] mb-4 font-display">Capabilities</p>
+          <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl text-white leading-[1.05] mb-12">
+            One team, <span className="italic font-light text-[#6ee05a]">every discipline.</span>
+          </h2>
+          <div className="cap-grid grid grid-cols-2 md:grid-cols-4 border-t border-l border-white/10">
+            {['Brand Identity', 'Web Design', 'Software & Apps', 'AI & Automation', 'Digital Marketing', 'Business Strategy', 'Motion Design', 'Consulting'].map((cap) => (
+              <div
+                key={cap}
+                className="cap-cell flex items-center justify-center aspect-[4/3] p-6 border-r border-b border-white/10 font-display text-base md:text-lg text-gray-300 hover:text-[#6ee05a] hover:bg-white/[0.03] transition-colors text-center"
+              >
+                {cap}
+              </div>
+            ))}
           </div>
         </div>
       </section>

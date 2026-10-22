@@ -12,6 +12,7 @@ import ServicesPage from './components/ServicesPage';
 import ContactPage from './components/ContactPage';
 import ServiceDetail from './components/ServiceDetail';
 import TransitionOverlay, { type TransitionHandle } from './components/TransitionOverlay';
+import ViewCurtain, { type CurtainHandle } from './components/ViewCurtain';
 import CustomCursor from './components/CustomCursor';
 import QolabLogo from './components/QolabLogo';
 import { Project, Service } from './types';
@@ -30,16 +31,36 @@ export default function App() {
   const [activeService, setActiveService] = useState<Service | null>(null);
   const [lastView, setLastView] = useState<'landing' | 'projects'>('landing');
   const transitionRef = useRef<TransitionHandle>(null);
+  const curtainRef = useRef<CurtainHandle>(null);
+  const lenisRef = useRef<Lenis | null>(null);
+
+  /** Wipe transition around a view swap; resets scroll via Lenis */
+  const navigateTo = (mutate: () => void) => {
+    const swap = () => {
+      mutate();
+      if (lenisRef.current) lenisRef.current.scrollTo(0, { immediate: true });
+      else window.scrollTo(0, 0);
+    };
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !curtainRef.current) {
+      swap();
+      return;
+    }
+    curtainRef.current.cover(swap);
+  };
 
   const handleSelectProject = (project: Project) => {
-    setLastView(view === 'landing' || view === 'projects' ? view : 'landing');
-    setActiveProject(project);
-    setView('detail');
+    navigateTo(() => {
+      setLastView(view === 'landing' || view === 'projects' ? view : 'landing');
+      setActiveProject(project);
+      setView('detail');
+    });
   };
 
   const handleBackFromDetail = () => {
-    setView(lastView);
-    setActiveProject(null);
+    navigateTo(() => {
+      setView(lastView);
+      setActiveProject(null);
+    });
   };
 
   const handleSelectService = async (service: Service) => {
@@ -61,8 +82,10 @@ export default function App() {
   };
 
   const handleBackFromService = () => {
-    setActiveService(null);
-    setView('landing');
+    navigateTo(() => {
+      setActiveService(null);
+      setView('landing');
+    });
   };
 
   // Global nav: hidden during hero on landing, appears once scrolled past it
@@ -83,10 +106,12 @@ export default function App() {
     const raf = (time: number) => lenis.raf(time * 1000);
     gsap.ticker.add(raf);
     gsap.ticker.lagSmoothing(0);
+    lenisRef.current = lenis;
 
     return () => {
       gsap.ticker.remove(raf);
       lenis.destroy();
+      lenisRef.current = null;
     };
   }, []);
 
@@ -98,12 +123,15 @@ export default function App() {
       {/* Global transition overlay for service card zoom */}
       <TransitionOverlay ref={transitionRef} />
 
+      {/* View-change curtain */}
+      <ViewCurtain ref={curtainRef} />
+
       {/* Header Navigation — inner views only; landing uses BottomPillNav */}
       {view !== 'service-detail' && view !== 'not-found' && view !== 'landing' && (
-        <Navigation onNavigate={(target) => setView(target)} />
+        <Navigation onNavigate={(target) => navigateTo(() => setView(target))} />
       )}
       {view === 'landing' && (
-        <BottomPillNav onNavigate={(target) => setView(target)} />
+        <BottomPillNav onNavigate={(target) => navigateTo(() => setView(target))} />
       )}
 
       {/* Main presentation grid layout routing */}
@@ -111,9 +139,9 @@ export default function App() {
         {view === 'landing' && (
           <LandingHero
             onSelectProject={handleSelectProject}
-            onViewAllProjects={() => setView('projects')}
+            onViewAllProjects={() => navigateTo(() => setView('projects'))}
             onSelectService={handleSelectService}
-            onNavigate={(target) => setView(target)}
+            onNavigate={(target) => navigateTo(() => setView(target))}
           />
         )}
         {view === 'projects' && (
