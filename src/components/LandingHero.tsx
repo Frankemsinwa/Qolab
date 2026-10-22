@@ -375,9 +375,9 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
           {/* Hero text — left-aligned composition */}
           <div className="hero-text-block flex-1 flex flex-col justify-center px-6 md:px-12 lg:px-16 relative">
             <div className="relative z-10 w-full max-w-6xl">
-              <h1 className="hero-headline font-sans text-[2.9rem] sm:text-[4.25rem] md:text-[5.5rem] lg:text-[7rem] xl:text-[8rem] leading-[0.95] tracking-[-0.03em] text-white font-semibold">
+              <h1 className="hero-headline font-sans text-[2.9rem] sm:text-[4.25rem] md:text-[5.5rem] lg:text-[7rem] xl:text-[8rem] leading-[0.84] tracking-[-0.03em] text-white font-semibold">
                 <span className="block"><CharLine text="Some Ideas" /></span>
-                <span className="block mt-1 md:mt-2">
+                <span className="block">
                   <CharLine text="Deserve to" />{' '}
                   <span
                     className="hero-flip inline-grid overflow-hidden align-bottom"
