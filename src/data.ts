@@ -9,6 +9,14 @@ import proj1 from './assets/projects/project-1.webp';
 import proj2 from './assets/projects/project-2.jpg';
 import proj3 from './assets/projects/project-3.jpg';
 import proj4 from './assets/projects/project-4.jpg';
+import luxBillboard from './assets/projects/luxel/billboard.jpg';
+import luxAircraft from './assets/projects/luxel/aircraft.jpg';
+import luxPhone from './assets/projects/luxel/phone-app.jpg';
+import luxCards from './assets/projects/luxel/business-cards.jpg';
+import luxRollup from './assets/projects/luxel/rollup-banner.jpg';
+import luxBrochure from './assets/projects/luxel/brochure.jpg';
+import luxTshirt from './assets/projects/luxel/tshirt.jpg';
+import luxGoldCard from './assets/projects/luxel/gold-card.jpg';
 import brandIdentityImg from './assets/services/brand-identity.jpg';
 import growthStrategyImg from './assets/services/growth-strategy.jpg';
 import aiImg from './assets/services/ai-service.jpg';
@@ -34,7 +42,7 @@ export const projectsData: Project[] = [
     color: 'bg-[#0a0f0d]',
     accentColor: '#3a863f',
     heroImage: proj1,
-    galleryImages: [proj1, proj2, proj3]
+    galleryImages: [luxBillboard, luxAircraft, luxPhone, luxCards, luxRollup, luxBrochure, luxTshirt, luxGoldCard]
   },
   {
     id: 'aether-mobile',

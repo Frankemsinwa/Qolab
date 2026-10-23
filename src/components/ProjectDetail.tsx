@@ -65,6 +65,23 @@ export default function ProjectDetail({ project, onBack, onNavigateToContact }: 
           }
         });
       });
+
+      // 5. Gallery artifacts — clip-reveal on view
+      gsap.utils.toArray('.artifact-item').forEach((el: any, i: number) => {
+        gsap.from(el, {
+          y: 70,
+          opacity: 0,
+          clipPath: 'inset(14% 14% 14% 14% round 32px)',
+          duration: 1.1,
+          ease: 'power3.out',
+          delay: (i % 2) * 0.12,
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 88%',
+            once: true,
+          },
+        });
+      });
     }, detailRef);
 
     return () => ctx.revert();
@@ -208,18 +225,31 @@ export default function ProjectDetail({ project, onBack, onNavigateToContact }: 
 
       {/* Visual Compilation Gallery */}
       <div className="detail-section max-w-6xl mx-auto py-12 border-t border-white/10 mb-20">
+        <p className="font-mono text-xs text-[#6ee05a] uppercase tracking-widest mb-4">
+          // {project.title} — in the world
+        </p>
         <h3 className="font-display font-normal tracking-tight text-4xl text-white mb-10">
           Visual Artifacts
         </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           {project.galleryImages.map((img, idx) => (
-            <div key={idx} className="aspect-square rounded-[2rem] overflow-hidden shadow-md bg-white/[0.05] border border-white/10 group cursor-zoom-in">
+            <div
+              key={idx}
+              className={`artifact-item relative rounded-[2rem] overflow-hidden shadow-md bg-white/[0.05] border border-white/10 group cursor-zoom-in ${
+                idx === 0 ? 'aspect-[16/9] sm:col-span-2' : 'aspect-[3/2]'
+              }`}
+            >
               <img
                 src={img}
-                alt={`Gallery visual ${idx + 1}`}
+                alt={`${project.title} artifact ${idx + 1}`}
                 referrerPolicy="no-referrer"
+                loading="lazy"
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+              <span className="absolute bottom-5 left-6 font-mono text-[10px] uppercase tracking-[0.2em] text-white/80 translate-y-3 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+                Artifact // {String(idx + 1).padStart(2, '0')}
+              </span>
             </div>
           ))}
         </div>
