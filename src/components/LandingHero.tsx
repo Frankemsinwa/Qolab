@@ -12,6 +12,7 @@ import QolabLogo from './QolabLogo';
 import AuroraBeams from './AuroraBeams';
 import ScrollMarquee from './ScrollMarquee';
 import heroBg from '../../assets/hero-imgs/bright-light-dark-background.jpg';
+import qMark from '../assets/Q.webp';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -120,8 +121,19 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
           .from('.hero-nav-item', { y: 16, opacity: 0, duration: 0.8, stagger: 0.08 }, 0.3)
           .from('.hero-char', { opacity: 0, filter: 'blur(14px)', y: 16, duration: 0.5, stagger: 0.018, ease: 'power2.out' }, 0.45)
           .from('.hero-flip, .hero-pill', { opacity: 0, filter: 'blur(14px)', duration: 0.6, ease: 'power2.out' }, 1.1)
+          .from('.hero-q-wrap', { opacity: 0, x: 60, scale: 0.9, duration: 1.2, ease: 'power2.out' }, 0.6)
           .from('.hero-subword', { opacity: 0, filter: 'blur(8px)', y: 8, duration: 0.4, stagger: 0.012, ease: 'power2.out' }, 1.35)
           .from('.hero-cta', { y: 20, opacity: 0, duration: 0.8 }, 1.65);
+
+        // 3D Q — gentle idle float + slow sway loop
+        gsap.to('.hero-q-float', {
+          y: -18,
+          rotation: 2.5,
+          duration: 4.5,
+          ease: 'sine.inOut',
+          yoyo: true,
+          repeat: -1,
+        });
 
         // "Exist." word-flip — seamless loop: words exit up, next enters from below,
         // and each word is quietly parked off-screen (clipped) before its turn again.
@@ -171,6 +183,7 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
           }
         })
           .to('.hero-bg-wrap', { scale: 1.08, ease: 'none' }, 0)
+          .to('.hero-q-wrap', { y: -80, scale: 0.85, opacity: 0, ease: 'power1.in' }, 0)
           .to('.hero-text-block', { scale: 0.94, opacity: 0, ease: 'power1.in' }, 0);
 
         // Green flare spotlight follows mouse (matches bg image flare)
@@ -363,6 +376,21 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
               mixBlendMode: 'screen',
             }}
           />
+        </div>
+
+        {/* 3D Q brand object — floats on the right, blends with the green flare */}
+        <div aria-hidden="true" className="hero-q-wrap hidden md:block absolute right-[3vw] lg:right-[6vw] top-1/2 -translate-y-1/2 w-[30vw] max-w-[480px] pointer-events-none z-[5]">
+          <div className="hero-q-float">
+            <img
+              src={qMark}
+              alt=""
+              className="w-full h-auto"
+              style={{
+                mixBlendMode: 'screen',
+                filter: 'drop-shadow(0 30px 60px rgba(0, 0, 0, 0.45)) drop-shadow(0 0 80px rgba(58, 134, 63, 0.35))',
+              }}
+            />
+          </div>
         </div>
 
         {/* Hero text content */}
