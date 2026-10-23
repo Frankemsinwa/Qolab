@@ -55,7 +55,7 @@ export const projectsData: Project[] = [
     tech: ['React', 'Node.js', 'Real-Time API Integration', 'Payment Gateway', 'Responsive Design'],
     color: 'bg-[#0a0f0d]',
     accentColor: '#3a863f',
-    heroImage: proj1,
+    heroImage: luxBillboard,
     galleryImages: [luxBillboard, luxAircraft, luxPhone, luxCards, luxRollup, luxBrochure, luxTshirt, luxGoldCard]
   },
   {
