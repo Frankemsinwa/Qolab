@@ -78,7 +78,7 @@ export default function ProjectGrid({ onSelectProject }: ProjectGridProps) {
         <img
           src={project.heroImage}
           alt={project.title}
-          className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+          className={`w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04] ${project.galleryLayout === 'portrait' ? 'object-[center_30%]' : ''}`}
         />
       </div>
     </div>

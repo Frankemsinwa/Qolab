@@ -20,6 +20,7 @@ export interface Project {
   accentColor: string;
   heroImage: string;
   galleryImages: string[];
+  galleryLayout?: 'featured' | 'portrait';
 }
 
 export interface Service {

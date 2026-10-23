@@ -9,6 +9,14 @@ import proj1 from './assets/projects/project-1.webp';
 import proj2 from './assets/projects/project-2.jpg';
 import proj3 from './assets/projects/project-3.jpg';
 import proj4 from './assets/projects/project-4.jpg';
+import amoloModel from './assets/projects/amolo/model.jpg';
+import amoloTag from './assets/projects/amolo/tag.jpg';
+import amoloJacket from './assets/projects/amolo/jacket.jpg';
+import amoloCaps from './assets/projects/amolo/caps-shorts.jpg';
+import amoloTeeWhite from './assets/projects/amolo/tee-white.jpg';
+import amoloSuit from './assets/projects/amolo/suit.jpg';
+import amoloSignage from './assets/projects/amolo/signage.jpg';
+import amoloTeeMaroon from './assets/projects/amolo/tee-maroon.jpg';
 import luxBillboard from './assets/projects/luxel/billboard.jpg';
 import luxAircraft from './assets/projects/luxel/aircraft.jpg';
 import luxPhone from './assets/projects/luxel/phone-app.jpg';
@@ -45,26 +53,27 @@ export const projectsData: Project[] = [
     galleryImages: [luxBillboard, luxAircraft, luxPhone, luxCards, luxRollup, luxBrochure, luxTshirt, luxGoldCard]
   },
   {
-    id: 'aether-mobile',
-    title: 'AETHER SUITE',
-    subtitle: 'Ambient Workspace Mobile App',
-    category: 'MOBILE APP DEVELOPMENT & UI/UX',
-    client: 'Aether Inc.',
+    id: 'amolo',
+    title: 'AMOLO',
+    subtitle: 'Clothing Brand — Italy & Nigeria',
+    category: 'BRAND IDENTITY & FASHION DESIGN',
+    client: 'Amolo',
     year: '2026',
-    role: 'Full-Stack iOS/Android App & UI Architecture',
-    description: 'A fully immersive ambient mobile application designed to coordinate physical and digital workspace metrics into interactive, sensory-guided focus widgets.',
-    challenge: 'Traditional workspace apps are static, dense, and uninspiring. Aether wanted an experience that active remote workers would feel drawn to, which meant integrating custom physics and audio synth mechanics without slowing down mobile performance.',
-    solution: 'QOLAB designed a modular, gesture-centric mobile UI backed by elastic spring systems. Users transition through layout nodes with fluid dragging, accompanied by ambient pentatonic sound feedback generated in real time.',
+    role: 'Brand Identity, Apparel Graphics & Art Direction',
+    description: 'Amolo is a clothing label built between Italy and Nigeria — Italian tailoring discipline meeting Lagos energy. We shaped the brand from monogram to merch: identity, apparel graphics, packaging, and the imagery that carries it.',
+    challenge: 'Amolo needed a brand that could live credibly in two fashion cultures at once — refined enough for the Italian market, distinctive enough to stand out in Nigeria — and hold together from a single monogram across garments, woven tags, packaging, and retail signage.',
+    solution: 'We built a monogram-led identity in burnt orange and deep maroon, then rolled it across the full product line: tags, monogram tees, outerwear, tailored pieces, packaging, and storefront signage — one system, consistent at every touchpoint.',
     results: [
-      'App Store Featured App of the Week',
-      '4.9/5 stars average review across 50,000+ active users',
-      'Zero external assets loaded - 100% vector-generated client layouts'
+      'Monogram-led identity system: mark, palette, and monogram pattern',
+      'Apparel line art-directed across outerwear, tees, and tailored pieces',
+      'Woven tags, packaging, and retail signage designed for launch'
     ],
-    tech: ['iOS / Android Swift', 'React Native', 'Acoustic Feedback Engine', 'Gesture Physics', 'Spring Physics'],
-    color: 'bg-[#0a0f0d]',
-    accentColor: '#3a863f',
-    heroImage: proj2,
-    galleryImages: [proj2, proj3, proj4]
+    tech: ['Brand Strategy', 'Visual Identity', 'Apparel Graphics', 'Packaging Design', 'Art Direction'],
+    color: 'bg-[#160d08]',
+    accentColor: '#c2410c',
+    heroImage: amoloModel,
+    galleryImages: [amoloTag, amoloJacket, amoloCaps, amoloTeeWhite, amoloSuit, amoloSignage, amoloTeeMaroon],
+    galleryLayout: 'portrait'
   },
   {
     id: 'muse-web',

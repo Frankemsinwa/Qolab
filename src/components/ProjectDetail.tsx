@@ -15,6 +15,7 @@ interface ProjectDetailProps {
 
 export default function ProjectDetail({ project, onBack, onNavigateToContact }: ProjectDetailProps) {
   const detailRef = useRef<HTMLDivElement>(null);
+  const isPortrait = project.galleryLayout === 'portrait';
 
   // Reset scroll to top on mount
   useEffect(() => {
@@ -127,7 +128,7 @@ export default function ProjectDetail({ project, onBack, onNavigateToContact }: 
           src={project.heroImage}
           alt={project.title}
           referrerPolicy="no-referrer"
-          className="w-full h-full object-cover scale-105"
+          className={`w-full h-full object-cover scale-105 ${isPortrait ? 'object-[center_35%]' : ''}`}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/25 to-transparent pointer-events-none" />
       </div>
@@ -231,12 +232,16 @@ export default function ProjectDetail({ project, onBack, onNavigateToContact }: 
         <h3 className="font-display font-normal tracking-tight text-4xl text-white mb-10">
           Visual Artifacts
         </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div className={isPortrait ? 'grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6' : 'grid grid-cols-1 sm:grid-cols-2 gap-6'}>
           {project.galleryImages.map((img, idx) => (
             <div
               key={idx}
               className={`artifact-item relative rounded-[2rem] overflow-hidden shadow-md bg-white/[0.05] border border-white/10 group cursor-zoom-in ${
-                idx === 0 ? 'aspect-[16/9] sm:col-span-2' : 'aspect-[3/2]'
+                isPortrait
+                  ? `aspect-[4/5] ${idx % 3 === 1 ? 'md:mt-10' : ''}`
+                  : idx === 0
+                    ? 'aspect-[16/9] sm:col-span-2'
+                    : 'aspect-[3/2]'
               }`}
             >
               <img

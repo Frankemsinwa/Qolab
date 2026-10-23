@@ -75,7 +75,7 @@ export default function ProjectShowcase({ onSelectProject, onBack }: ProjectShow
                 <img
                   src={project.heroImage}
                   alt={project.title}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  className={`w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 ${project.galleryLayout === 'portrait' ? 'object-[center_30%]' : ''}`}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent pointer-events-none" />
                 <div className="absolute inset-0 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out flex flex-col justify-between p-8 text-white z-10" style={{ backgroundColor: project.accentColor }}>
