@@ -379,7 +379,7 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
         </div>
 
         {/* 3D Q brand object — floats on the right, blends with the green flare */}
-        <div aria-hidden="true" className="hero-q-wrap hidden md:block absolute right-[3vw] lg:right-[6vw] top-1/2 -translate-y-1/2 w-[30vw] max-w-[480px] pointer-events-none z-[5]">
+        <div aria-hidden="true" className="hero-q-wrap hidden md:block absolute right-[0vw] lg:right-[3vw] top-1/2 -translate-y-1/2 w-[38vw] max-w-[600px] pointer-events-none z-[5]">
           <div className="hero-q-float">
             <img
               src={qMark}
@@ -387,7 +387,9 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
               className="w-full h-auto"
               style={{
                 mixBlendMode: 'screen',
-                filter: 'drop-shadow(0 30px 60px rgba(0, 0, 0, 0.45)) drop-shadow(0 0 80px rgba(58, 134, 63, 0.35))',
+                WebkitMaskImage: 'radial-gradient(circle at 50% 47%, black 52%, transparent 72%)',
+                maskImage: 'radial-gradient(circle at 50% 47%, black 52%, transparent 72%)',
+                filter: 'brightness(1.08) saturate(1.15) drop-shadow(0 0 70px rgba(58, 134, 63, 0.4)) drop-shadow(0 0 140px rgba(110, 230, 90, 0.18))',
               }}
             />
           </div>
@@ -408,8 +410,8 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
                 <span className="block">
                   <CharLine text="Deserve to" />{' '}
                   <span
-                    className="hero-flip inline-grid overflow-hidden align-bottom"
-                    style={{ lineHeight: 1.05, marginTop: '-0.17em' }}
+                    className="hero-flip inline-grid overflow-hidden align-baseline"
+                    style={{ lineHeight: 1.15 }}
                     aria-label="Exist."
                   >
                     {HERO_FLIP_WORDS.map((word, i) => (
