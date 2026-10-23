@@ -11,6 +11,7 @@ import proj3 from './assets/projects/project-3.jpg';
 import proj4 from './assets/projects/project-4.jpg';
 import brandIdentityImg from './assets/services/brand-identity.jpg';
 import growthStrategyImg from './assets/services/growth-strategy.jpg';
+import aiImg from './assets/services/ai-service.jpg';
 
 export const projectsData: Project[] = [
   {
@@ -147,7 +148,7 @@ export const experimentsData: LabExperiment[] = [
 
 export const servicesData: Service[] = [
   { id: 'brand-identity-design', num: '01', title: 'Brand Identity & Design', shortTitle: 'Brand Identity', description: 'Brand strategy, visual identity, art direction, guidelines, and digital assets.', image: brandIdentityImg, accent: '#3a863f' },
-  { id: 'web-app-development', num: '02', title: 'Web & App Development', shortTitle: 'Web & Apps', description: 'Business websites, e-commerce, web apps, mobile apps, custom software, and digital platforms.', image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=800&q=80', accent: '#3a863f' },
-  { id: 'ai-solutions-automation', num: '03', title: 'AI Solutions & Automation', shortTitle: 'AI & Automation', description: 'AI-enabled solutions, intelligent workflows, and repetitive-process automation.', image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=800&q=80', accent: '#3a863f' },
+  { id: 'web-app-development', num: '02', title: 'Web & App Development', shortTitle: 'Web & Apps', description: 'Business websites, e-commerce, web apps, mobile apps, custom software, and digital platforms.', image: proj1, accent: '#3a863f' },
+  { id: 'ai-solutions-automation', num: '03', title: 'AI Solutions & Automation', shortTitle: 'AI & Automation', description: 'AI-enabled solutions, intelligent workflows, and repetitive-process automation.', image: aiImg, accent: '#3a863f' },
   { id: 'growth-strategy', num: '04', title: 'Growth & Strategy', shortTitle: 'Growth & Strategy', description: 'Business analysis, positioning, marketing strategy, campaigns, and practical growth planning.', image: growthStrategyImg, accent: '#3a863f' },
 ];
