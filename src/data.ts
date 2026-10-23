@@ -9,7 +9,7 @@ import proj1 from './assets/projects/project-1.webp';
 import proj2 from './assets/projects/project-2.jpg';
 import proj3 from './assets/projects/project-3.jpg';
 import proj4 from './assets/projects/project-4.jpg';
-import brandIdentityImg from './assets/services/Brand strategy.jpg';
+import brandIdentityImg from './assets/services/brand-identity.jpg';
 import growthStrategyImg from './assets/services/growth-strategy.jpg';
 
 export const projectsData: Project[] = [
