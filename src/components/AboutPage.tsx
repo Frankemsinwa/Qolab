@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react';
 import { ArrowLeft, ArrowUpRight } from 'lucide-react';
 import { gsap } from 'gsap';
-import heroImg1 from '../assets/hero-imgs/hero-1.jpg';
-import heroImg7 from '../assets/hero-imgs/hero-7.jpg';
+import founderImg from '../assets/founder.jpeg';
+import cofounderImg from '../assets/Cofounder.jpeg';
 
 interface AboutPageProps {
   onBack: () => void;
@@ -156,16 +156,18 @@ export default function AboutPage({ onBack, onNavigateToContact }: AboutPageProp
           <h2 className="about-reveal font-display font-normal tracking-tight text-3xl sm:text-4xl text-white mb-12">The team.</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             <div className="about-reveal flex gap-4">
-              <div className="w-1/2 aspect-[4/5] rounded-[2rem] overflow-hidden shadow-md relative">
-                <img src={heroImg1} alt="Creative Team" className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex items-end p-4">
-                  <span className="text-white text-xs font-semibold">Creative Team</span>
+              <div className="w-1/2 aspect-[4/5] rounded-[2rem] overflow-hidden shadow-md relative group">
+                <img src={founderImg} alt="Ekemini Akpan - Founder" className="w-full h-full object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-4 sm:p-5">
+                  <span className="text-white text-sm sm:text-base font-semibold leading-tight">Ekemini Akpan</span>
+                  <span className="text-[#6ee05a] text-xs font-medium mt-0.5">Founder</span>
                 </div>
               </div>
-              <div className="w-1/2 aspect-[4/5] rounded-[2rem] overflow-hidden shadow-md relative mt-8">
-                <img src={heroImg7} alt="Coding Desk" className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex items-end p-4">
-                  <span className="text-white text-xs font-semibold">Coding Desk</span>
+              <div className="w-1/2 aspect-[4/5] rounded-[2rem] overflow-hidden shadow-md relative mt-8 group">
+                <img src={cofounderImg} alt="Simona Fyn - Co-founder" className="w-full h-full object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-4 sm:p-5">
+                  <span className="text-white text-sm sm:text-base font-semibold leading-tight">Simona Fyn</span>
+                  <span className="text-[#6ee05a] text-xs font-medium mt-0.5">Co-founder</span>
                 </div>
               </div>
             </div>
