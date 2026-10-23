@@ -6,9 +6,6 @@
 import { Project, LabExperiment, Service } from './types';
 
 import proj1 from './assets/projects/project-1.webp';
-import proj2 from './assets/projects/project-2.jpg';
-import proj3 from './assets/projects/project-3.jpg';
-import proj4 from './assets/projects/project-4.jpg';
 import amoloModel from './assets/projects/amolo/model.jpg';
 import amoloTag from './assets/projects/amolo/tag.jpg';
 import amoloJacket from './assets/projects/amolo/jacket.jpg';
@@ -105,28 +102,6 @@ export const projectsData: Project[] = [
     accentColor: '#166534',
     heroImage: gvHero,
     galleryImages: [gvBanner, gvCar, gvBrochure, gvLetterhead, gvCards, gvTee, gvApp, gvLogos]
-  },
-  {
-    id: 'apex-branding',
-    title: 'APEX DIGITAL SYSTEM',
-    subtitle: 'Brand Design & Digital Marketing Ecosystem',
-    category: 'BRAND DESIGN & MARKETING ECOSYSTEM',
-    client: 'Apex Global',
-    year: '2025',
-    role: 'Brand Architecture, UX Strategy & Interactive Marketing',
-    description: 'A revolutionary digital marketing hub integrating responsive, fluid brand guidelines with micro-coordinate grids, interactive content tools, and real-time aesthetic layouts.',
-    challenge: 'Bridging standard guidelines with dynamic visual marketing campaigns. Giving designers and marketers the freedom to construct customized layouts without compromising core brand consistency.',
-    solution: 'QOLAB built a customizable, modular web system backed by deep responsive templates. The system tracks content alignment and scales typography dynamically, ensuring every layout stays perfect across platforms.',
-    results: [
-      'CSS Design Awards Best UI/UX',
-      '200% increase in lead generation across interactive pages',
-      'Deployed globally across 15+ marketing sub-sites'
-    ],
-    tech: ['Brand Strategy', 'Typography Design', 'Tailwind v4', 'Asynchronous Grid API'],
-    color: 'bg-[#0a0f0d]',
-    accentColor: '#3a863f',
-    heroImage: proj4,
-    galleryImages: [proj4, proj1, proj2]
   }
 ];
 
