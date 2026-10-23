@@ -17,6 +17,15 @@ import amoloTeeWhite from './assets/projects/amolo/tee-white.jpg';
 import amoloSuit from './assets/projects/amolo/suit.jpg';
 import amoloSignage from './assets/projects/amolo/signage.jpg';
 import amoloTeeMaroon from './assets/projects/amolo/tee-maroon.jpg';
+import gvHero from './assets/projects/green-valley/hero.jpg';
+import gvBanner from './assets/projects/green-valley/banner.jpg';
+import gvCar from './assets/projects/green-valley/car.jpg';
+import gvBrochure from './assets/projects/green-valley/brochure.jpg';
+import gvLetterhead from './assets/projects/green-valley/letterhead.jpg';
+import gvCards from './assets/projects/green-valley/cards.jpg';
+import gvTee from './assets/projects/green-valley/tee.jpg';
+import gvApp from './assets/projects/green-valley/app.jpg';
+import gvLogos from './assets/projects/green-valley/logos.jpg';
 import luxBillboard from './assets/projects/luxel/billboard.jpg';
 import luxAircraft from './assets/projects/luxel/aircraft.jpg';
 import luxPhone from './assets/projects/luxel/phone-app.jpg';
@@ -76,26 +85,26 @@ export const projectsData: Project[] = [
     galleryLayout: 'portrait'
   },
   {
-    id: 'muse-web',
-    title: 'MUSE EXPERIMENTAL',
-    subtitle: 'Immersive WebGL Hub & Platform',
-    category: 'WEBSITE DEVELOPMENT & MOTION DESIGN',
-    client: 'MUSE Creative Group',
-    year: '2025',
-    role: 'Creative Coding & Interactive Website Development',
-    description: 'An interactive spatial website mapping creative portfolios into gorgeous multi-dimensional elastic webs. Users navigate portfolios through magnetic coordinates.',
-    challenge: 'Designing an interactive web experience that serves complex historical and artistic projects while keeping page loads instant and performance high across standard desktop and mobile browsers.',
-    solution: 'We engineered a node-based coordinate grid utilizing WebGL spatial layouts. Each project acts as an orbital system with delicate particle effects that transition smoothly on touch or hover, creating beautiful tactile feedback.',
+    id: 'green-valley',
+    title: 'GREEN VALLEY',
+    subtitle: 'Real Estate Firm Brand Identity',
+    category: 'BRAND IDENTITY & ENVIRONMENTAL DESIGN',
+    client: 'Green Valley Realty',
+    year: '2026',
+    role: 'Brand Identity, Collateral & Environmental Design',
+    description: 'Green Valley Realty is a real estate firm built on one simple promise: invest in tomorrow, own today. We shaped the complete brand, from geometric mark to signage, stationery, vehicles, and the campaign imagery that carries it.',
+    challenge: 'Green Valley needed a brand trustworthy enough for one of the biggest decisions in life and modern enough to stand apart in a crowded property market, consistent across offices, print, vehicles, digital touchpoints, and outdoor media.',
+    solution: 'We designed a geometric G-V mark with a fresh valley-green palette, then applied it across the full system: stationery, brochures, ID badges, business cards, branded vehicles, app presence, and outdoor campaigns. One identity, everywhere the firm shows up.',
     results: [
-      'Awwwards Site of the Month Winner',
-      'Over 1.5 million interactive portfolio nodes explored',
-      'Fluid page performance locked at a perfect 120 FPS'
+      'Full identity system: mark, palette, and logo lockups',
+      'Office and print collateral: stationery, brochures, badges, and cards',
+      'Environmental and fleet branding: outdoor banners and branded vehicles'
     ],
-    tech: ['WebGL', 'HTML5 Canvas', 'GSAP Sequencing', 'Tailwind v4', 'Custom Physics Core'],
-    color: 'bg-[#0a0f0d]',
-    accentColor: '#3a863f',
-    heroImage: proj3,
-    galleryImages: [proj3, proj4, proj1]
+    tech: ['Brand Strategy', 'Visual Identity', 'Print & Collateral', 'Environmental Design', 'Campaign Art Direction'],
+    color: 'bg-[#052e16]',
+    accentColor: '#166534',
+    heroImage: gvHero,
+    galleryImages: [gvBanner, gvCar, gvBrochure, gvLetterhead, gvCards, gvTee, gvApp, gvLogos]
   },
   {
     id: 'apex-branding',
