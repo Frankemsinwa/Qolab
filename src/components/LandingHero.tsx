@@ -183,7 +183,7 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
           }
         })
           .to('.hero-bg-wrap', { scale: 1.08, ease: 'none' }, 0)
-          .to('.hero-q-wrap', { y: -80, scale: 0.85, opacity: 0, ease: 'power1.in' }, 0)
+          .to('.hero-q-wrap', { y: -60, ease: 'none' }, 0)
           .to('.hero-text-block', { scale: 0.94, opacity: 0, ease: 'power1.in' }, 0);
 
         // Green flare spotlight follows mouse (matches bg image flare)
