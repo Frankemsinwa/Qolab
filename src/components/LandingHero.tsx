@@ -12,7 +12,6 @@ import QolabLogo from './QolabLogo';
 import AuroraBeams from './AuroraBeams';
 import ScrollMarquee from './ScrollMarquee';
 import heroBg from '../../assets/hero-imgs/bright-light-dark-background.jpg';
-import qMark from '../assets/Q.webp';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -120,7 +119,7 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
           .from('.hero-bg-wrap', { opacity: 0, duration: 1.8, ease: 'power2.out' }, 0)
           .from('.hero-nav-item', { y: 16, opacity: 0, duration: 0.8, stagger: 0.08 }, 0.3)
           .from('.hero-char', { opacity: 0, filter: 'blur(14px)', y: 16, duration: 0.5, stagger: 0.018, ease: 'power2.out' }, 0.45)
-          .from('.hero-flip, .hero-pill', { opacity: 0, filter: 'blur(14px)', duration: 0.6, ease: 'power2.out' }, 1.1)
+          .from('.hero-flip', { opacity: 0, filter: 'blur(14px)', duration: 0.6, ease: 'power2.out' }, 1.1)
           .from('.hero-q-wrap', { opacity: 0, x: 60, scale: 0.9, duration: 1.2, ease: 'power2.out' }, 0.6)
           .from('.hero-subword', { opacity: 0, filter: 'blur(8px)', y: 8, duration: 0.4, stagger: 0.012, ease: 'power2.out' }, 1.35)
           .from('.hero-cta', { y: 20, opacity: 0, duration: 0.8 }, 1.65);
@@ -359,13 +358,34 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
             <img
               src={heroBg}
               alt=""
-              className="w-full h-full object-cover object-center scale-x-[-1]"
+              className="w-full h-full object-cover object-center scale-x-[-1] scale-y-[-1]"
             />
             <AuroraBeams />
           </div>
-          <div className="absolute inset-0 bg-gradient-to-b from-black/15 via-transparent to-black/55" />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/15 to-transparent" />
-          {/* Mouse-following green flare spotlight — matches bg image flare */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-transparent to-black/65" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/25 to-transparent" />
+
+          {/* Subtle vertical architectural grid lines — reference design hallmark */}
+          <div className="absolute inset-0 z-0 pointer-events-none flex justify-between px-6 md:px-12 lg:px-16" aria-hidden="true">
+            <div className="w-px h-full bg-white/[0.04]" />
+            <div className="w-px h-full bg-white/[0.04]" />
+            <div className="w-px h-full bg-white/[0.04]" />
+            <div className="w-px h-full bg-white/[0.04] hidden sm:block" />
+            <div className="w-px h-full bg-white/[0.04] hidden md:block" />
+            <div className="w-px h-full bg-white/[0.04] hidden lg:block" />
+          </div>
+
+          {/* Top-Right warm ambient flare bloom — matching reference image lighting */}
+          <div
+            className="absolute -top-[15%] -right-[10%] w-[55vw] h-[55vw] max-w-[900px] max-h-[900px] rounded-full pointer-events-none opacity-85"
+            style={{
+              background: 'radial-gradient(circle at 65% 35%, rgba(220, 140, 60, 0.24) 0%, rgba(110, 230, 90, 0.18) 35%, rgba(45, 120, 55, 0.08) 60%, transparent 75%)',
+              filter: 'blur(75px)',
+              mixBlendMode: 'screen',
+            }}
+          />
+
+          {/* Mouse-following green flare spotlight */}
           <div
             ref={spotlightRef}
             aria-hidden="true"
@@ -378,37 +398,61 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
           />
         </div>
 
-        {/* 3D Q brand object — floats on the right, blends with the green flare */}
-        <div aria-hidden="true" className="hero-q-wrap hidden md:block absolute right-[0vw] lg:right-[3vw] top-1/2 -translate-y-1/2 w-[38vw] max-w-[600px] pointer-events-none z-[5]">
-          <div className="hero-q-float">
-            <img
-              src={qMark}
-              alt=""
-              className="w-full h-auto"
+        {/* 3D Liquid Cube brand object — massive, immersive scale with celestial orbit ring */}
+        <div aria-hidden="true" className="hero-q-wrap hidden md:block absolute right-[-4vw] lg:right-[0vw] xl:right-[2vw] top-1/2 -translate-y-1/2 w-[52vw] lg:w-[48vw] xl:w-[45vw] max-w-[720px] 2xl:max-w-[820px] aspect-square pointer-events-none z-[5]">
+          <div className="hero-q-float w-full h-full relative flex items-center justify-center">
+            {/* Celestial Orbital Ring & Tag Chip (Reference Aesthetic) */}
+            <div className="absolute inset-[-12%] pointer-events-none flex items-center justify-center">
+              <div className="relative w-full h-full rounded-full border border-white/[0.08] shadow-[0_0_60px_rgba(110,230,90,0.05)]">
+                {/* Subtle dashed inner orbit */}
+                <div className="absolute inset-[6%] rounded-full border border-dashed border-white/[0.04]" />
+                {/* Orbit marker with category label matching reference's BRANDING badge */}
+                <div className="absolute top-[22%] -left-[3%] flex items-center gap-2 transform -translate-y-1/2">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#6ee05a] opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-[#6ee05a] shadow-[0_0_10px_#6ee05a]"></span>
+                  </span>
+                  <span className="text-[10px] md:text-[11px] tracking-[0.25em] uppercase font-mono text-gray-300/80 font-medium select-none">
+                    INNOVATION
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              poster="/hero-cube-poster.webp"
+              className="w-full h-full object-contain pointer-events-none select-none relative z-10"
               style={{
                 mixBlendMode: 'screen',
-                WebkitMaskImage: 'radial-gradient(circle at 50% 47%, black 52%, transparent 72%)',
-                maskImage: 'radial-gradient(circle at 50% 47%, black 52%, transparent 72%)',
-                filter: 'brightness(1.08) saturate(1.15) drop-shadow(0 0 70px rgba(58, 134, 63, 0.4)) drop-shadow(0 0 140px rgba(110, 230, 90, 0.18))',
+                WebkitMaskImage: 'radial-gradient(circle at 50% 50%, black 58%, transparent 75%)',
+                maskImage: 'radial-gradient(circle at 50% 50%, black 58%, transparent 75%)',
+                filter: 'brightness(1.1) saturate(1.25) drop-shadow(0 0 70px rgba(110, 230, 90, 0.45)) drop-shadow(0 0 140px rgba(58, 134, 63, 0.25))',
               }}
-            />
+            >
+              <source src="/hero-cube.webm" type="video/webm" />
+              <source src="/hero-cube.mp4" type="video/mp4" />
+            </video>
           </div>
         </div>
 
         {/* Hero text content */}
         <div className="hero-content-layer relative z-10 w-full h-full flex flex-col justify-between">
-          {/* Top bar — logo left, larger (desktop only; mobile uses the sticky glass bar) */}
+          {/* Top bar — logo left (desktop only; mobile uses the sticky glass bar) */}
           <div className="hidden md:flex w-full items-center px-6 md:px-12 lg:px-16 pt-6 md:pt-8 relative z-20">
             <QolabLogo className="w-24 md:w-28" />
           </div>
 
-          {/* Hero text — left-aligned composition */}
+          {/* Hero text — left-aligned composition with Qolab original wording */}
           <div className="hero-text-block flex-1 flex flex-col justify-center px-6 md:px-12 lg:px-16 relative">
             <div className="relative z-10 w-full max-w-6xl">
-              <h1 className="hero-headline font-display text-[2.9rem] sm:text-[4.25rem] md:text-[5.5rem] lg:text-[7rem] xl:text-[8rem] leading-[0.84] tracking-[-0.03em] text-white font-bold">
+              <h1 className="hero-headline font-display text-[2.9rem] sm:text-[4.25rem] md:text-[5.5rem] lg:text-[7rem] xl:text-[8rem] leading-[0.88] tracking-[-0.035em] text-white font-bold">
                 <span className="block"><CharLine text="Some Ideas" /></span>
-                <span className="block">
-                  <CharLine text="Deserve to" />{' '}
+                <span className="block"><CharLine text="Deserve to" /></span>
+                <span className="block text-[#6ee05a]">
                   <span
                     className="hero-flip inline-grid overflow-hidden align-baseline"
                     style={{ lineHeight: 1.15 }}
@@ -424,27 +468,28 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
                       </span>
                     ))}
                   </span>
-                  <button
-                    onClick={() => onNavigate?.('contact')}
-                    data-cursor="magnetic"
-                    data-cursor-text="Let's go"
-                    className="hero-pill align-bottom mb-1 md:mb-2 ml-5 md:ml-8 inline-flex items-center gap-2.5 border border-white/60 rounded-full px-6 py-3 md:px-7 md:py-3.5 text-xs md:text-sm text-white hover:bg-white hover:text-[#0f0f11] transition-all font-sans font-medium"
-                  >
-                    Let's Make It Exist.
-                    <ArrowUpRight size={15} />
-                  </button>
                 </span>
               </h1>
-              <p className="hero-subtext text-gray-300 text-base sm:text-lg mt-7 md:mt-9 max-w-2xl font-sans leading-relaxed">
+              <p className="hero-subtext text-gray-300 text-base sm:text-lg mt-7 md:mt-8 max-w-2xl font-sans leading-relaxed text-left">
                 <WordRoll
                   cls="hero-subword"
                   text="We don't follow the future. We make it. We bring creativity, technology, and strategy together to turn ambitious thinking into meaningful solutions."
                 />
               </p>
-              <div className="hero-cta mt-7 md:mt-9 flex flex-wrap items-center gap-5">
+              <div className="hero-cta mt-8 md:mt-10 flex flex-wrap items-center justify-start gap-4 sm:gap-6 text-left w-full">
+                <button
+                  onClick={() => onNavigate?.('contact')}
+                  data-cursor="magnetic"
+                  data-cursor-text="Let's go"
+                  className="inline-flex items-center gap-2.5 border border-white/60 hover:border-white rounded-full px-6 py-3 md:px-7 md:py-3.5 text-xs md:text-sm text-white hover:bg-white hover:text-[#0f0f11] transition-all font-sans font-medium shadow-[0_0_25px_rgba(110,230,90,0.18)] bg-white/[0.04] backdrop-blur-sm"
+                >
+                  Let's Make It Exist.
+                  <ArrowUpRight size={15} />
+                </button>
                 <button
                   onClick={onViewAllProjects}
-                  className="flex items-center gap-2 text-sm font-medium text-white hover:text-[#6ee05a] transition-colors font-sans"
+                  data-cursor="magnetic"
+                  className="inline-flex items-center gap-2 text-sm font-medium text-white hover:text-[#6ee05a] transition-colors font-sans py-3"
                 >
                   Explore Our Work.
                   <ArrowRight size={15} />
