@@ -296,3 +296,14 @@ html.lenis, html.lenis body {
     transform: none;
   }
 }
+
+/* ===== Cyber Visionary holographic scanline ===== */
+@keyframes cyberScan {
+  0% { top: 0%; opacity: 0; }
+  15% { opacity: 0.9; }
+  85% { opacity: 0.9; }
+  100% { top: 100%; opacity: 0; }
+}
+.animate-cyber-scan {
+  animation: cyberScan 6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
