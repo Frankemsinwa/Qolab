@@ -9,9 +9,8 @@ import ApproachSection from './ApproachSection';
 import { projectsData } from '../data';
 import { Service } from '../types';
 import QolabLogo from './QolabLogo';
-import AuroraBeams from './AuroraBeams';
 import ScrollMarquee from './ScrollMarquee';
-import heroBg from '../../assets/hero-imgs/bright-light-dark-background.jpg';
+import qMark from '../assets/Q.webp';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -42,14 +41,14 @@ function CharLine({ text }: { text: string }) {
           {word.split('').map((c, ci) => (
             <span key={ci} className="hero-char inline-block">{c}</span>
           ))}
-          {wi < arr.length - 1 ? ' ' : ''}
+          {wi < arr.length - 1 && <span>&nbsp;</span>}
         </span>
       ))}
     </>
   );
 }
 
-const HERO_FLIP_WORDS = ['future.', 'system.', 'reality.', 'solution.'];
+const HERO_FLIP_WORDS = ['Exist.', 'Thrive.', 'Matter.', 'Emerge.', 'Begin.'];
 
 /** Inline neon icon chips embedded in body copy (reference-site style) */
 function ChipDiamond() {
@@ -103,12 +102,11 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
   const approachRef = useRef<HTMLDivElement>(null);
   const s8Ref = useRef<HTMLDivElement>(null);
   const s2TextRef = useRef<HTMLParagraphElement>(null);
-  const spotlightRef = useRef<HTMLDivElement>(null);
+  const cubeVideoRef = useRef<HTMLVideoElement>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let onHeroMove: ((e: MouseEvent) => void) | null = null;
     const hero = heroRef.current;
 
     if (!reduced) {
@@ -116,24 +114,61 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
         // Hero content entrance — blur-type reveal
         const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
         heroTl
-          .from('.hero-bg-wrap', { opacity: 0, duration: 1.8, ease: 'power2.out' }, 0)
-          .from('.hero-nav-item', { y: 16, opacity: 0, duration: 0.8, stagger: 0.08 }, 0.3)
-          .from('.hero-char', { opacity: 0, filter: 'blur(14px)', y: 16, duration: 0.5, stagger: 0.018, ease: 'power2.out' }, 0.45)
-          .from('.hero-flip', { opacity: 0, filter: 'blur(14px)', duration: 0.6, ease: 'power2.out' }, 1.1)
-          .from('.hero-wordmark', { opacity: 0, y: 50, duration: 1.4, ease: 'power2.out' }, 0.6)
-          .from('.hero-visionary-wrap', { opacity: 0, y: 70, scale: 0.96, duration: 1.3, ease: 'power3.out' }, 0.5)
-          .from('.hero-card-wrap', { opacity: 0, x: 40, duration: 1.1, ease: 'power3.out' }, 0.9)
-          .from('.hero-subword', { opacity: 0, filter: 'blur(8px)', y: 8, duration: 0.4, stagger: 0.012, ease: 'power2.out' }, 1.25)
-          .from('.hero-cta', { y: 20, opacity: 0, duration: 0.8 }, 1.5);
+          .from('.hero-eyebrow', { opacity: 0, y: 12, duration: 0.7 }, 0.15)
+          .from('.hero-nav-item', { y: 16, opacity: 0, duration: 0.8, stagger: 0.08 }, 0.2)
+          .from('.hero-char', { opacity: 0, filter: 'blur(14px)', y: 16, duration: 0.5, stagger: 0.016, ease: 'power2.out' }, 0.35)
+          .from('.hero-flip', { opacity: 0, filter: 'blur(14px)', duration: 0.6, ease: 'power2.out' }, 0.95)
+          .from('.hero-sculpture-wrap', { opacity: 0, duration: 1.4, ease: 'power2.out' }, 0.4)
+          .from('.hero-sculpture-float', { scale: 0.88, duration: 1.4, ease: 'power2.out' }, 0.4)
+          .from('.hero-subword', { opacity: 0, filter: 'blur(8px)', y: 8, duration: 0.4, stagger: 0.012, ease: 'power2.out' }, 1.2)
+          .from('.hero-cta', { y: 20, opacity: 0, duration: 0.8 }, 1.45)
+          .from('.hero-meta-strip', { opacity: 0, y: 12, duration: 0.8 }, 1.6);
 
-        // Visionary subtle idle float
-        gsap.to('.hero-visionary-float', {
-          y: -12,
-          duration: 4.5,
+        // 3D Sculpture gentle float
+        gsap.to('.hero-sculpture-float', {
+          y: -14,
+          rotation: 1.2,
+          duration: 4.8,
           ease: 'sine.inOut',
           yoyo: true,
           repeat: -1,
         });
+
+        // Interactive ScrollTrigger: Scatters on scroll down, arranges on scroll up!
+        const cubeVideo = cubeVideoRef.current;
+        if (cubeVideo) {
+          const initVideo = () => {
+            cubeVideo.currentTime = 0;
+            cubeVideo.pause();
+          };
+          if (cubeVideo.readyState >= 1) {
+            initVideo();
+          } else {
+            cubeVideo.addEventListener('loadedmetadata', initVideo, { once: true });
+          }
+
+          // Mobile touch unlock for smooth scrubbing on iOS/Android
+          const unlockSeek = () => {
+            cubeVideo.play().then(() => cubeVideo.pause()).catch(() => {});
+            window.removeEventListener('touchstart', unlockSeek);
+            window.removeEventListener('scroll', unlockSeek);
+          };
+          window.addEventListener('touchstart', unlockSeek, { passive: true, once: true });
+          window.addEventListener('scroll', unlockSeek, { passive: true, once: true });
+
+          ScrollTrigger.create({
+            trigger: hero,
+            start: 'top top',
+            end: '+=150%',
+            scrub: 0.15,
+            onUpdate: (self) => {
+              if (cubeVideo.readyState >= 1) {
+                // Video timeline: 0.0s = fully arranged/assembled, ~6.2s = fully scattered/expanded
+                cubeVideo.currentTime = self.progress * 6.2;
+              }
+            },
+          });
+        }
 
         // "Exist." word-flip — seamless loop: words exit up, next enters from below,
         // and each word is quietly parked off-screen (clipped) before its turn again.
@@ -169,8 +204,7 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
           });
         }
 
-        // Scrubbed pin — hero holds 2vh: bg zooms 1.0→1.08, headline shrinks & fades
-        // while s2 (z-20) slides OVER the still-pinned hero (pinSpacing: false)
+        // Scrubbed pin — hero holds: s2 (z-20) slides OVER the still-pinned hero (pinSpacing: false)
         gsap.timeline({
           scrollTrigger: {
             trigger: hero,
@@ -182,54 +216,8 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
             scrub: 1,
           }
         })
-          .to('.hero-bg-wrap', { scale: 1.08, ease: 'none' }, 0)
-          .to('.hero-q-wrap', { y: -60, ease: 'none' }, 0)
+          .to('.hero-sculpture-wrap', { scale: 1.15, opacity: 0.65, ease: 'none' }, 0)
           .to('.hero-text-block', { scale: 0.94, opacity: 0, ease: 'power1.in' }, 0);
-
-        // Green flare spotlight & interactive 3D parallax
-        const spotlight = spotlightRef.current;
-        if (hero) {
-          if (spotlight) {
-            gsap.set(spotlight, { xPercent: -50, yPercent: -50, x: hero.offsetWidth / 2, y: hero.offsetHeight / 2 });
-          }
-          const spotX = spotlight ? gsap.quickTo(spotlight, 'x', { duration: 0.65, ease: 'power3.out' }) : null;
-          const spotY = spotlight ? gsap.quickTo(spotlight, 'y', { duration: 0.65, ease: 'power3.out' }) : null;
-
-          // Parallax for visionary figure, giant wordmark, and top card
-          const visX = gsap.quickTo('.hero-visionary-tilt', 'x', { duration: 0.8, ease: 'power2.out' });
-          const visY = gsap.quickTo('.hero-visionary-tilt', 'y', { duration: 0.8, ease: 'power2.out' });
-          const visRotY = gsap.quickTo('.hero-visionary-tilt', 'rotationY', { duration: 0.8, ease: 'power2.out' });
-          const visRotX = gsap.quickTo('.hero-visionary-tilt', 'rotationX', { duration: 0.8, ease: 'power2.out' });
-          const wordmarkX = gsap.quickTo('.hero-wordmark-inner', 'x', { duration: 1.1, ease: 'power2.out' });
-          const cardX = gsap.quickTo('.hero-card-inner', 'x', { duration: 0.9, ease: 'power2.out' });
-          const cardY = gsap.quickTo('.hero-card-inner', 'y', { duration: 0.9, ease: 'power2.out' });
-
-          onHeroMove = (e: MouseEvent) => {
-            const rect = hero.getBoundingClientRect();
-            const relX = e.clientX - rect.left;
-            const relY = e.clientY - rect.top;
-            const normX = (relX / rect.width - 0.5) * 2; // -1 to 1
-            const normY = (relY / rect.height - 0.5) * 2; // -1 to 1
-
-            if (spotX && spotY) {
-              spotX(relX);
-              spotY(relY);
-              gsap.to(spotlight, { opacity: 1, duration: 0.4, overwrite: 'auto' });
-            }
-
-            // 3D parallax tracking
-            visX(normX * 18);
-            visY(normY * 10);
-            visRotY(normX * 9);
-            visRotX(-normY * 6);
-
-            // Counter-depth parallax
-            wordmarkX(-normX * 22);
-            cardX(-normX * 12);
-            cardY(-normY * 8);
-          };
-          hero.addEventListener('mousemove', onHeroMove);
-        }
 
         // Section 2 scroll-triggered
         gsap.from('.s2-inner', {
@@ -309,14 +297,9 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
       }, containerRef);
 
       return () => {
-        if (onHeroMove && hero) hero.removeEventListener('mousemove', onHeroMove);
         ctx.revert();
       };
     }
-
-    return () => {
-      if (onHeroMove && hero) hero.removeEventListener('mousemove', onHeroMove);
-    };
   }, []);
 
   return (
@@ -380,211 +363,91 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
       {/* ===== PINNED HERO ===== */}
       <section 
         ref={heroRef} 
-        className="relative w-full h-screen overflow-hidden bg-transparent z-10"
+        className="relative w-full h-screen overflow-hidden bg-black z-10"
       >
 
-        {/* ===== HERO BACKGROUND & 3 CINEMATIC EMERALD FLARES (MATCHING CHARACTER LIGHTING) ===== */}
-        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden bg-[#060807]" aria-hidden="true">
-          <div className="hero-bg-wrap absolute inset-0">
-            {/* Subtle vertical architectural grid lines — reference design hallmark */}
-            <div className="absolute inset-0 z-0 pointer-events-none flex justify-between px-6 md:px-12 lg:px-16 opacity-40" aria-hidden="true">
-              <div className="w-px h-full bg-white/[0.04]" />
-              <div className="w-px h-full bg-white/[0.04]" />
-              <div className="w-px h-full bg-white/[0.04]" />
-              <div className="w-px h-full bg-white/[0.04] hidden sm:block" />
-              <div className="w-px h-full bg-white/[0.04] hidden md:block" />
-              <div className="w-px h-full bg-white/[0.04] hidden lg:block" />
-            </div>
-
-            {/* 1. Top-Left Atmospheric Flare (behind headline) */}
-            <div
-              aria-hidden="true"
-              className="absolute -top-[15%] -left-[10%] w-[54vw] h-[54vw] max-w-[800px] max-h-[800px] rounded-full pointer-events-none opacity-85 z-[3]"
-              style={{
-                background: 'radial-gradient(circle at 35% 35%, rgba(110, 224, 90, 0.25) 0%, rgba(72, 199, 101, 0.14) 35%, rgba(25, 112, 72, 0.04) 65%, transparent 75%)',
-                filter: 'blur(90px)',
-                mixBlendMode: 'screen',
-              }}
-            />
-
-            {/* 2. Top-Center Overhead Flare (bleeding down from top edge above character) */}
-            <div
-              aria-hidden="true"
-              className="absolute -top-[18%] left-1/2 -translate-x-1/2 w-[48vw] h-[36vw] max-w-[720px] max-h-[500px] rounded-full pointer-events-none opacity-90 z-[3]"
-              style={{
-                background: 'radial-gradient(ellipse at 50% 25%, rgba(110, 224, 90, 0.35) 0%, rgba(72, 199, 101, 0.18) 35%, rgba(25, 112, 72, 0.05) 65%, transparent 80%)',
-                filter: 'blur(75px)',
-                mixBlendMode: 'screen',
-              }}
-            />
-
-            {/* 3. Top-Right Edge Flare (hugging top-right perimeter and corner) */}
-            <div
-              aria-hidden="true"
-              className="absolute -top-[14%] -right-[8%] w-[50vw] h-[50vw] max-w-[700px] max-h-[700px] rounded-full pointer-events-none opacity-85 z-[3]"
-              style={{
-                background: 'radial-gradient(circle at 75% 25%, rgba(110, 224, 90, 0.32) 0%, rgba(72, 199, 101, 0.16) 38%, rgba(25, 112, 72, 0.04) 65%, transparent 80%)',
-                filter: 'blur(80px)',
-                mixBlendMode: 'screen',
-              }}
-            />
-
-            {/* 4. Center Silhouette Backlight (behind visionary torso & between backdrop letters) */}
-            <div
-              aria-hidden="true"
-              className="absolute top-[26%] left-1/2 -translate-x-1/2 w-[48vw] h-[50vh] max-w-[740px] max-h-[620px] rounded-full pointer-events-none opacity-85 z-[4]"
-              style={{
-                background: 'radial-gradient(ellipse at 50% 50%, rgba(110, 224, 90, 0.30) 0%, rgba(72, 199, 101, 0.16) 35%, rgba(25, 112, 72, 0.04) 60%, transparent 75%)',
-                filter: 'blur(80px)',
-                mixBlendMode: 'screen',
-              }}
-            />
-          </div>
-
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/75" />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/35 via-transparent to-transparent" />
-
-          {/* Mouse-following green flare spotlight (exact emerald hue) */}
+        {/* ===== HERO BACKGROUND — Plain black with two ambient emerald flares ===== */}
+        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden" aria-hidden="true">
+          {/* Flare 1: Top-left edge corner — soft radiant emerald aura */}
           <div
-            ref={spotlightRef}
-            aria-hidden="true"
-            className="absolute top-0 left-0 w-[42rem] h-[42rem] rounded-full opacity-0 pointer-events-none hidden md:block"
+            className="absolute -top-[18%] -left-[10%] w-[42rem] h-[42rem] rounded-full pointer-events-none opacity-45"
             style={{
-              background: 'radial-gradient(circle, rgba(110, 224, 90, 0.16) 0%, rgba(72, 199, 101, 0.08) 35%, rgba(25, 112, 72, 0.03) 55%, transparent 70%)',
-              filter: 'blur(65px)',
+              background: 'radial-gradient(circle at 35% 35%, rgba(110, 224, 90, 0.28) 0%, rgba(58, 134, 63, 0.12) 42%, rgba(10, 25, 15, 0.03) 65%, transparent 78%)',
+              filter: 'blur(80px)',
+              mixBlendMode: 'screen',
+            }}
+          />
+
+          {/* Flare 2: Bottom-left edge — subtle atmospheric glow framing the text */}
+          <div
+            className="absolute -bottom-[20%] left-[4%] w-[36rem] h-[36rem] rounded-full pointer-events-none opacity-35"
+            style={{
+              background: 'radial-gradient(circle, rgba(110, 224, 90, 0.18) 0%, rgba(58, 134, 63, 0.08) 45%, transparent 75%)',
+              filter: 'blur(85px)',
               mixBlendMode: 'screen',
             }}
           />
         </div>
 
-        {/* Giant Architectural Backdrop Wordmark: QOLAB */}
-        <div aria-hidden="true" className="hero-wordmark absolute -bottom-4 lg:-bottom-10 inset-x-0 w-full flex justify-center pointer-events-none z-[4] overflow-hidden select-none">
-          <span className="hero-wordmark-inner inline-block will-change-transform font-display font-black text-[22vw] leading-none tracking-[-0.05em] text-white/[0.07] lg:text-white/[0.11] whitespace-nowrap">
-            QOLAB
-          </span>
-        </div>
-
-        {/* Mobile Atmospheric Visionary Silhouette */}
-        <div aria-hidden="true" className="md:hidden absolute bottom-0 right-[-10%] sm:right-0 w-[80vw] max-w-[340px] h-[65vh] pointer-events-none z-[3] opacity-35 flex items-end justify-center overflow-hidden select-none">
-          <img
-            src="/cyber-visionary.webp"
-            alt=""
-            className="w-full h-full object-contain object-bottom"
-          />
-        </div>
-
-        {/* Central Cyber-Visionary Hero Figure (Interactive 3D Perspective Tilt) */}
-        <div 
-          aria-hidden="true" 
-          className="hero-visionary-wrap hidden md:flex absolute bottom-0 left-[48%] lg:left-[51%] -translate-x-1/2 w-[42vw] max-w-[620px] h-[88vh] pointer-events-none z-[5] items-end justify-center [perspective:1000px]"
+        {/* Massive 3D Geometric Sculpture — responsive on mobile bottom & desktop right */}
+        <div
+          aria-hidden="true"
+          className="hero-sculpture-wrap pointer-events-none z-[1]"
         >
-          <div className="hero-visionary-tilt w-full h-full will-change-transform transform-gpu flex items-end justify-center">
-            <div className="hero-visionary-float relative w-full h-full flex items-end justify-center">
-              {/* Emerald volumetric bloom directly behind head & shoulders */}
-              <div 
-                className="absolute top-[20%] left-1/2 -translate-x-1/2 w-[32rem] h-[32rem] rounded-full opacity-65 pointer-events-none transition-opacity duration-700"
-                style={{
-                  background: 'radial-gradient(circle, rgba(110, 224, 90, 0.38) 0%, rgba(72, 199, 101, 0.18) 40%, rgba(25, 112, 72, 0.06) 65%, transparent 75%)',
-                  filter: 'blur(75px)',
-                  mixBlendMode: 'screen',
-                }}
-              />
-
-              <img
-                src="/cyber-visionary.webp"
-                alt="Qolab Cyber Visionary"
-                className="w-full h-full object-contain object-bottom select-none drop-shadow-[0_25px_60px_rgba(0,0,0,0.95)]"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Floating Glass Recognition Card & Metrics (Right Column — Aligned with Hero Top) */}
-        <div className="hero-card-wrap hidden lg:flex absolute right-6 md:right-12 lg:right-16 top-10 md:top-14 lg:top-16 xl:top-20 w-[320px] xl:w-[350px] pointer-events-auto z-20">
-          <div className="hero-card-inner w-full flex flex-col items-end gap-7 text-right will-change-transform">
-            {/* Interactive Glass Card with hover glow */}
-            <div 
-              data-cursor="magnetic"
-              className="group/card w-full bg-black/60 hover:bg-black/80 border border-white/10 hover:border-[#6ee05a]/40 rounded-2xl p-4 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.65)] hover:shadow-[0_20px_50px_rgba(110,230,90,0.18)] transition-all duration-500 flex gap-4 text-left cursor-pointer"
+          <div className="hero-sculpture-float w-full h-full flex items-center justify-center">
+            <video
+              ref={cubeVideoRef}
+              muted
+              playsInline
+              preload="auto"
+              poster="/hero-cubes-poster.webp"
+              className="w-full h-full object-contain select-none pointer-events-none"
+              style={{
+                mixBlendMode: 'screen',
+              }}
             >
-              <div className="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0 border border-white/10 relative group-hover/card:border-[#6ee05a]/30 transition-colors shadow-inner">
-                <img 
-                  src="/cyber-tech-lab.webp" 
-                  alt="Recognition" 
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover/card:scale-105" 
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-              </div>
-              <div className="flex-1 flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center justify-between text-white font-sans text-xs font-semibold">
-                    <span className="group-hover/card:text-[#6ee05a] transition-colors">Recognition</span>
-                    <div className="w-6 h-6 rounded-full bg-white text-black flex items-center justify-center flex-shrink-0 shadow-sm transition-transform group-hover/card:rotate-45">
-                      <ArrowUpRight size={13} strokeWidth={2.4} />
-                    </div>
-                  </div>
-                  <p className="text-[11px] text-gray-400 mt-1 leading-snug font-sans group-hover/card:text-gray-300 transition-colors">
-                    We build intelligent visual systems that make brands stand out and scale.
-                  </p>
-                </div>
-                <div className="flex items-center justify-between pt-2">
-                  <div className="w-16 h-1 rounded-full bg-white/10 overflow-hidden">
-                    <div className="w-10 h-full bg-[#6ee05a] rounded-full shadow-[0_0_8px_#6ee05a]" />
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-[#6ee05a] shadow-[0_0_6px_#6ee05a] animate-pulse" />
-                    <span className="w-2 h-2 rounded-full bg-white/20" />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Metrics Section: 100% and 360° */}
-            <div className="grid grid-cols-2 gap-6 text-left w-full pt-1">
-              <div className="group cursor-default">
-                <div className="font-display text-4xl xl:text-5xl font-bold text-white tracking-tight group-hover:text-[#6ee05a] transition-colors duration-300">
-                  100%
-                </div>
-                <p className="text-[11px] text-gray-400 mt-2 leading-relaxed font-sans group-hover:text-gray-300 transition-colors">
-                  No cosmetic illusions. Only clear systems built for market leadership.
-                </p>
-              </div>
-              <div className="group cursor-default">
-                <div className="font-display text-4xl xl:text-5xl font-bold text-white tracking-tight group-hover:text-[#6ee05a] transition-colors duration-300">
-                  360°
-                </div>
-                <p className="text-[11px] text-gray-400 mt-2 leading-relaxed font-sans group-hover:text-gray-300 transition-colors">
-                  Full brand presence: from strategy and engineering to launch.
-                </p>
-              </div>
-            </div>
+              <source src="/hero-cubes.mp4" type="video/mp4" />
+            </video>
           </div>
         </div>
 
-        {/* Hero text content (Top nav completely removed per user request) */}
-        <div className="hero-content-layer relative z-10 w-full h-full flex flex-col justify-between pointer-events-none pt-10 md:pt-14 lg:pt-16">
-          {/* Hero text — left-aligned composition matching reference */}
-          <div className="hero-text-block flex-1 flex flex-col justify-center px-6 md:px-12 lg:px-16 relative pointer-events-auto">
-            <div className="relative z-10 w-full max-w-2xl text-left">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/10 backdrop-blur-md mb-6">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#6ee05a] animate-pulse shadow-[0_0_8px_#6ee05a]" />
-                <span className="text-[11px] font-mono tracking-[0.2em] uppercase text-gray-300 font-medium">Creative Technology Studio</span>
+        {/* Hero text content */}
+        <div className="hero-content-layer relative z-10 w-full h-full flex flex-col justify-between">
+          {/* Top bar — logo left, larger (desktop only; mobile uses the sticky glass bar) */}
+          <div className="hidden md:flex w-full items-center px-6 md:px-12 lg:px-16 pt-6 md:pt-8 relative z-20">
+            <QolabLogo className="w-24 md:w-28" />
+          </div>
+
+          {/* Hero text — left-aligned composition */}
+          <div className="hero-text-block flex-1 flex flex-col justify-start sm:justify-center pt-24 sm:pt-0 px-6 md:px-12 lg:px-16 relative">
+            <div className="relative z-10 w-full max-w-5xl">
+              {/* Studio Status & Index Kicker */}
+              <div className="hero-eyebrow flex items-center gap-3.5 mb-6 md:mb-8">
+                <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/[0.04] backdrop-blur-md text-[11px] font-mono tracking-[0.2em] uppercase text-[#6ee05a]">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#6ee05a] animate-pulse shadow-[0_0_8px_#6ee05a]" />
+                  <span>INNOVATION & CRAFT</span>
+                </span>
+                <span className="hidden sm:inline-block w-8 h-px bg-white/15" />
+                <span className="hidden sm:inline-block text-[11px] font-mono tracking-[0.22em] uppercase text-gray-400">
+                  CREATIVE TECHNOLOGY STUDIO // 2026
+                </span>
               </div>
 
-              <h1 className="hero-headline font-display text-[3.2rem] sm:text-[4.2rem] md:text-[5rem] lg:text-[6.2rem] xl:text-[7.2rem] leading-[0.88] tracking-[-0.04em] text-white font-bold">
-                <span className="block"><CharLine text="Ideas first." /></span>
-                <span className="block"><CharLine text="Then the" /></span>
-                <span className="block text-[#6ee05a]">
+              {/* Monumental Headline */}
+              <h1 className="hero-headline font-display text-[3.1rem] sm:text-[4.5rem] md:text-[5.6rem] lg:text-[6.8rem] xl:text-[7.8rem] leading-[0.88] tracking-[-0.035em] text-white font-semibold">
+                <span className="block"><CharLine text="Some Ideas" /></span>
+                <span className="block flex flex-wrap items-baseline gap-x-4 sm:gap-x-6">
+                  <CharLine text="Deserve to" />{' '}
                   <span
                     className="hero-flip inline-grid overflow-hidden align-baseline"
                     style={{ lineHeight: 1.15 }}
-                    aria-label="future."
+                    aria-label="Exist."
                   >
                     {HERO_FLIP_WORDS.map((word, i) => (
                       <span
                         key={word}
                         aria-hidden="true"
-                        className={`hero-flip-word font-serif italic text-[#6ee05a] [grid-area:1/1] ${i === 0 ? '' : 'opacity-0'}`}
+                        className={`hero-flip-word font-serif italic text-transparent bg-clip-text bg-gradient-to-r from-[#6ee05a] via-[#a8ff96] to-[#6ee05a] [grid-area:1/1] ${i === 0 ? '' : 'opacity-0'}`}
                       >
                         {word}
                       </span>
@@ -592,44 +455,67 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
                   </span>
                 </span>
               </h1>
-              <p className="hero-subtext text-gray-300 text-sm sm:text-base mt-6 md:mt-8 max-w-md font-sans leading-relaxed text-left">
+
+              {/* Editorial Subtext */}
+              <p className="hero-subtext text-gray-300/85 text-base sm:text-lg md:text-[1.15rem] mt-8 md:mt-10 max-w-xl font-sans leading-[1.65] font-normal">
                 <WordRoll
                   cls="hero-subword"
-                  text="Strategy, technology and communication shaped into future-ready digital systems."
+                  text="We don't follow the future. We engineer it. Uniting brand strategy, computational design, and creative technology into category-defining digital products."
                 />
               </p>
-              <div className="hero-cta mt-8 md:mt-10 flex flex-wrap items-center justify-start gap-5 text-left w-full">
+
+              {/* World-Class Dual CTA Action Group */}
+              <div className="hero-cta mt-9 md:mt-12 flex flex-wrap items-center gap-4 sm:gap-6">
+                {/* Primary: Frosted Glass Capsule with Rotating Arrow Puck */}
                 <button
                   onClick={() => onNavigate?.('contact')}
                   data-cursor="magnetic"
                   data-cursor-text="Let's Talk"
-                  className="group inline-flex items-center gap-3 pl-6 pr-2 py-2 rounded-full bg-white text-[#0f0f11] font-sans text-xs md:text-sm font-semibold tracking-tight transition-all duration-300 hover:shadow-[0_0_30px_rgba(110,230,90,0.4)]"
+                  className="group relative inline-flex items-center gap-4 pl-7 pr-3 py-3 rounded-full bg-white/[0.08] hover:bg-white/[0.14] border border-white/20 hover:border-[#6ee05a]/60 backdrop-blur-xl shadow-[0_4px_30px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.2)] transition-all duration-300"
                 >
-                  <span>Start a Project</span>
-                  <span className="w-8 h-8 rounded-full bg-[#0f0f11] text-white flex items-center justify-center transition-transform group-hover:rotate-45">
-                    <ArrowUpRight size={15} />
+                  <span className="font-sans text-sm sm:text-base font-medium tracking-wide text-white">
+                    Let's Make It Exist.
+                  </span>
+                  <span className="w-10 h-10 rounded-full bg-[#6ee05a] text-[#0a0d0c] flex items-center justify-center transition-all duration-300 group-hover:scale-105 group-hover:rotate-45 shadow-[0_0_18px_rgba(110,224,90,0.5)]">
+                    <ArrowUpRight size={18} strokeWidth={2.4} />
                   </span>
                 </button>
+
+                {/* Secondary: Editorial Case Index Pill */}
                 <button
                   onClick={onViewAllProjects}
                   data-cursor="magnetic"
-                  className="inline-flex items-center gap-2 text-xs md:text-sm font-medium text-gray-300 hover:text-white transition-colors font-sans py-2"
+                  data-cursor-text="View Work"
+                  className="group inline-flex items-center gap-3.5 px-6 py-3.5 rounded-full border border-white/10 hover:border-white/30 bg-transparent hover:bg-white/[0.04] backdrop-blur-sm transition-all duration-300 text-sm font-sans font-medium text-gray-300 hover:text-white"
                 >
-                  <span>View Our Work</span>
-                  <ArrowRight size={14} className="text-[#6ee05a]" />
+                  <span className="text-[11px] font-mono text-gray-400 group-hover:text-[#6ee05a] transition-colors">
+                    [ {projectsData.length} SELECTED ]
+                  </span>
+                  <span>Explore Projects</span>
+                  <ArrowRight size={15} className="text-gray-400 group-hover:text-[#6ee05a] group-hover:translate-x-1.5 transition-all duration-300" />
                 </button>
               </div>
             </div>
           </div>
 
-          {/* Bottom meta — captions stacked like the reference */}
-          <div className="w-full flex flex-col gap-1.5 items-start px-6 md:px-12 lg:px-16 pb-6 md:pb-8 relative z-20">
-            <p className="hero-nav-item text-[10px] md:text-[11px] font-medium tracking-[0.2em] uppercase text-gray-400 font-sans">
-              Creativity × Technology × Strategy
-            </p>
-            <p className="hero-nav-item text-[10px] md:text-[11px] font-medium tracking-[0.25em] uppercase text-gray-500 font-sans">
-              QOLAB — Future Ready Solutions.
-            </p>
+          {/* Bottom editorial meta strip */}
+          <div className="hero-meta-strip w-full flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 px-6 md:px-12 lg:px-16 pb-6 md:pb-8 relative z-20 border-t border-white/[0.08] pt-4">
+            <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-[10px] sm:text-[11px] font-mono tracking-[0.2em] uppercase text-gray-400">
+              <span className="flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#6ee05a] shadow-[0_0_6px_#6ee05a]" />
+                <span className="text-gray-400">SERVICES:</span>
+                <span className="text-gray-200">BRAND × SYSTEMS × COMPUTATIONAL TECH</span>
+              </span>
+              <span className="hidden md:inline text-white/20">|</span>
+              <span className="hidden md:inline text-gray-400">
+                QOLAB STUDIO // FUTURE READY
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2 text-[10px] sm:text-[11px] font-mono tracking-[0.22em] uppercase text-gray-400">
+              <span className="text-gray-400">SCROLL TO SCATTER</span>
+              <span className="text-[#6ee05a] animate-bounce">↓</span>
+            </div>
           </div>
         </div>
       </section>

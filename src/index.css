@@ -97,6 +97,49 @@ html.lenis, html.lenis body {
   }
 }
 
+/* ===== HERO: 3D Sculpture Responsive Positioning ===== */
+.hero-sculpture-wrap {
+  position: absolute;
+  pointer-events: none;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* On mobile: centered horizontally in the bottom open area */
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  top: auto;
+  bottom: 4.25rem;
+  width: min(84vw, 320px);
+  height: min(28vh, 230px);
+}
+
+@media (min-width: 768px) {
+  .hero-sculpture-wrap {
+    /* On desktop: anchored on the right side, vertically centered */
+    left: auto;
+    right: -2vw;
+    margin-left: 0;
+    margin-right: 0;
+    top: 0;
+    bottom: 0;
+    margin-top: auto;
+    margin-bottom: auto;
+    width: 55vw;
+    max-width: 1040px;
+    height: 92vh;
+    max-height: 1100px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .hero-sculpture-wrap {
+    right: 0vw;
+  }
+}
+
 /* Silhouette canvas blending */
 .silhouette-canvas {
   mix-blend-mode: multiply;
