@@ -5,6 +5,7 @@
   --font-serif: "Instrument Serif", Georgia, serif;
   --font-display: "Plus Jakarta Sans", "Clash Display", "Clash Grotesk", "Instrument Sans", sans-serif;
   --font-mono: "Instrument Sans", ui-monospace, monospace;
+  --font-zen: "Zen Dots", cursive, sans-serif;
 
   --color-bg-cream: #ffffff;
   --color-bg-hero: #ffffff;
@@ -77,6 +78,34 @@ html.lenis, html.lenis body {
   font-family: var(--font-sans);
 }
 
+.font-zen {
+  font-family: "Zen Dots", cursive, sans-serif;
+  letter-spacing: 0em;
+}
+
+.cyber-grid-bg {
+  background-size: 252px 240px, 252px 240px, 84px 60px, 84px 60px;
+  background-position: 64px 100px, 64px 100px, 64px 100px, 64px 100px;
+  background-image: 
+    linear-gradient(to right, rgba(45, 115, 18, 0.45) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(45, 115, 18, 0.45) 1px, transparent 1px),
+    linear-gradient(to right, rgba(40, 100, 15, 0.15) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(40, 100, 15, 0.15) 1px, transparent 1px);
+}
+
+@keyframes spin-badge {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-badge {
+  animation: spin-badge 14s linear infinite;
+}
+
 .bg-cream {
   background-color: var(--color-bg-cream);
 }
@@ -99,25 +128,17 @@ html.lenis, html.lenis body {
 
 /* ===== HERO: 3D Sculpture Responsive Positioning ===== */
 .hero-sculpture-wrap {
+  display: none;
   position: absolute;
   pointer-events: none;
   z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  /* On mobile: centered horizontally in the bottom open area */
-  left: 0;
-  right: 0;
-  margin-left: auto;
-  margin-right: auto;
-  top: auto;
-  bottom: 4.25rem;
-  width: min(84vw, 320px);
-  height: min(28vh, 230px);
 }
 
 @media (min-width: 768px) {
   .hero-sculpture-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     /* On desktop: anchored on the right side, vertically centered */
     left: auto;
     right: -2vw;

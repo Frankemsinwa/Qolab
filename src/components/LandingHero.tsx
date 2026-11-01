@@ -102,7 +102,7 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
   const approachRef = useRef<HTMLDivElement>(null);
   const s8Ref = useRef<HTMLDivElement>(null);
   const s2TextRef = useRef<HTMLParagraphElement>(null);
-  const cubeVideoRef = useRef<HTMLVideoElement>(null);
+  const puzzleRef = useRef<HTMLDivElement>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -110,114 +110,25 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
     const hero = heroRef.current;
 
     if (!reduced) {
+      let handleMouseMove: ((e: MouseEvent) => void) | null = null;
       const ctx = gsap.context(() => {
-        // Hero content entrance — blur-type reveal
+        // Hero content entrance
         const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
         heroTl
-          .from('.hero-eyebrow', { opacity: 0, y: 12, duration: 0.7 }, 0.15)
-          .from('.hero-nav-item', { y: 16, opacity: 0, duration: 0.8, stagger: 0.08 }, 0.2)
-          .from('.hero-char', { opacity: 0, filter: 'blur(14px)', y: 16, duration: 0.5, stagger: 0.016, ease: 'power2.out' }, 0.35)
-          .from('.hero-flip', { opacity: 0, filter: 'blur(14px)', duration: 0.6, ease: 'power2.out' }, 0.95)
-          .from('.hero-sculpture-wrap', { opacity: 0, duration: 1.4, ease: 'power2.out' }, 0.4)
-          .from('.hero-sculpture-float', { scale: 0.88, duration: 1.4, ease: 'power2.out' }, 0.4)
-          .from('.hero-subword', { opacity: 0, filter: 'blur(8px)', y: 8, duration: 0.4, stagger: 0.012, ease: 'power2.out' }, 1.2)
-          .from('.hero-cta', { y: 20, opacity: 0, duration: 0.8 }, 1.45)
-          .from('.hero-meta-strip', { opacity: 0, y: 12, duration: 0.8 }, 1.6);
-
-        // 3D Sculpture gentle float
-        gsap.to('.hero-sculpture-float', {
-          y: -14,
-          rotation: 1.2,
-          duration: 4.8,
-          ease: 'sine.inOut',
-          yoyo: true,
-          repeat: -1,
-        });
-
-        // Interactive ScrollTrigger: Scatters on scroll down, arranges on scroll up!
-        const cubeVideo = cubeVideoRef.current;
-        if (cubeVideo) {
-          const initVideo = () => {
-            cubeVideo.currentTime = 0;
-            cubeVideo.pause();
-          };
-          if (cubeVideo.readyState >= 1) {
-            initVideo();
-          } else {
-            cubeVideo.addEventListener('loadedmetadata', initVideo, { once: true });
-          }
-
-          // Mobile touch unlock for smooth scrubbing on iOS/Android
-          const unlockSeek = () => {
-            cubeVideo.play().then(() => cubeVideo.pause()).catch(() => {});
-            window.removeEventListener('touchstart', unlockSeek);
-            window.removeEventListener('scroll', unlockSeek);
-          };
-          window.addEventListener('touchstart', unlockSeek, { passive: true, once: true });
-          window.addEventListener('scroll', unlockSeek, { passive: true, once: true });
-
-          ScrollTrigger.create({
-            trigger: hero,
-            start: 'top top',
-            end: '+=150%',
-            scrub: 0.15,
-            onUpdate: (self) => {
-              if (cubeVideo.readyState >= 1) {
-                // Video timeline: 0.0s = fully arranged/assembled, ~6.2s = fully scattered/expanded
-                cubeVideo.currentTime = self.progress * 6.2;
-              }
-            },
-          });
-        }
-
-        // "Exist." word-flip — seamless loop: words exit up, next enters from below,
-        // and each word is quietly parked off-screen (clipped) before its turn again.
-        const flipWords = gsap.utils.toArray<HTMLElement>('.hero-flip-word');
-        if (flipWords.length > 1) {
-          gsap.set(flipWords.slice(1), { yPercent: 115, opacity: 1 });
-          const flipTl = gsap.timeline({ repeat: -1, paused: true });
-          const dur = 0.55;
-          const hold = 1.6;
-          let t = hold;
-          for (let i = 0; i < flipWords.length - 1; i++) {
-            const cur = flipWords[i];
-            const next = flipWords[i + 1];
-            flipTl.call(() => gsap.set(next, { yPercent: 115 }), [], t);
-            flipTl.to(cur, { yPercent: -115, duration: dur, ease: 'power3.inOut' }, t);
-            flipTl.to(next, { yPercent: 0, duration: dur, ease: 'power3.inOut' }, t + 0.01);
-            t += dur + hold;
-          }
-          const last = flipWords[flipWords.length - 1];
-          const first = flipWords[0];
-          flipTl.call(() => gsap.set(first, { yPercent: 115 }), [], t);
-          flipTl.to(last, { yPercent: -115, duration: dur, ease: 'power3.inOut' }, t);
-          flipTl.to(first, { yPercent: 0, duration: dur, ease: 'power3.inOut' }, t + 0.01);
-          flipTl.play();
-          ScrollTrigger.create({
-            trigger: hero,
-            start: 'top top',
-            end: 'bottom top',
-            onToggle: (self) => {
-              if (self.isActive) flipTl.play();
-              else flipTl.pause();
-            },
-          });
-        }
+          .from('.hero-topbar-item', { y: -12, opacity: 0, duration: 0.6, stagger: 0.06 }, 0.1)
+          .from('.hero-title-line', { opacity: 0, y: 20, duration: 0.65, stagger: 0.1, ease: 'power3.out' }, 0.15)
+          .from('.hero-subtext', { opacity: 0, y: 12, duration: 0.55, ease: 'power2.out' }, 0.45)
+          .from('.hero-cta', { y: 14, opacity: 0, duration: 0.6 }, 0.55);
 
         // Scrubbed pin — hero holds: s2 (z-20) slides OVER the still-pinned hero (pinSpacing: false)
-        gsap.timeline({
-          scrollTrigger: {
-            trigger: hero,
-            start: 'top top',
-            end: '+=200%',
-            pin: true,
-            pinSpacing: false,
-            anticipatePin: 1,
-            scrub: 1,
-          }
-        })
-          .to('.hero-sculpture-wrap', { scale: 1.15, opacity: 0.65, ease: 'none' }, 0)
-          .to('.hero-text-block', { scale: 0.94, opacity: 0, ease: 'power1.in' }, 0);
+        ScrollTrigger.create({
+          trigger: hero,
+          start: 'top top',
+          end: '+=100%',
+          pin: true,
+          pinSpacing: false,
+          anticipatePin: 1,
+        });
 
         // Section 2 scroll-triggered
         gsap.from('.s2-inner', {
@@ -297,6 +208,7 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
       }, containerRef);
 
       return () => {
+        if (handleMouseMove) window.removeEventListener('mousemove', handleMouseMove);
         ctx.revert();
       };
     }
@@ -363,165 +275,149 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
       {/* ===== PINNED HERO ===== */}
       <section 
         ref={heroRef} 
-        className="relative w-full h-screen overflow-hidden bg-black z-10"
+        className="relative w-full h-screen min-h-[640px] overflow-hidden bg-[#080c01] z-10 select-none"
       >
-
-        {/* ===== HERO BACKGROUND — Plain black with two ambient emerald flares ===== */}
+        {/* Bottom-left chartreuse/lime flare — placed beneath the grid so grid lines remain subtly visible across it */}
         <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden" aria-hidden="true">
-          {/* Flare 1: Top-left edge corner — soft radiant emerald aura */}
+          {/* Primary intense lime-yellow floor glow under the CTA button */}
           <div
-            className="absolute -top-[18%] -left-[10%] w-[42rem] h-[42rem] rounded-full pointer-events-none opacity-45"
+            className="absolute pointer-events-none"
             style={{
-              background: 'radial-gradient(circle at 35% 35%, rgba(110, 224, 90, 0.28) 0%, rgba(58, 134, 63, 0.12) 42%, rgba(10, 25, 15, 0.03) 65%, transparent 78%)',
-              filter: 'blur(80px)',
-              mixBlendMode: 'screen',
+              left: '-6%',
+              bottom: '-28%',
+              width: '68%',
+              height: '78%',
+              background: 'radial-gradient(ellipse 68% 62% at 44% 78%, #d2f282 0%, #b5df54 22%, #78b816 44%, #3d6802 66%, rgba(20, 36, 1, 0.45) 82%, transparent 96%)',
+              filter: 'blur(38px)',
             }}
           />
-
-          {/* Flare 2: Bottom-left edge — subtle atmospheric glow framing the text */}
+          {/* Secondary upper-left olive-lime atmospheric halo behind subtext */}
           <div
-            className="absolute -bottom-[20%] left-[4%] w-[36rem] h-[36rem] rounded-full pointer-events-none opacity-35"
+            className="absolute pointer-events-none"
             style={{
-              background: 'radial-gradient(circle, rgba(110, 224, 90, 0.18) 0%, rgba(58, 134, 63, 0.08) 45%, transparent 75%)',
-              filter: 'blur(85px)',
-              mixBlendMode: 'screen',
+              left: '-4%',
+              bottom: '4%',
+              width: '52%',
+              height: '52%',
+              background: 'radial-gradient(circle at 42% 58%, rgba(112, 178, 12, 0.52) 0%, rgba(62, 104, 2, 0.32) 48%, transparent 78%)',
+              filter: 'blur(50px)',
             }}
           />
         </div>
 
-        {/* Massive 3D Geometric Sculpture — responsive on mobile bottom & desktop right */}
-        <div
+        {/* Two-tier architectural blueprint grid layer */}
+        <div 
+          className="cyber-grid-bg absolute inset-0 z-[1] pointer-events-none opacity-95"
+          style={{
+            maskImage: 'radial-gradient(ellipse 96% 92% at 50% 48%, black 68%, transparent 98%)',
+            WebkitMaskImage: 'radial-gradient(ellipse 96% 92% at 50% 48%, black 68%, transparent 98%)',
+          }}
           aria-hidden="true"
-          className="hero-sculpture-wrap pointer-events-none z-[1]"
+        />
+
+        {/* 3D Glossy Emerald Puzzle — static, rotated 33deg and cropped at bottom-right on both mobile and desktop */}
+        <div
+          ref={puzzleRef}
+          aria-hidden="true"
+          className="hero-puzzle-wrap block absolute bottom-0 right-0 pointer-events-none z-[12] w-[min(88vw,46vh)] h-[min(88vw,46vh)] md:w-[min(73.3vw,86.8vh)] md:h-[min(73.3vw,86.8vh)]"
         >
-          <div className="hero-sculpture-float w-full h-full flex items-center justify-center">
-            <video
-              ref={cubeVideoRef}
-              muted
-              playsInline
-              preload="auto"
-              poster="/hero-cubes-poster.webp"
-              className="w-full h-full object-contain select-none pointer-events-none"
-              style={{
-                mixBlendMode: 'screen',
-              }}
-            >
-              <source src="/hero-cubes.mp4" type="video/mp4" />
-            </video>
-          </div>
+          <img
+            src="/puzzle.png"
+            alt="3D Jigsaw Puzzle Sculpture"
+            className="w-full h-full object-contain select-none pointer-events-none"
+            style={{
+              transform: 'translate(18.5%, 38.5%) rotate(33deg)',
+              transformOrigin: 'center center',
+            }}
+          />
         </div>
 
-        {/* Hero text content */}
-        <div className="hero-content-layer relative z-10 w-full h-full flex flex-col justify-between">
-          {/* Top bar — logo left, larger (desktop only; mobile uses the sticky glass bar) */}
-          <div className="hidden md:flex w-full items-center px-6 md:px-12 lg:px-16 pt-6 md:pt-8 relative z-20">
-            <QolabLogo className="w-24 md:w-28" />
+        {/* Hero content layer */}
+        <div className="hero-content-layer relative z-20 w-full h-full">
+          {/* Top bar — desktop only (mobile uses the fixed glass bar) */}
+          <div className="hidden md:flex w-full items-center justify-between pl-6 pr-6 md:pl-[9.5%] md:pr-[5.1%] pt-6 md:pt-[9.4vh] relative z-30">
+            {/* Logo */}
+            <div className="hero-topbar-item flex items-center">
+              <QolabLogo className="w-36 sm:w-44 md:w-[min(18.2vw,21.6vh)]" />
+            </div>
+
+            {/* Center rotating badge: FUTURE READY SOLUTION — dead-center horizontally */}
+            <div className="hero-topbar-item hidden md:flex items-center justify-center absolute left-1/2 -translate-x-1/2 top-[9.4vh]">
+              <img
+                src="/circle.png"
+                alt="Future Ready Solution"
+                className="animate-spin-badge select-none pointer-events-none"
+                style={{
+                  width: 'min(10.2vw, 12.1vh)',
+                  height: 'min(10.2vw, 12.1vh)',
+                }}
+              />
+            </div>
           </div>
 
-          {/* Hero text — left-aligned composition */}
-          <div className="hero-text-block flex-1 flex flex-col justify-start sm:justify-center pt-24 sm:pt-0 px-6 md:px-12 lg:px-16 relative">
-            <div className="relative z-10 w-full max-w-5xl">
-              {/* Studio Status & Index Kicker */}
-              <div className="hero-eyebrow flex items-center gap-3.5 mb-6 md:mb-8">
-                <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/[0.04] backdrop-blur-md text-[11px] font-mono tracking-[0.2em] uppercase text-[#6ee05a]">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#6ee05a] animate-pulse shadow-[0_0_8px_#6ee05a]" />
-                  <span>INNOVATION & CRAFT</span>
-                </span>
-                <span className="hidden sm:inline-block w-8 h-px bg-white/15" />
-                <span className="hidden sm:inline-block text-[11px] font-mono tracking-[0.22em] uppercase text-gray-400">
-                  CREATIVE TECHNOLOGY STUDIO // 2026
-                </span>
-              </div>
-
-              {/* Monumental Headline */}
-              <h1 className="hero-headline font-display text-[3.1rem] sm:text-[4.5rem] md:text-[5.6rem] lg:text-[6.8rem] xl:text-[7.8rem] leading-[0.88] tracking-[-0.035em] text-white font-semibold">
-                <span className="block"><CharLine text="Some Ideas" /></span>
-                <span className="block flex flex-wrap items-baseline gap-x-4 sm:gap-x-6">
-                  <CharLine text="Deserve to" />{' '}
-                  <span
-                    className="hero-flip inline-grid overflow-hidden align-baseline"
-                    style={{ lineHeight: 1.15 }}
-                    aria-label="Exist."
-                  >
-                    {HERO_FLIP_WORDS.map((word, i) => (
-                      <span
-                        key={word}
-                        aria-hidden="true"
-                        className={`hero-flip-word font-serif italic text-transparent bg-clip-text bg-gradient-to-r from-[#6ee05a] via-[#a8ff96] to-[#6ee05a] [grid-area:1/1] ${i === 0 ? '' : 'opacity-0'}`}
-                      >
-                        {word}
-                      </span>
-                    ))}
-                  </span>
-                </span>
+          {/* Main Left-Aligned Hero Composition — positioned at exact design coordinates */}
+          <div className="hero-text-block px-6 md:px-0 md:pl-[9.5%] pt-28 sm:pt-32 md:pt-0 md:absolute md:top-[33.3vh] md:left-0 w-full z-20">
+            <div className="relative z-10 w-full">
+              {/* Monumental Headline in Zen Dots — crisp solid colors, no drop-shadow, exact design sizing */}
+              <h1
+                className="hero-headline font-zen uppercase font-normal tracking-normal text-[2.4rem] sm:text-[3.7rem] md:text-[min(7.15vw,8.48vh)] leading-[1.0] select-none"
+              >
+                <div className="block hero-title-line whitespace-nowrap">
+                  <span className="text-white">SOME</span>{' '}
+                  <span className="text-[#1fff11]">IDEAS</span>
+                </div>
+                <div className="block hero-title-line text-white whitespace-nowrap mt-[0.04em]">
+                  DESERVE TO
+                </div>
+                <div className="block hero-title-line text-[#1fff11] whitespace-nowrap mt-[0.04em]">
+                  EXIST
+                </div>
               </h1>
 
-              {/* Editorial Subtext */}
-              <p className="hero-subtext text-gray-300/85 text-base sm:text-lg md:text-[1.15rem] mt-8 md:mt-10 max-w-xl font-sans leading-[1.65] font-normal">
-                <WordRoll
-                  cls="hero-subword"
-                  text="We don't follow the future. We engineer it. Uniting brand strategy, computational design, and creative technology into category-defining digital products."
-                />
+              {/* Editorial Subtext — exact 4-line break structure from mockup */}
+              <p
+                className="hero-subtext text-white/90 font-sans font-normal text-[14px] sm:text-[15px] md:text-[min(1.25vw,1.48vh)] leading-[1.52] mt-6 sm:mt-8 md:mt-[4.7vh]"
+              >
+                We don’t follow the future. We engineer it. Uniting brand<br className="hidden sm:inline" />{' '}
+                strategy, computational design,<br className="hidden sm:inline" />{' '}
+                and creative technology into category-defining digital<br className="hidden sm:inline" />{' '}
+                products.
               </p>
 
-              {/* World-Class Dual CTA Action Group */}
-              <div className="hero-cta mt-9 md:mt-12 flex flex-wrap items-center gap-4 sm:gap-6">
-                {/* Primary: Frosted Glass Capsule with Rotating Arrow Puck */}
+              {/* Rounded-rectangle dark CTA button matching mockup */}
+              <div className="hero-cta mt-8 sm:mt-10 md:mt-[6.2vh] flex items-center">
                 <button
                   onClick={() => onNavigate?.('contact')}
                   data-cursor="magnetic"
                   data-cursor-text="Let's Talk"
-                  className="group relative inline-flex items-center gap-4 pl-7 pr-3 py-3 rounded-full bg-white/[0.08] hover:bg-white/[0.14] border border-white/20 hover:border-[#6ee05a]/60 backdrop-blur-xl shadow-[0_4px_30px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.2)] transition-all duration-300"
+                  className="group relative inline-flex items-center justify-between rounded-[16px] bg-[#122103] hover:bg-[#172a05] transition-all duration-300 pl-6 pr-3.5 py-3 md:pl-[min(2.18vw,2.59vh)] md:pr-[min(1.09vw,1.3vh)]"
+                  style={{
+                    width: 'min(23.9vw, 28.3vh)',
+                    minWidth: '256px',
+                    height: 'min(5.86vw, 6.94vh)',
+                    minHeight: '62px',
+                  }}
                 >
-                  <span className="font-sans text-sm sm:text-base font-medium tracking-wide text-white">
-                    Let's Make It Exist.
+                  <span className="font-sans text-[17px] md:text-[min(1.52vw,1.8vh)] font-normal tracking-[-0.01em] text-white">
+                    Let’s Make it Exist
                   </span>
-                  <span className="w-10 h-10 rounded-full bg-[#6ee05a] text-[#0a0d0c] flex items-center justify-center transition-all duration-300 group-hover:scale-105 group-hover:rotate-45 shadow-[0_0_18px_rgba(110,224,90,0.5)]">
-                    <ArrowUpRight size={18} strokeWidth={2.4} />
+                  <span
+                    className="rounded-full bg-[#1fff11] text-[#0a1402] flex items-center justify-center transition-transform duration-300 group-hover:translate-x-0.5 shrink-0"
+                    style={{
+                      width: 'min(4.06vw, 4.81vh)',
+                      minWidth: '42px',
+                      height: 'min(4.06vw, 4.81vh)',
+                      minHeight: '42px',
+                    }}
+                  >
+                    <ArrowRight size={20} strokeWidth={1.8} />
                   </span>
-                </button>
-
-                {/* Secondary: Editorial Case Index Pill */}
-                <button
-                  onClick={onViewAllProjects}
-                  data-cursor="magnetic"
-                  data-cursor-text="View Work"
-                  className="group inline-flex items-center gap-3.5 px-6 py-3.5 rounded-full border border-white/10 hover:border-white/30 bg-transparent hover:bg-white/[0.04] backdrop-blur-sm transition-all duration-300 text-sm font-sans font-medium text-gray-300 hover:text-white"
-                >
-                  <span className="text-[11px] font-mono text-gray-400 group-hover:text-[#6ee05a] transition-colors">
-                    [ {projectsData.length} SELECTED ]
-                  </span>
-                  <span>Explore Projects</span>
-                  <ArrowRight size={15} className="text-gray-400 group-hover:text-[#6ee05a] group-hover:translate-x-1.5 transition-all duration-300" />
                 </button>
               </div>
             </div>
           </div>
-
-          {/* Bottom editorial meta strip */}
-          <div className="hero-meta-strip w-full flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 px-6 md:px-12 lg:px-16 pb-6 md:pb-8 relative z-20 border-t border-white/[0.08] pt-4">
-            <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-[10px] sm:text-[11px] font-mono tracking-[0.2em] uppercase text-gray-400">
-              <span className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#6ee05a] shadow-[0_0_6px_#6ee05a]" />
-                <span className="text-gray-400">SERVICES:</span>
-                <span className="text-gray-200">BRAND × SYSTEMS × COMPUTATIONAL TECH</span>
-              </span>
-              <span className="hidden md:inline text-white/20">|</span>
-              <span className="hidden md:inline text-gray-400">
-                QOLAB STUDIO // FUTURE READY
-              </span>
-            </div>
-
-            <div className="flex items-center gap-2 text-[10px] sm:text-[11px] font-mono tracking-[0.22em] uppercase text-gray-400">
-              <span className="text-gray-400">SCROLL TO SCATTER</span>
-              <span className="text-[#6ee05a] animate-bounce">↓</span>
-            </div>
-          </div>
         </div>
       </section>
-
-      {/* Hold spacer — gives the pin a 1vh pause before s2 starts sliding over the hero */}
-      <div className="hero-hold-spacer h-screen" aria-hidden="true" />
 
       {/* ===== SECTION 2: WHY QOLAB — giant scroll-reveal statement (reference layout) ===== */}
       <section
