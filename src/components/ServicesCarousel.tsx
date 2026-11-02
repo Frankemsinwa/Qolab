@@ -15,6 +15,7 @@ export default function ServicesCarousel({ onSelectService }: ServicesCarouselPr
   const sectionRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const activeIndexRef = useRef(0);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   useEffect(() => {
@@ -24,40 +25,28 @@ export default function ServicesCarousel({ onSelectService }: ServicesCarouselPr
     if (!section || !track) return;
 
     const ctx = gsap.context(() => {
-      const totalWidth = track.scrollWidth - window.innerWidth;
+      const getScrollAmount = () => Math.max(0, track.scrollWidth - window.innerWidth);
 
-      const tl = gsap.to(track, {
-        x: -totalWidth,
+      gsap.to(track, {
+        x: () => -getScrollAmount(),
         ease: 'none',
         scrollTrigger: {
           trigger: section,
           start: 'top top',
-          end: () => `+=${totalWidth}`,
+          end: () => `+=${getScrollAmount()}`,
           pin: true,
-          scrub: 1,
+          pinSpacing: true,
+          scrub: 0.5,
+          refreshPriority: 5,
           invalidateOnRefresh: true,
           onUpdate: (self) => {
-            const progress = self.progress;
-            const idx = Math.round(progress * (servicesData.length - 1));
-            setActiveIndex(idx);
+            const idx = Math.round(self.progress * (servicesData.length - 1));
+            if (idx !== activeIndexRef.current) {
+              activeIndexRef.current = idx;
+              setActiveIndex(idx);
+            }
           },
         },
-      });
-
-      // Animate cards as they enter the center
-      gsap.utils.toArray('.service-card').forEach((card: any) => {
-        gsap.fromTo(card, { opacity: 0.4, scale: 0.85 }, {
-          opacity: 1,
-          scale: 1,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: card,
-            containerAnimation: tl,
-            start: 'left 80%',
-            end: 'left 40%',
-            scrub: true,
-          },
-        });
       });
     }, sectionRef);
 
@@ -72,9 +61,8 @@ export default function ServicesCarousel({ onSelectService }: ServicesCarouselPr
     <>
       <section
         ref={sectionRef}
-        className="relative w-full h-screen overflow-hidden bg-[#0f0f11]"
+        className="relative w-full h-screen overflow-hidden bg-[#0f0f11] z-20"
         id="services"
-        style={{ zIndex: 100 }}
       >
         {/* Section header */}
         <div className="absolute top-0 left-0 right-0 z-20 px-6 md:px-12 lg:px-16 pt-10">

@@ -48,7 +48,7 @@ function CharLine({ text }: { text: string }) {
   );
 }
 
-const HERO_FLIP_WORDS = ['EXIST', 'THRIVE', 'MATTER', 'EMERGE', 'BEGIN'];
+const HERO_FLIP_WORDS = ['BEGIN', 'EXIST', 'THRIVE', 'MATTER', 'EMERGE'];
 
 /** Inline neon icon chips embedded in body copy (reference-site style) */
 function ChipDiamond() {
@@ -96,6 +96,7 @@ function ChipEye() {
 
 export default function LandingHero({ onSelectProject, onViewAllProjects, onSelectService, onNavigate }: LandingHeroProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const heroTrackRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLDivElement>(null);
   const s2Ref = useRef<HTMLDivElement>(null);
 
@@ -103,6 +104,7 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
   const s8Ref = useRef<HTMLDivElement>(null);
   const s2TextRef = useRef<HTMLParagraphElement>(null);
   const puzzleRef = useRef<HTMLDivElement>(null);
+  const puzzleCanvasRef = useRef<HTMLCanvasElement>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -143,31 +145,81 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
           flipTl.to(last, { yPercent: -115, duration: dur, ease: 'power3.inOut' }, t);
           flipTl.to(first, { yPercent: 0, duration: dur, ease: 'power3.inOut' }, t + 0.01);
           flipTl.play();
-          ScrollTrigger.create({
-            trigger: hero,
-            start: 'top top',
-            end: 'bottom top',
-            onToggle: (self) => {
-              if (self.isActive) flipTl.play();
-              else flipTl.pause();
-            },
-          });
         }
 
-        // Scrubbed pin — hero holds: s2 (z-20) slides OVER the still-pinned hero (pinSpacing: false)
+        // 3D Puzzle Scrollytelling Assembly Frame Engine
+        const canvas = puzzleCanvasRef.current;
+        // Cleanly stop at frame 78 where puzzle pieces are fully assembled into the locked shape
+        // This eliminates the camera zoom / elastic distortion at the end of the AI video
+        const TOTAL_FRAMES = 78;
+        const frames: HTMLImageElement[] = [];
+        let currentDrawn = -1;
+
+        const renderFrame = (idx: number) => {
+          if (idx === currentDrawn) return;
+          if (!canvas) return;
+          const ctx = canvas.getContext('2d');
+          if (!ctx) return;
+          const img = frames[idx];
+          if (img && img.complete && img.naturalWidth > 0) {
+            ctx.clearRect(0, 0, 490, 374);
+            ctx.drawImage(img, 115, 16, 490, 374, 0, 0, 490, 374);
+            currentDrawn = idx;
+          }
+        };
+
+        // Draw initial scattered frame 0 immediately
+        const poster = new Image();
+        poster.src = '/puzzle-start.jpg';
+        poster.onload = () => {
+          if (currentDrawn === -1 && canvas) {
+            const ctx = canvas.getContext('2d');
+            if (ctx) {
+              ctx.clearRect(0, 0, 490, 374);
+              ctx.drawImage(poster, 115, 16, 490, 374, 0, 0, 490, 374);
+              currentDrawn = 0;
+            }
+          }
+        };
+
+        // Preload clean sequence frames 1 through 78
+        for (let i = 1; i <= TOTAL_FRAMES; i++) {
+          const img = new Image();
+          const pad = String(i).padStart(3, '0');
+          img.src = `/puzzle-seq/${pad}.jpg`;
+          img.onload = () => {
+            if (i === 1 && currentDrawn === -1) {
+              renderFrame(0);
+            }
+          };
+          frames.push(img);
+        }
+
+        // GSAP Hero Sticky Pin & Puzzle Scrub
+        // 1. Pinned for 150% of viewport height (duration of 1.5 extra sections)
+        // 2. While pinned, the hero layout NEVER moves, scrolls away, or breaks
+        // 3. Scrolling ONLY scrubs the puzzle from scattered (frame 0) to locked (frame 77)
+        // 4. Reverse scrolling scrubs in reverse from locked back to scattered
+        // 5. Once fully arranged at the end of the pin, hero unpins and Section 2 enters
         ScrollTrigger.create({
           trigger: hero,
           start: 'top top',
-          end: '+=100%',
+          end: '+=150%',
           pin: true,
-          pinSpacing: false,
-          anticipatePin: 1,
+          pinSpacing: true,
+          scrub: true,
+          refreshPriority: 10,
+          invalidateOnRefresh: true,
+          onUpdate: (self) => {
+            const targetIdx = Math.min(TOTAL_FRAMES - 1, Math.floor(self.progress * (TOTAL_FRAMES - 1)));
+            renderFrame(targetIdx);
+          },
         });
 
         // Section 2 scroll-triggered
         gsap.from('.s2-inner', {
           y: 50, opacity: 0, duration: 1, stagger: 0.15,
-          scrollTrigger: { trigger: s2Ref.current, start: 'top 75%' }
+          scrollTrigger: { trigger: s2Ref.current, start: 'top 75%', refreshPriority: 8 }
         });
 
         // Section 2 word-by-word reveal (gray → white, scrubbed) — inline chips
@@ -178,7 +230,7 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
           gsap.set(s2Seq.filter((el) => el.classList.contains('s2-word')), { opacity: 0.18 });
           gsap.set(s2Seq.filter((el) => el.classList.contains('s2-chip')), { opacity: 0.18, rotation: 0, transformOrigin: '50% 50%' });
           const s2Tl = gsap.timeline({
-            scrollTrigger: { trigger: s2TextRef.current, start: 'top 85%', end: 'top 35%', scrub: true },
+            scrollTrigger: { trigger: s2TextRef.current, start: 'top 85%', end: 'top 35%', scrub: true, refreshPriority: 8 },
           });
           s2Seq.forEach((el, i) => {
             const at = i * 0.06;
@@ -189,14 +241,6 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
             }
           });
         }
-
-        // Section 5 parallax
-        gsap.utils.toArray('.parallax-card').forEach((card: any) => {
-          gsap.fromTo(card, { y: -50 }, {
-            y: 50, ease: 'none',
-            scrollTrigger: { trigger: card, start: 'top bottom', end: 'bottom top', scrub: 1 }
-          });
-        });
 
         // Section 8
         gsap.from('.s8-content', {
@@ -241,7 +285,27 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
 
       }, containerRef);
 
+      // Sort all ScrollTriggers by refreshPriority / DOM order and recalculate
+      // pin-spacers now that parent and child triggers are all registered
+      let isMounted = true;
+      ScrollTrigger.sort();
+      ScrollTrigger.refresh();
+      const rafId = requestAnimationFrame(() => {
+        if (!isMounted) return;
+        ScrollTrigger.sort();
+        ScrollTrigger.refresh();
+      });
+      if (document.fonts?.ready) {
+        document.fonts.ready.then(() => {
+          if (!isMounted) return;
+          ScrollTrigger.sort();
+          ScrollTrigger.refresh();
+        });
+      }
+
       return () => {
+        isMounted = false;
+        cancelAnimationFrame(rafId);
         if (handleMouseMove) window.removeEventListener('mousemove', handleMouseMove);
         ctx.revert();
       };
@@ -249,9 +313,8 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
   }, []);
 
   return (
-    <div ref={containerRef} className="w-full">
-      {/* ===== FIXED BACKGROUND — plain milky white behind hero + section 2 ===== */}
-      <div className="fixed inset-0 z-0 pointer-events-none bg-[#f4f3ef] overflow-hidden" />
+    <div ref={containerRef} className="relative w-full bg-[#0a0d0c] text-white overflow-hidden">
+
 
       {/* ===== STICKY MOBILE NAV + MENU OVERLAY — portaled to body so GSAP's
              pin-spacer DOM mutations can't break React's reconciliation ===== */}
@@ -306,7 +369,7 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
         document.body
       )}
 
-      {/* ===== PINNED HERO ===== */}
+      {/* ===== PINNED HERO SECTION ===== */}
       <section 
         ref={heroRef} 
         className="relative w-full h-screen min-h-[640px] overflow-hidden bg-[#080c01] z-10 select-none"
@@ -349,20 +412,20 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
           aria-hidden="true"
         />
 
-        {/* 3D Glossy Emerald Puzzle — static, rotated 33deg and cropped at bottom-right on both mobile and desktop */}
+        {/* 3D Glossy Emerald Puzzle — Positioned right by bottom-right corner edge, unclipped & larger scale */}
         <div
           ref={puzzleRef}
           aria-hidden="true"
-          className="hero-puzzle-wrap block absolute bottom-0 right-0 pointer-events-none z-[12] w-[min(88vw,46vh)] h-[min(88vw,46vh)] md:w-[min(73.3vw,86.8vh)] md:h-[min(73.3vw,86.8vh)]"
+          className="hero-puzzle-wrap block absolute bottom-0 right-0 pointer-events-none z-[12] w-[min(92vw,54vh)] md:w-[min(45vw,84vh)] lg:w-[min(46vw,86vh)] aspect-[490/374]"
+          style={{
+            mixBlendMode: 'screen',
+          }}
         >
-          <img
-            src="/puzzle.png"
-            alt="3D Jigsaw Puzzle Sculpture"
-            className="w-full h-full object-contain select-none pointer-events-none"
-            style={{
-              transform: 'translate(18.5%, 38.5%) rotate(33deg)',
-              transformOrigin: 'center center',
-            }}
+          <canvas
+            ref={puzzleCanvasRef}
+            width={490}
+            height={374}
+            className="w-full h-full object-contain pointer-events-none select-none"
           />
         </div>
 
@@ -406,7 +469,7 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
                 WORK
               </button>
               <button
-                onClick={() => onSelectService?.('Brand Identity')}
+                onClick={() => onNavigate?.('services')}
                 data-cursor="magnetic"
                 data-cursor-text="Services"
                 className="inline-flex items-center justify-center rounded-[9px] text-white font-sans font-normal text-[12px] tracking-[0.03em] uppercase transition-transform duration-200 hover:scale-105 active:scale-95"
@@ -439,11 +502,11 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
           </div>
 
           {/* Main Left-Aligned Hero Composition — positioned at exact design coordinates */}
-          <div className="hero-text-block px-6 md:px-0 md:pl-[9.5%] pt-28 sm:pt-32 md:pt-0 md:absolute md:top-[33.3vh] md:left-0 w-full z-20">
+          <div className="hero-text-block px-5 sm:px-8 md:px-0 md:pl-[9.5%] pt-24 sm:pt-28 md:pt-0 md:absolute md:top-[33.3vh] md:left-0 w-full z-20">
             <div className="relative z-10 w-full">
               {/* Monumental Headline in Zen Dots — larger heroic size covering ample space with rotating synonyms */}
               <h1
-                className="hero-headline font-zen uppercase font-normal tracking-normal text-[3.1rem] sm:text-[4.6rem] md:text-[min(8.6vw,9.8vh)] lg:text-[min(9.2vw,10.4vh)] xl:text-[min(9.6vw,10.8vh)] leading-[0.98] select-none"
+                className="hero-headline font-zen uppercase font-normal tracking-[0.01em] text-[clamp(1.65rem,7.2vw,2.35rem)] sm:text-[clamp(2.5rem,6.4vw,4.2rem)] md:text-[min(8.9vw,10.2vh)] lg:text-[min(9.5vw,10.8vh)] xl:text-[min(9.9vw,11.2vh)] leading-[1.02] select-none"
               >
                 <div className="block hero-title-line whitespace-nowrap">
                   <span className="text-white">SOME</span>{' '}
@@ -456,13 +519,13 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
                   <span
                     className="hero-flip inline-grid overflow-hidden align-baseline"
                     style={{ lineHeight: 1.05 }}
-                    aria-label="EXIST"
+                    aria-label="BEGIN"
                   >
                     {HERO_FLIP_WORDS.map((word, i) => (
                       <span
                         key={word}
                         aria-hidden="true"
-                        className={`hero-flip-word font-zen [grid-area:1/1] ${i === 0 ? '' : 'opacity-0'}`}
+                        className={`hero-flip-word font-zen font-normal uppercase tracking-normal [grid-area:1/1] ${i === 0 ? '' : 'opacity-0'}`}
                       >
                         {word}
                       </span>
@@ -473,7 +536,7 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
 
               {/* Editorial Subtext in Clash Grotesk with increased size */}
               <p
-                className="hero-subtext text-white/90 font-grotesk font-normal text-[16px] sm:text-[18px] md:text-[min(1.48vw,1.75vh)] lg:text-[min(1.58vw,1.85vh)] leading-[1.5] max-w-2xl mt-6 sm:mt-8 md:mt-[4.5vh]"
+                className="hero-subtext text-white/90 font-grotesk font-normal text-[17px] sm:text-[19px] md:text-[min(1.6vw,1.9vh)] lg:text-[min(1.7vw,2.05vh)] leading-[1.58] max-w-2xl mt-6 sm:mt-8 md:mt-[4.5vh]"
               >
                 We don’t follow the future. We engineer it. Uniting brand<br className="hidden sm:inline" />{' '}
                 strategy, computational design,<br className="hidden sm:inline" />{' '}
@@ -482,32 +545,20 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
               </p>
 
               {/* Rounded-rectangle dark CTA button matching mockup */}
-              <div className="hero-cta mt-8 sm:mt-10 md:mt-[6.2vh] flex items-center">
+              <div className="hero-cta mt-8 sm:mt-10 md:mt-[5.2vh] flex items-center">
                 <button
                   onClick={() => onNavigate?.('contact')}
                   data-cursor="magnetic"
                   data-cursor-text="Let's Talk"
-                  className="group relative inline-flex items-center justify-between rounded-[16px] bg-[#122103] hover:bg-[#172a05] transition-all duration-300 pl-6 pr-3.5 py-3 md:pl-[min(2.18vw,2.59vh)] md:pr-[min(1.09vw,1.3vh)]"
-                  style={{
-                    width: 'min(23.9vw, 28.3vh)',
-                    minWidth: '256px',
-                    height: 'min(5.86vw, 6.94vh)',
-                    minHeight: '62px',
-                  }}
+                  className="group relative inline-flex items-center gap-4 sm:gap-5 rounded-[16px] bg-[#122103] hover:bg-[#172a05] transition-all duration-300 pl-6 sm:pl-7 pr-2.5 sm:pr-3 py-2.5 sm:py-3 border border-[#6ee05a]/20 shadow-[0_0_24px_rgba(31,255,17,0.12)] hover:shadow-[0_0_32px_rgba(31,255,17,0.25)] hover:border-[#6ee05a]/40"
                 >
-                  <span className="font-sans text-[17px] md:text-[min(1.52vw,1.8vh)] font-normal tracking-[-0.01em] text-white">
+                  <span className="font-grotesk text-[16px] sm:text-[17px] md:text-[18px] font-medium tracking-tight text-white whitespace-nowrap">
                     Let’s Make it Exist
                   </span>
                   <span
-                    className="rounded-full bg-[#1fff11] text-[#0a1402] flex items-center justify-center transition-transform duration-300 group-hover:translate-x-0.5 shrink-0"
-                    style={{
-                      width: 'min(4.06vw, 4.81vh)',
-                      minWidth: '42px',
-                      height: 'min(4.06vw, 4.81vh)',
-                      minHeight: '42px',
-                    }}
+                    className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#1fff11] text-[#0a1402] flex items-center justify-center transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 shrink-0 shadow-[0_0_12px_rgba(31,255,17,0.5)]"
                   >
-                    <ArrowRight size={20} strokeWidth={1.8} />
+                    <ArrowUpRight size={20} strokeWidth={2.2} />
                   </span>
                 </button>
               </div>
@@ -535,7 +586,7 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
             className="s2-inner font-sans text-2xl sm:text-3xl md:text-4xl lg:text-[2.6rem] leading-[1.4] text-white font-medium tracking-tight"
           >
             <WordRoll text="We don't just design —" />{' '}
-            <span className="italic font-light text-[#6ee05a]">we engineer</span>{' '}
+            <span className="font-normal text-[#6ee05a]">we engineer</span>{' '}
             <WordRoll text="experiences." />{' '}
             <ChipDiamond />{' '}
             <WordRoll text="Every pixel, every interaction, every line of code is intentional." />{' '}
@@ -554,9 +605,9 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
               { title: 'Marketing & Brand Teams', desc: 'Creative direction, identity systems, websites, campaigns, and strategic support.' },
               { title: 'Product & Operations Teams', desc: 'Custom software, AI-assisted workflows, and business automation.' },
             ].map((audience) => (
-              <div key={audience.title} className="s2-inner border-r border-b border-white/10 p-6 md:p-8 lg:p-10 hover:bg-white/[0.03] transition-colors">
-                <p className="text-white font-semibold text-xl sm:text-2xl md:text-3xl lg:text-[2.2rem] font-display leading-tight">{audience.title}</p>
-                <p className="text-base sm:text-lg md:text-xl lg:text-[1.5rem] text-gray-400 mt-3 md:mt-4 font-sans leading-snug">{audience.desc}</p>
+              <div key={audience.title} className="s2-inner border-r border-b border-white/10 p-5 sm:p-6 md:p-7 hover:bg-white/[0.03] transition-colors">
+                <p className="text-white font-medium text-base sm:text-lg md:text-[1.25rem] font-display leading-snug">{audience.title}</p>
+                <p className="text-xs sm:text-sm md:text-[15px] text-gray-400 mt-2.5 font-sans leading-relaxed">{audience.desc}</p>
               </div>
             ))}
           </div>

@@ -63,7 +63,11 @@ export default function App() {
     });
   };
 
-  const handleSelectService = async (service: Service) => {
+  const handleSelectService = async (serviceOrId: Service | string) => {
+    const service: Service = typeof serviceOrId === 'string'
+      ? servicesData.find(s => s.id === serviceOrId || s.title.toLowerCase().includes(serviceOrId.toLowerCase()) || s.shortTitle.toLowerCase().includes(serviceOrId.toLowerCase())) || servicesData[0]
+      : serviceOrId;
+
     // Wait for next frame to get the active card's position
     await new Promise(r => requestAnimationFrame(r));
 
@@ -162,7 +166,7 @@ export default function App() {
           <AboutPage onBack={() => setView('landing')} onNavigateToContact={() => setView('contact')} />
         )}
         {view === 'services' && (
-          <ServicesPage onBack={() => setView('landing')} onNavigateToContact={() => setView('contact')} />
+          <ServicesPage onBack={() => setView('landing')} onNavigateToContact={() => setView('contact')} onSelectService={handleSelectService} />
         )}
         {view === 'contact' && (
           <ContactPage onBack={() => setView('landing')} />

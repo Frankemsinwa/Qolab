@@ -3,12 +3,15 @@ import { ArrowLeft, ArrowUpRight } from 'lucide-react';
 import { gsap } from 'gsap';
 import { servicesData } from '../data';
 
+import type { Service } from '../types';
+
 interface ServicesPageProps {
   onBack: () => void;
   onNavigateToContact?: () => void;
+  onSelectService?: (service: Service) => void;
 }
 
-export default function ServicesPage({ onBack, onNavigateToContact }: ServicesPageProps) {
+export default function ServicesPage({ onBack, onNavigateToContact, onSelectService }: ServicesPageProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -62,7 +65,8 @@ export default function ServicesPage({ onBack, onNavigateToContact }: ServicesPa
           {services.map((service, i) => (
             <div
               key={i}
-              className="service-reveal lime-card bg-white/[0.03] rounded-[2rem] p-8 sm:p-10 border border-white/10 hover:shadow-lg transition-shadow duration-300"
+              onClick={() => onSelectService?.(service)}
+              className="service-reveal lime-card bg-white/[0.03] rounded-[2rem] p-8 sm:p-10 border border-white/10 hover:shadow-lg transition-all duration-300 cursor-pointer hover:border-[#6ee05a]/40"
             >
               <div className="w-12 h-12 rounded-full bg-[#6ee05a]/10 flex items-center justify-center mb-6">
                 <span className="font-display text-[#6ee05a] text-xl">{String(i + 1).padStart(2, '0')}</span>

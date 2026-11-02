@@ -22,6 +22,7 @@ export default function ScrollMarquee({ words }: { words: string[] }) {
           start: 'top bottom',
           end: 'bottom top',
           scrub: 0.6,
+          refreshPriority: 2,
         },
       });
     }, wrapRef);

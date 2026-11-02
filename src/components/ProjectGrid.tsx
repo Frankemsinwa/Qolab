@@ -27,7 +27,7 @@ export default function ProjectGrid({ onSelectProject }: ProjectGridProps) {
         gsap.set(imgs, { scale: 1.15, transition: 'none' });
 
         const tl = gsap.timeline({
-          scrollTrigger: { trigger: row, start: 'top 78%', once: true },
+          scrollTrigger: { trigger: row, start: 'top 78%', once: true, refreshPriority: 3 },
         });
         tl.from(row, { y: 60, opacity: 0, duration: 0.9, ease: 'power3.out' }, 0);
         shots.forEach((shot, i) => {

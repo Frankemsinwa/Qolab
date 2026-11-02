@@ -1,14 +1,14 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
-  --font-serif: "Instrument Serif", Georgia, serif;
-  --font-display: "Plus Jakarta Sans", "Clash Display", "Clash Grotesk", "Instrument Sans", sans-serif;
-  --font-mono: "Instrument Sans", ui-monospace, monospace;
+  --font-sans: "Clash Grotesk", sans-serif;
+  --font-serif: "Clash Grotesk", sans-serif;
+  --font-display: "Clash Grotesk", sans-serif;
+  --font-mono: "Clash Grotesk", monospace;
   --font-zen: "Zen Dots", cursive, sans-serif;
 
-  --color-bg-cream: #ffffff;
-  --color-bg-hero: #ffffff;
+  --color-bg-cream: #080c01;
+  --color-bg-hero: #080c01;
   --color-bg-dark: #0f0f11;
   --color-accent-green: #3a863f;
   --color-accent-green-deep: #2f6d33;
@@ -20,7 +20,7 @@ html, body {
   padding: 0;
   background-color: #0a0d0c;
   color: #d1d5db;
-  font-family: var(--font-sans);
+  font-family: "Clash Grotesk", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   cursor: none;
@@ -71,11 +71,11 @@ html.lenis, html.lenis body {
 }
 
 .font-display {
-  font-family: var(--font-display);
+  font-family: "Clash Grotesk", sans-serif;
 }
 
 .font-sans {
-  font-family: var(--font-sans);
+  font-family: "Clash Grotesk", sans-serif;
 }
 
 .font-grotesk {
@@ -281,9 +281,9 @@ html.lenis, html.lenis body {
 
 /* ===== HERO: flip words — lighter italic serif (same size, thinner strokes) ===== */
 .hero-flip-word {
-  font-family: "Newsreader", Georgia, serif;
-  font-weight: 200;
-  font-optical-sizing: auto;
+  font-family: "Zen Dots", cursive, sans-serif !important;
+  font-weight: 400 !important;
+  text-transform: uppercase !important;
 }
 
 /* ===== Inner pages — shared dark + lime gradient utilities ===== */

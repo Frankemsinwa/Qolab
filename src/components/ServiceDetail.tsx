@@ -95,8 +95,11 @@ const GENERIC_CONTENT = {
 
 export default function ServiceDetail({ service, onBack, onNavigateToContact }: ServiceDetailProps) {
   const pageRef = useRef<HTMLDivElement>(null);
-  const content = SERVICE_CONTENT[service.id] ?? GENERIC_CONTENT;
-  const relatedServices = getRelatedServices(service.id);
+  const safeService: Service = (service && service.title && service.image)
+    ? service
+    : (servicesData.find(s => typeof service === 'string' && (s.id === service || s.title.includes(service))) || servicesData[0]);
+  const content = SERVICE_CONTENT[safeService.id] ?? GENERIC_CONTENT;
+  const relatedServices = getRelatedServices(safeService.id);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -117,8 +120,8 @@ export default function ServiceDetail({ service, onBack, onNavigateToContact }: 
       {/* Hero */}
       <section className="relative w-full h-[70vh] md:h-[80vh] overflow-hidden">
         <img
-          src={service.image}
-          alt={service.title}
+          src={safeService.image}
+          alt={safeService.title}
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/10" />
@@ -141,14 +144,14 @@ export default function ServiceDetail({ service, onBack, onNavigateToContact }: 
         <div className="absolute bottom-0 left-0 right-0 p-8 md:p-16 z-10">
           <div className="max-w-7xl mx-auto">
             <div className="flex items-center gap-3 mb-4">
-              <span className="font-mono text-sm text-white/50">{service.num}</span>
+              <span className="font-mono text-sm text-white/50">{safeService.num}</span>
               <div className="w-12 h-[1px]" style={{ backgroundColor: '#6ee05a' }} />
             </div>
             <h1 className="sd-hero-title font-display font-normal tracking-tight text-4xl sm:text-5xl md:text-7xl text-white leading-[0.95]">
-              {service.title}
+              {safeService.title}
             </h1>
             <p className="sd-hero-desc text-white/70 text-lg md:text-xl mt-6 max-w-2xl font-sans leading-relaxed">
-              {service.description}
+              {safeService.description}
             </p>
             <div className="sd-hero-meta flex flex-wrap gap-6 mt-8">
               {['Strategy', 'Execution', 'Optimization'].map((tag) => (
