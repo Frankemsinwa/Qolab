@@ -78,6 +78,10 @@ html.lenis, html.lenis body {
   font-family: var(--font-sans);
 }
 
+.font-grotesk {
+  font-family: "Clash Grotesk", sans-serif;
+}
+
 .font-zen {
   font-family: "Zen Dots", cursive, sans-serif;
   letter-spacing: 0em;

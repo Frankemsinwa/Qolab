@@ -48,7 +48,7 @@ function CharLine({ text }: { text: string }) {
   );
 }
 
-const HERO_FLIP_WORDS = ['Exist.', 'Thrive.', 'Matter.', 'Emerge.', 'Begin.'];
+const HERO_FLIP_WORDS = ['EXIST', 'THRIVE', 'MATTER', 'EMERGE', 'BEGIN'];
 
 /** Inline neon icon chips embedded in body copy (reference-site style) */
 function ChipDiamond() {
@@ -117,8 +117,42 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
         heroTl
           .from('.hero-topbar-item', { y: -12, opacity: 0, duration: 0.6, stagger: 0.06 }, 0.1)
           .from('.hero-title-line', { opacity: 0, y: 20, duration: 0.65, stagger: 0.1, ease: 'power3.out' }, 0.15)
+          .from('.hero-flip', { opacity: 0, filter: 'blur(10px)', duration: 0.6, ease: 'power2.out' }, 0.35)
           .from('.hero-subtext', { opacity: 0, y: 12, duration: 0.55, ease: 'power2.out' }, 0.45)
           .from('.hero-cta', { y: 14, opacity: 0, duration: 0.6 }, 0.55);
+
+        // "EXIST" word-flip animation cycling through synonyms
+        const flipWords = gsap.utils.toArray<HTMLElement>('.hero-flip-word');
+        if (flipWords.length > 1) {
+          gsap.set(flipWords.slice(1), { yPercent: 115, opacity: 1 });
+          const flipTl = gsap.timeline({ repeat: -1, paused: true });
+          const dur = 0.55;
+          const hold = 1.8;
+          let t = hold;
+          for (let i = 0; i < flipWords.length - 1; i++) {
+            const cur = flipWords[i];
+            const next = flipWords[i + 1];
+            flipTl.call(() => gsap.set(next, { yPercent: 115 }), [], t);
+            flipTl.to(cur, { yPercent: -115, duration: dur, ease: 'power3.inOut' }, t);
+            flipTl.to(next, { yPercent: 0, duration: dur, ease: 'power3.inOut' }, t + 0.01);
+            t += dur + hold;
+          }
+          const last = flipWords[flipWords.length - 1];
+          const first = flipWords[0];
+          flipTl.call(() => gsap.set(first, { yPercent: 115 }), [], t);
+          flipTl.to(last, { yPercent: -115, duration: dur, ease: 'power3.inOut' }, t);
+          flipTl.to(first, { yPercent: 0, duration: dur, ease: 'power3.inOut' }, t + 0.01);
+          flipTl.play();
+          ScrollTrigger.create({
+            trigger: hero,
+            start: 'top top',
+            end: 'bottom top',
+            onToggle: (self) => {
+              if (self.isActive) flipTl.play();
+              else flipTl.pause();
+            },
+          });
+        }
 
         // Scrubbed pin — hero holds: s2 (z-20) slides OVER the still-pinned hero (pinSpacing: false)
         ScrollTrigger.create({
@@ -353,14 +387,63 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
                 }}
               />
             </div>
+
+            {/* Right: 3 rounded-rectangle gradient nav pills matching referenced design */}
+            <div className="hero-topbar-item hidden md:flex items-center gap-[8px]">
+              <button
+                onClick={onViewAllProjects}
+                data-cursor="magnetic"
+                data-cursor-text="Projects"
+                className="inline-flex items-center justify-center rounded-[9px] text-white font-sans font-normal text-[12px] tracking-[0.03em] uppercase transition-transform duration-200 hover:scale-105 active:scale-95"
+                style={{
+                  width: 'min(5.0vw, 5.9vh)',
+                  minWidth: '58px',
+                  height: 'min(2.9vw, 3.43vh)',
+                  minHeight: '34px',
+                  background: 'linear-gradient(90deg, rgba(48, 8, 8, 0.92) 0%, #680505 42%, #e00405 100%)',
+                }}
+              >
+                WORK
+              </button>
+              <button
+                onClick={() => onSelectService?.('Brand Identity')}
+                data-cursor="magnetic"
+                data-cursor-text="Services"
+                className="inline-flex items-center justify-center rounded-[9px] text-white font-sans font-normal text-[12px] tracking-[0.03em] uppercase transition-transform duration-200 hover:scale-105 active:scale-95"
+                style={{
+                  width: 'min(7.2vw, 8.5vh)',
+                  minWidth: '84px',
+                  height: 'min(2.9vw, 3.43vh)',
+                  minHeight: '34px',
+                  background: 'linear-gradient(90deg, rgba(5, 39, 4, 0.92) 0%, #0e6b05 42%, #18fc0b 100%)',
+                }}
+              >
+                SERVICES
+              </button>
+              <button
+                onClick={() => onNavigate?.('about')}
+                data-cursor="magnetic"
+                data-cursor-text="About Us"
+                className="inline-flex items-center justify-center rounded-[9px] text-white font-sans font-normal text-[12px] tracking-[0.03em] uppercase transition-transform duration-200 hover:scale-105 active:scale-95"
+                style={{
+                  width: 'min(6.56vw, 7.78vh)',
+                  minWidth: '76px',
+                  height: 'min(2.9vw, 3.43vh)',
+                  minHeight: '34px',
+                  background: 'linear-gradient(90deg, rgba(67, 55, 8, 0.92) 0%, #836204 42%, #ca9d06 100%)',
+                }}
+              >
+                ABOUT
+              </button>
+            </div>
           </div>
 
           {/* Main Left-Aligned Hero Composition — positioned at exact design coordinates */}
           <div className="hero-text-block px-6 md:px-0 md:pl-[9.5%] pt-28 sm:pt-32 md:pt-0 md:absolute md:top-[33.3vh] md:left-0 w-full z-20">
             <div className="relative z-10 w-full">
-              {/* Monumental Headline in Zen Dots — crisp solid colors, no drop-shadow, exact design sizing */}
+              {/* Monumental Headline in Zen Dots — larger heroic size covering ample space with rotating synonyms */}
               <h1
-                className="hero-headline font-zen uppercase font-normal tracking-normal text-[2.4rem] sm:text-[3.7rem] md:text-[min(7.15vw,8.48vh)] leading-[1.0] select-none"
+                className="hero-headline font-zen uppercase font-normal tracking-normal text-[3.1rem] sm:text-[4.6rem] md:text-[min(8.6vw,9.8vh)] lg:text-[min(9.2vw,10.4vh)] xl:text-[min(9.6vw,10.8vh)] leading-[0.98] select-none"
               >
                 <div className="block hero-title-line whitespace-nowrap">
                   <span className="text-white">SOME</span>{' '}
@@ -370,13 +453,27 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
                   DESERVE TO
                 </div>
                 <div className="block hero-title-line text-[#1fff11] whitespace-nowrap mt-[0.04em]">
-                  EXIST
+                  <span
+                    className="hero-flip inline-grid overflow-hidden align-baseline"
+                    style={{ lineHeight: 1.05 }}
+                    aria-label="EXIST"
+                  >
+                    {HERO_FLIP_WORDS.map((word, i) => (
+                      <span
+                        key={word}
+                        aria-hidden="true"
+                        className={`hero-flip-word font-zen [grid-area:1/1] ${i === 0 ? '' : 'opacity-0'}`}
+                      >
+                        {word}
+                      </span>
+                    ))}
+                  </span>
                 </div>
               </h1>
 
-              {/* Editorial Subtext — exact 4-line break structure from mockup */}
+              {/* Editorial Subtext in Clash Grotesk with increased size */}
               <p
-                className="hero-subtext text-white/90 font-sans font-normal text-[14px] sm:text-[15px] md:text-[min(1.25vw,1.48vh)] leading-[1.52] mt-6 sm:mt-8 md:mt-[4.7vh]"
+                className="hero-subtext text-white/90 font-grotesk font-normal text-[16px] sm:text-[18px] md:text-[min(1.48vw,1.75vh)] lg:text-[min(1.58vw,1.85vh)] leading-[1.5] max-w-2xl mt-6 sm:mt-8 md:mt-[4.5vh]"
               >
                 We don’t follow the future. We engineer it. Uniting brand<br className="hidden sm:inline" />{' '}
                 strategy, computational design,<br className="hidden sm:inline" />{' '}

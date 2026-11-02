@@ -121,10 +121,10 @@ export default function ApproachSection() {
           <div
             key={step.num}
             ref={(el) => { cardRefs.current[i] = el; }}
-            className={`${prefersReducedMotion ? 'relative w-full min-h-[520px]' : 'absolute inset-x-4 sm:inset-x-8 md:inset-x-12 lg:inset-x-16 bottom-0 h-[72vh] sm:h-[75vh] lg:h-[78vh]'} rounded-[32px] overflow-hidden will-change-transform border border-white/10 shadow-[0_-20px_50px_rgba(0,0,0,0.5)] group/card`}
+            className={`${prefersReducedMotion ? 'relative w-full min-h-[520px]' : 'absolute inset-x-4 sm:inset-x-8 md:inset-x-12 lg:inset-x-16 bottom-0 h-[72vh] sm:h-[75vh] lg:h-[78vh]'} rounded-[32px] overflow-hidden will-change-transform border border-[#6ee05a]/25 shadow-[0_-20px_50px_rgba(0,0,0,0.6),0_0_40px_rgba(58,134,63,0.15)] group/card`}
             style={{
               zIndex: 10 + i,
-              background: 'linear-gradient(135deg, rgba(16,17,16,0.97) 0%, rgba(9,10,9,0.99) 100%)',
+              background: 'linear-gradient(135deg, rgba(16, 38, 20, 0.96) 0%, rgba(10, 24, 12, 0.98) 50%, rgba(6, 14, 8, 0.99) 100%)',
             }}
           >
             {/* Top hairline — soft white edge */}
@@ -182,11 +182,11 @@ export default function ApproachSection() {
                   {step.title}
                 </h3>
 
-                <p className="font-display text-lg sm:text-xl text-[#3a863f] italic leading-relaxed mb-4 max-w-2xl">
+                <p className="font-grotesk text-lg sm:text-xl text-[#6ee05a] not-italic font-medium leading-relaxed mb-4 max-w-2xl">
                   {step.description}
                 </p>
 
-                <p className="text-gray-400 text-sm sm:text-base leading-relaxed max-w-xl">
+                <p className="font-grotesk text-gray-300 text-base sm:text-lg leading-relaxed max-w-xl font-normal not-italic">
                   {step.body}
                 </p>
               </div>

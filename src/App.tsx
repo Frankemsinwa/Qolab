@@ -130,9 +130,10 @@ export default function App() {
       {view !== 'service-detail' && view !== 'not-found' && view !== 'landing' && (
         <Navigation onNavigate={(target) => navigateTo(() => setView(target))} />
       )}
-      {view === 'landing' && (
+      {/* Commented out as requested in favor of the referenced top nav design in hero */}
+      {/* {view === 'landing' && (
         <BottomPillNav onNavigate={(target) => navigateTo(() => setView(target))} />
-      )}
+      )} */}
 
       {/* Main presentation grid layout routing */}
       <main className="w-full">
