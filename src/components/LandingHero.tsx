@@ -48,7 +48,7 @@ function CharLine({ text }: { text: string }) {
   );
 }
 
-const HERO_FLIP_WORDS = ['BEGIN', 'EXIST', 'THRIVE', 'MATTER', 'EMERGE'];
+const HERO_FLIP_WORDS = ['EMERGE', 'BEGIN', 'EXIST', 'THRIVE', 'MATTER'];
 
 /** Inline neon icon chips embedded in body copy (reference-site style) */
 function ChipDiamond() {
@@ -147,73 +147,13 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
           flipTl.play();
         }
 
-        // 3D Puzzle Scrollytelling Assembly Frame Engine
-        const canvas = puzzleCanvasRef.current;
-        // Cleanly stop at frame 78 where puzzle pieces are fully assembled into the locked shape
-        // This eliminates the camera zoom / elastic distortion at the end of the AI video
-        const TOTAL_FRAMES = 78;
-        const frames: HTMLImageElement[] = [];
-        let currentDrawn = -1;
-
-        const renderFrame = (idx: number) => {
-          if (idx === currentDrawn) return;
-          if (!canvas) return;
-          const ctx = canvas.getContext('2d');
-          if (!ctx) return;
-          const img = frames[idx];
-          if (img && img.complete && img.naturalWidth > 0) {
-            ctx.clearRect(0, 0, 490, 374);
-            ctx.drawImage(img, 115, 16, 490, 374, 0, 0, 490, 374);
-            currentDrawn = idx;
-          }
-        };
-
-        // Draw initial scattered frame 0 immediately
-        const poster = new Image();
-        poster.src = '/puzzle-start.jpg';
-        poster.onload = () => {
-          if (currentDrawn === -1 && canvas) {
-            const ctx = canvas.getContext('2d');
-            if (ctx) {
-              ctx.clearRect(0, 0, 490, 374);
-              ctx.drawImage(poster, 115, 16, 490, 374, 0, 0, 490, 374);
-              currentDrawn = 0;
-            }
-          }
-        };
-
-        // Preload clean sequence frames 1 through 78
-        for (let i = 1; i <= TOTAL_FRAMES; i++) {
-          const img = new Image();
-          const pad = String(i).padStart(3, '0');
-          img.src = `/puzzle-seq/${pad}.jpg`;
-          img.onload = () => {
-            if (i === 1 && currentDrawn === -1) {
-              renderFrame(0);
-            }
-          };
-          frames.push(img);
-        }
-
-        // GSAP Hero Sticky Pin & Puzzle Scrub
-        // 1. Pinned for 150% of viewport height (duration of 1.5 extra sections)
-        // 2. While pinned, the hero layout NEVER moves, scrolls away, or breaks
-        // 3. Scrolling ONLY scrubs the puzzle from scattered (frame 0) to locked (frame 77)
-        // 4. Reverse scrolling scrubs in reverse from locked back to scattered
-        // 5. Once fully arranged at the end of the pin, hero unpins and Section 2 enters
-        ScrollTrigger.create({
-          trigger: hero,
-          start: 'top top',
-          end: '+=150%',
-          pin: true,
-          pinSpacing: true,
-          scrub: true,
-          refreshPriority: 10,
-          invalidateOnRefresh: true,
-          onUpdate: (self) => {
-            const targetIdx = Math.min(TOTAL_FRAMES - 1, Math.floor(self.progress * (TOTAL_FRAMES - 1)));
-            renderFrame(targetIdx);
-          },
+        // Subtle floating / entrance for character video
+        gsap.from('.hero-character-video', {
+          y: 40,
+          opacity: 0,
+          duration: 1.1,
+          ease: 'power3.out',
+          delay: 0.35,
         });
 
         // Section 2 scroll-triggered
