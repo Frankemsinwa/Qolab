@@ -554,6 +554,8 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
           >
             <video
               src="/character-typing.mp4"
+              poster="/character-typing-poster.webp"
+              preload="auto"
               autoPlay
               loop
               muted
