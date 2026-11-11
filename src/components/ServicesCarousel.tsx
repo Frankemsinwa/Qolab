@@ -156,7 +156,7 @@ export default function ServicesCarousel({ onSelectService }: ServicesCarouselPr
                     >
                       {service.shortTitle}
                     </h3>
-                    <p className="text-white/40 text-sm mt-2 font-sans leading-relaxed line-clamp-2 group-hover:text-white/60 transition-colors duration-300">
+                    <p className="text-white/40 text-sm mt-2 font-sans leading-relaxed line-clamp-3 group-hover:text-white/60 transition-colors duration-300">
                       {service.description}
                     </p>
                   </div>

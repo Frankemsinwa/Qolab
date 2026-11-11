@@ -148,8 +148,40 @@ export const experimentsData: LabExperiment[] = [
 ];
 
 export const servicesData: Service[] = [
-  { id: 'brand-identity-design', num: '01', title: 'Brand Identity & Design', shortTitle: 'Brand Identity', description: 'Brand strategy, visual identity, art direction, guidelines, and digital assets.', image: brandIdentityImg, accent: '#3a863f' },
-  { id: 'web-app-development', num: '02', title: 'Web & App Development', shortTitle: 'Web & Apps', description: 'Business websites, e-commerce, web apps, mobile apps, custom software, and digital platforms.', image: proj1, accent: '#3a863f' },
-  { id: 'ai-solutions-automation', num: '03', title: 'AI Solutions & Automation', shortTitle: 'AI & Automation', description: 'AI-enabled solutions, intelligent workflows, and repetitive-process automation.', image: aiImg, accent: '#3a863f' },
-  { id: 'growth-strategy', num: '04', title: 'Growth & Strategy', shortTitle: 'Growth & Strategy', description: 'Business analysis, positioning, marketing strategy, campaigns, and practical growth planning.', image: growthStrategyImg, accent: '#3a863f' },
+  { 
+    id: 'brand-identity-design', 
+    num: '01', 
+    title: 'Brand Identity & Design', 
+    shortTitle: 'Brand Identity', 
+    description: 'We help you build a brand people can recognise and connect with, from your logo and visual identity to other brand materials.', 
+    image: brandIdentityImg, 
+    accent: '#3a863f' 
+  },
+  { 
+    id: 'web-app-development', 
+    num: '02', 
+    title: 'Web & App Development', 
+    shortTitle: 'Web & Apps', 
+    description: 'We build fast, modern websites and apps that look great, work smoothly on every device, and turn visitors into paying customers.', 
+    image: proj1, 
+    accent: '#3a863f' 
+  },
+  { 
+    id: 'ai-solutions-automation', 
+    num: '03', 
+    title: 'AI Solutions & Automation', 
+    shortTitle: 'AI & Automation', 
+    description: 'We set up smart AI tools and automate your repetitive daily tasks, saving your team hours and helping your business run smoother.', 
+    image: aiImg, 
+    accent: '#3a863f' 
+  },
+  { 
+    id: 'growth-strategy', 
+    num: '04', 
+    title: 'Growth & Strategy', 
+    shortTitle: 'Growth & Strategy', 
+    description: 'We help you find your ideal audience, sharpen your message, and build clear marketing plans that bring in real, steady growth.', 
+    image: growthStrategyImg, 
+    accent: '#3a863f' 
+  },
 ];

@@ -1,238 +1,317 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Check } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const STEP_FLARES = [
-  // Step 01: Question Everything — bright emerald flare blooming from top-right corner
-  {
-    background: 'radial-gradient(circle 560px at 85% 18%, rgba(31, 255, 17, 0.28) 0%, rgba(110, 224, 90, 0.12) 35%, transparent 70%)',
-    shadow: '0 0 45px rgba(31, 255, 17, 0.16)',
-  },
-  // Step 02: Find the Angle — flare sweeping upward from bottom-right corner
-  {
-    background: 'radial-gradient(circle 560px at 85% 82%, rgba(31, 255, 17, 0.28) 0%, rgba(110, 224, 90, 0.12) 35%, transparent 70%)',
-    shadow: '0 0 45px rgba(31, 255, 17, 0.16)',
-  },
-  // Step 03: Make It Real — flare radiating from right-center behind title and watermark
-  {
-    background: 'radial-gradient(ellipse 640px 450px at 92% 50%, rgba(31, 255, 17, 0.3) 0%, rgba(110, 224, 90, 0.14) 38%, transparent 72%)',
-    shadow: '0 0 50px rgba(31, 255, 17, 0.18)',
-  },
-  // Step 04: Make It Better — flare angled from bottom-left corner
-  {
-    background: 'radial-gradient(circle 540px at 15% 85%, rgba(31, 255, 17, 0.28) 0%, rgba(110, 224, 90, 0.12) 35%, transparent 70%)',
-    shadow: '0 0 45px rgba(31, 255, 17, 0.16)',
-  },
-  // Step 05: Keep What's Next in Mind — flare beaming down from top-center/right
-  {
-    background: 'radial-gradient(ellipse 640px 420px at 70% 12%, rgba(31, 255, 17, 0.32) 0%, rgba(110, 224, 90, 0.14) 38%, transparent 72%)',
-    shadow: '0 0 50px rgba(31, 255, 17, 0.18)',
-  },
-];
-
-const STEPS = [
+export const STEPS = [
   {
     num: '01',
-    title: 'Question Everything',
-    subtitle: 'DISCOVER THE REAL PROBLEM',
-    description: 'Understand the challenge and uncover the real problem.',
-    body: 'We start by understanding your business, your market, and the problem behind the brief. The right question is worth more than a hundred quick answers.',
-    accent: '#3a863f',
+    title: 'Understand the Problem',
+    phase: 'Discovery & Immersion',
+    short: 'Discovery',
+    lead: "We dig deep into your business, listen to your users, and uncover what's truly holding things back before writing a single line of code or pushing a pixel.",
+    deliverables: [
+      'Stakeholder & user interviews to uncover real friction',
+      'Market landscape & competitor opportunity audit',
+      'Clear problem definition and verifiable success metrics',
+    ],
+    time: 'Phase 01',
   },
   {
     num: '02',
-    title: 'Find the Angle',
-    subtitle: 'STRATEGY & DIRECTION',
-    description: 'Define the direction, priorities, and plan.',
-    body: 'We set the direction, agree the priorities, and map the plan — so every decision that follows has a reason behind it.',
-    accent: '#3a863f',
+    title: 'Define the Blueprint',
+    phase: 'Strategy & Architecture',
+    short: 'Blueprint',
+    lead: 'We map out a clear roadmap, technical architecture, and creative direction so every subsequent decision has a defined purpose.',
+    deliverables: [
+      'Product roadmap with milestone-based scopes and timelines',
+      'Scalable technical architecture and modern tech stack selection',
+      'Visual moodboards, user flows, and core design principles',
+    ],
+    time: 'Phase 02',
   },
   {
     num: '03',
-    title: 'Make It Real',
-    subtitle: 'DESIGN & BUILD',
-    description: 'Design, develop, experiment, and build.',
-    body: 'Design and engineering move together. We prototype, experiment, and build in tight loops, keeping you close to the work as it takes shape.',
-    accent: '#3a863f',
+    title: 'Bring It to Life',
+    phase: 'Design & Development',
+    short: 'Build',
+    lead: 'We turn the strategy into functional reality through rapid design iterations and clean, robust full-stack engineering.',
+    deliverables: [
+      'High-fidelity UI/UX design with responsive component systems',
+      'Modular, production-ready code built for speed and security',
+      'Weekly working demos and sprint reviews with your team',
+    ],
+    time: 'Phase 03',
   },
   {
     num: '04',
-    title: 'Make It Better',
-    subtitle: 'TEST & REFINE',
-    description: 'Test, refine, and improve the solution.',
-    body: 'We test what we have built against reality, refine what falls short, and raise the bar on what works.',
-    accent: '#3a863f',
+    title: 'Test, Polish & Perfect',
+    phase: 'Quality Assurance & Tuning',
+    short: 'Polish',
+    lead: 'We put the product through real-world paces, smoothing out friction, boosting speed, and polishing every micro-interaction.',
+    deliverables: [
+      'Cross-browser, multi-device, and accessibility stress testing',
+      'Performance optimization, fast load speeds, and SEO readiness',
+      'Micro-animations and interaction refinement for a premium tactile feel',
+    ],
+    time: 'Phase 04',
   },
   {
     num: '05',
-    title: "Keep What's Next in Mind",
-    subtitle: 'PLAN WHAT COMES NEXT',
-    description: 'Identify future opportunities and room to evolve.',
-    body: 'A launch is a starting point. We look for the next opportunity — the feature, the market, the idea your brand is ready for.',
-    accent: '#3a863f',
+    title: 'Launch & Scale Forward',
+    phase: 'Deployment & Growth',
+    short: 'Launch',
+    lead: 'We guide you through a seamless public launch, hand over complete documentation, and help you scale as user demand grows.',
+    deliverables: [
+      'Zero-downtime deployment to secure production infrastructure',
+      'Complete asset handoff, design system guides, and team training',
+      'Post-launch performance review and roadmap for future iterations',
+    ],
+    time: 'Phase 05',
   },
 ];
 
 export default function ApproachSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const cardsContainerRef = useRef<HTMLDivElement>(null);
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const trailContainerRef = useRef<HTMLDivElement>(null);
+  const activeLineRef = useRef<HTMLDivElement>(null);
+  const stepItemRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const stepNodeRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const stepCardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
-    if (prefersReducedMotion) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const section = sectionRef.current;
-    const container = cardsContainerRef.current;
-    if (!section || !container) return;
-
-    const cards = cardRefs.current.filter(Boolean) as HTMLDivElement[];
-    if (cards.length < 2) return;
+    const trailContainer = trailContainerRef.current;
+    const activeLine = activeLineRef.current;
+    if (!section || !trailContainer || !activeLine) return;
 
     const ctx = gsap.context(() => {
-      // Set initial states: card 0 visible, remaining cards stacked below
-      cards.slice(1).forEach((card) => {
-        gsap.set(card, { yPercent: 105, scale: 0.95 });
-      });
-
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: section,
-          start: 'top top',
-          end: () => `+=${window.innerHeight * (cards.length - 1) * 1.1}`,
-          pin: true,
-          pinSpacing: true,
-          scrub: 0.5,
-          refreshPriority: 1,
-          invalidateOnRefresh: true,
-        },
-      });
-
-      // Each card slides over the previous one; older cards recede behind
-      for (let i = 1; i < cards.length; i++) {
-        const at = (i - 1) * 1.2;
-        tl.to(cards[i], { yPercent: 0, scale: 1, duration: 1.2, ease: 'power2.inOut' }, at);
-        for (let j = 0; j < i; j++) {
-          const depth = i - j;
-          tl.to(cards[j], {
-            y: -30 * depth,
-            scale: 1 - 0.05 * depth,
-            opacity: depth === 1 ? 0.4 : 0.15,
-            duration: 1.2,
-            ease: 'power2.inOut',
-          }, at);
+      // 1. Scrubbed line drawing: The line draws down smoothly as user scrolls through the container
+      gsap.fromTo(
+        activeLine,
+        { scaleY: 0 },
+        {
+          scaleY: 1,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: trailContainer,
+            start: 'top 70%',
+            end: 'bottom 65%',
+            scrub: 0.5,
+            refreshPriority: 3,
+          },
         }
-      }
+      );
+
+      // 2. Step reveals: As the scroll position reaches each step, the node bursts alive and card sweeps into place
+      stepItemRefs.current.forEach((item, index) => {
+        if (!item) return;
+        const card = stepCardRefs.current[index];
+        const node = stepNodeRefs.current[index];
+        const isDesktop = window.innerWidth >= 768;
+        const isEven = index % 2 === 0;
+
+        // Set initial resting states
+        if (card) {
+          gsap.set(card, {
+            opacity: 0,
+            y: 45,
+            x: isDesktop ? (isEven ? -35 : 35) : 0,
+            scale: 0.95,
+          });
+        }
+        if (node) {
+          gsap.set(node, {
+            scale: 0.65,
+            opacity: 0.25,
+          });
+        }
+
+        // Timeline linked to scroll: reveals the moment the line reaches this milestone
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: item,
+            start: 'top 70%',
+            end: 'top 48%',
+            scrub: 0.5,
+            refreshPriority: 3,
+          },
+        });
+
+        if (node) {
+          tl.to(node, {
+            scale: 1,
+            opacity: 1,
+            duration: 0.4,
+            ease: 'power2.out',
+          }, 0);
+        }
+
+        if (card) {
+          tl.to(card, {
+            opacity: 1,
+            y: 0,
+            x: 0,
+            scale: 1,
+            duration: 0.6,
+            ease: 'power2.out',
+          }, 0.08);
+        }
+      });
     }, sectionRef);
 
     return () => ctx.revert();
   }, []);
 
   return (
-    <section ref={sectionRef} className={`relative w-full bg-[#09090b] z-20 overflow-hidden font-grotesk ${prefersReducedMotion ? 'py-24' : 'h-screen'}`}>
-      {/* Background Ambience */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.01)_0%,transparent_80%)] pointer-events-none" />
+    <section ref={sectionRef} className="relative w-full py-20 sm:py-28 md:py-36 px-4 sm:px-8 md:px-12 lg:px-16 bg-[#e4e4e1] text-[#111411] overflow-hidden font-grotesk z-20">
+      {/* Subtle organic ambient warmth */}
+      <div
+        className="absolute top-1/4 -right-40 w-[24rem] sm:w-[36rem] h-[24rem] sm:h-[36rem] rounded-full pointer-events-none opacity-25"
+        style={{
+          background: 'radial-gradient(circle, rgba(110, 224, 90, 0.22) 0%, transparent 70%)',
+          filter: 'blur(80px)',
+        }}
+      />
+      <div
+        className="absolute bottom-1/4 -left-40 w-[24rem] sm:w-[36rem] h-[24rem] sm:h-[36rem] rounded-full pointer-events-none opacity-20"
+        style={{
+          background: 'radial-gradient(circle, rgba(30, 68, 40, 0.18) 0%, transparent 70%)',
+          filter: 'blur(90px)',
+        }}
+      />
 
-      {/* Header */}
-      <div className={prefersReducedMotion ? 'relative px-6 md:px-12 lg:px-16 mb-10' : 'absolute top-10 md:top-14 left-6 md:left-12 lg:left-16 z-30'}>
-        <p className="text-[10px] md:text-xs font-semibold tracking-[0.3em] uppercase text-[#3a863f] mb-2 font-grotesk">
-          Process
-        </p>
-        <h2 className="font-grotesk text-4xl sm:text-5xl lg:text-[4rem] text-white leading-[0.95] tracking-tight font-medium">
-          How We Work
+      {/* Section Header */}
+      <div className="max-w-5xl mx-auto text-center mb-16 sm:mb-20 md:mb-24 relative z-10 px-2">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1e4428]/10 border border-[#1e4428]/20 mb-3.5 sm:mb-4">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#1e4428] animate-pulse" />
+          <span className="text-[11px] sm:text-xs font-semibold tracking-[0.25em] uppercase text-[#1e4428] font-grotesk">
+            Our Methodology
+          </span>
+        </div>
+
+        <h2 className="font-display font-normal text-3xl sm:text-4xl md:text-5xl lg:text-[3.6rem] text-[#111411] tracking-tight leading-[1.12] mb-3 sm:mb-5">
+          How We <span className="text-[#1e4428]">Work.</span>
         </h2>
+
+        <p className="text-black/70 max-w-xl mx-auto font-sans text-sm sm:text-base md:text-lg leading-relaxed">
+          Scroll down and follow the trail from initial discovery to launch day.
+        </p>
       </div>
 
-      {/* Cards Container */}
-      <div ref={cardsContainerRef} className={prefersReducedMotion ? 'relative flex flex-col gap-8 px-6 md:px-12 lg:px-16' : 'absolute inset-0 flex items-end justify-center pb-6 md:pb-10'}>
-        {STEPS.map((step, i) => (
-          <div
-            key={step.num}
-            ref={(el) => { cardRefs.current[i] = el; }}
-            className={`${prefersReducedMotion ? 'relative w-full min-h-[520px]' : 'absolute inset-x-4 sm:inset-x-8 md:inset-x-12 lg:inset-x-16 bottom-0 h-[72vh] sm:h-[75vh] lg:h-[78vh]'} rounded-[32px] overflow-hidden will-change-transform border border-white/10 bg-[#070809] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] group/card`}
-            style={{
-              zIndex: 10 + i,
-              boxShadow: `0 -20px 50px rgba(0,0,0,0.8), ${STEP_FLARES[i]?.shadow || '0 0 40px rgba(31,255,17,0.15)'}`,
-            }}
-          >
-            {/* Dedicated green flare at a unique, perfect angle for each process card */}
-            <div
-              className="absolute inset-0 pointer-events-none z-10 transition-opacity duration-500 opacity-90 group-hover/card:opacity-100"
-              style={{ background: STEP_FLARES[i]?.background }}
-              aria-hidden="true"
-            />
+      {/* The Scenic Trail Container */}
+      <div ref={trailContainerRef} className="max-w-5xl mx-auto relative z-10">
+        
+        {/* Base Inactive Guide Track */}
+        <div className="absolute left-[15px] sm:left-5 md:left-1/2 top-4 bottom-4 w-[2px] md:w-[3px] -translate-x-1/2 bg-black/10 rounded-full" />
 
-            {/* Top hairline — subtle luminous edge */}
-            <div className="absolute top-0 left-8 right-8 h-px z-30 pointer-events-none"
-              style={{ background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent)' }}
-            />
+        {/* Active Scroll-Drawn Glowing Spine */}
+        <div 
+          ref={activeLineRef}
+          className="absolute left-[15px] sm:left-5 md:left-1/2 top-4 bottom-4 w-[2px] md:w-[3px] -translate-x-1/2 bg-gradient-to-b from-[#1e4428] via-[#52db44] to-[#1e4428] rounded-full shadow-[0_0_12px_rgba(82,219,68,0.5)] origin-top will-change-transform z-10"
+          style={{ transform: 'scaleY(0)' }}
+        />
 
-            {/* Subtle dotted grid texture */}
-            <div
-              className="absolute inset-0 pointer-events-none opacity-[0.05]"
-              style={{
-                backgroundImage: 'radial-gradient(circle, rgba(255,255,255,1) 1px, transparent 1px)',
-                backgroundSize: '28px 28px',
-              }}
-            />
-
-            {/* Giant watermark numeral */}
-            <span className="absolute -bottom-16 -right-4 lg:-right-8 font-grotesk font-bold text-[16rem] lg:text-[24rem] leading-none text-white/[0.04] select-none pointer-events-none tracking-tighter">
-              {step.num}
-            </span>
-
-            {/* Viewfinder corner brackets */}
-            <div className="absolute top-5 left-5 w-6 h-6 border-t-2 border-l-2 border-white/25 rounded-tl-md pointer-events-none z-30" />
-            <div className="absolute top-5 right-5 w-6 h-6 border-t-2 border-r-2 border-white/25 rounded-tr-md pointer-events-none z-30" />
-            <div className="absolute bottom-5 left-5 w-6 h-6 border-b-2 border-l-2 border-white/25 rounded-bl-md pointer-events-none z-30" />
-            <div className="absolute bottom-5 right-5 w-6 h-6 border-b-2 border-r-2 border-white/25 rounded-br-md pointer-events-none z-30" />
-
-            {/* Inner layout */}
-            <div className="relative z-20 h-full grid grid-cols-1 items-center p-8 sm:p-12 md:p-16 lg:p-20">
-              <div className="flex flex-col justify-center h-full max-w-3xl">
-                <div className="flex items-center gap-3 mb-6">
-                  <span className="font-grotesk text-xs font-semibold tracking-widest px-3 py-1 rounded-full border border-[#6ee05a]/30 bg-[#6ee05a]/10 text-[#6ee05a]">
-                    {step.num}
+        {/* Trail Stops */}
+        <div className="space-y-8 sm:space-y-12 md:space-y-24 relative pl-10 sm:pl-12 md:pl-0">
+          {STEPS.map((step, idx) => {
+            const isEven = idx % 2 === 0;
+            return (
+              <div
+                key={step.num}
+                ref={(el) => { stepItemRefs.current[idx] = el; }}
+                className={`relative flex flex-col md:flex-row items-stretch md:items-center ${
+                  isEven ? 'md:flex-row' : 'md:flex-row-reverse'
+                }`}
+              >
+                {/* Milestone Node */}
+                <div 
+                  ref={(el) => { stepNodeRefs.current[idx] = el; }}
+                  className="absolute -left-10 sm:-left-12 md:left-1/2 top-6 md:top-1/2 -translate-x-1/2 md:-translate-y-1/2 w-8 h-8 sm:w-9 sm:h-9 md:w-12 md:h-12 rounded-full bg-[#1e4428] text-white font-mono text-[11px] md:text-xs font-bold flex items-center justify-center border-2 md:border-4 border-[#e4e4e1] shadow-[0_4px_16px_rgba(30,68,40,0.35)] z-20 will-change-transform"
+                >
+                  <span className="relative flex h-1.5 w-1.5 md:h-2 md:w-2 mr-0.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#52db44] opacity-75" />
+                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 md:h-2 md:w-2 bg-[#52db44]" />
                   </span>
-                  <span className="flex items-center gap-2 text-[10px] tracking-[0.2em] font-semibold text-gray-500 uppercase font-grotesk">
-                    <span className="relative flex h-1.5 w-1.5">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style={{ backgroundColor: step.accent }} />
-                      <span className="relative inline-flex rounded-full h-1.5 w-1.5" style={{ backgroundColor: step.accent }} />
-                    </span>
-                    {step.subtitle}
-                  </span>
+                  <span>{step.num}</span>
                 </div>
 
-                <h3 className="font-grotesk text-3xl sm:text-4xl lg:text-[2.8rem] leading-[1.05] text-white font-medium mb-5 tracking-tight">
-                  {step.title}
-                </h3>
+                {/* Milestone Card */}
+                <div className="w-full md:w-[calc(50%-2.5rem)] lg:md:w-[calc(50%-3rem)]">
+                  <div 
+                    ref={(el) => { stepCardRefs.current[idx] = el; }}
+                    className="group relative rounded-2xl sm:rounded-3xl md:rounded-[2.25rem] p-6 sm:p-8 md:p-10 transition-all duration-500 hover:-translate-y-1.5 will-change-transform overflow-hidden"
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.48)',
+                      backdropFilter: 'blur(30px) saturate(190%)',
+                      WebkitBackdropFilter: 'blur(30px) saturate(190%)',
+                      border: '1px solid rgba(255, 255, 255, 0.85)',
+                      boxShadow: 'inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.95), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.04), 0 20px 45px -12px rgba(15, 30, 20, 0.08), 0 2px 6px rgba(0, 0, 0, 0.03)',
+                    }}
+                  >
+                    {/* Apple-grade Specular Highlight Hairline */}
+                    <div 
+                      className="absolute top-0 inset-x-8 h-[1.5px] pointer-events-none"
+                      style={{
+                        background: 'linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.95) 50%, transparent 100%)',
+                      }}
+                    />
 
-                <p className="font-grotesk text-lg sm:text-xl text-[#6ee05a] not-italic font-medium leading-relaxed mb-4 max-w-2xl">
-                  {step.description}
-                </p>
+                    {/* Top Row: Crisp Milestone & Phase */}
+                    <div className="flex items-center justify-between gap-3 mb-4 sm:mb-5">
+                      <span className="font-mono text-xs font-bold px-3 py-1 rounded-full bg-[#112818] text-white shadow-sm">
+                        {step.num}
+                      </span>
+                      <span className="text-[11px] sm:text-xs font-mono uppercase tracking-[0.16em] text-[#112818] font-bold truncate">
+                        {step.phase}
+                      </span>
+                    </div>
 
-                <p className="font-grotesk text-gray-300 text-base sm:text-lg leading-relaxed max-w-xl font-normal not-italic">
-                  {step.body}
-                </p>
+                    {/* Step Title: High-Contrast Obsidian */}
+                    <h3 className="font-display font-medium text-2xl sm:text-3xl md:text-[2rem] text-[#090d0b] mb-3 leading-snug tracking-tight group-hover:text-[#112818] transition-colors duration-300">
+                      {step.title}
+                    </h3>
+
+                    {/* Lead Benefit: Razor-Sharp Contrast */}
+                    <p className="text-sm sm:text-base text-[#202923] font-sans leading-relaxed mb-6 font-normal">
+                      {step.lead}
+                    </p>
+
+                    {/* Deliverables Checklist with Enhanced Contrast */}
+                    <div className="pt-4 border-t border-black/[0.08]">
+                      <p className="text-[10px] sm:text-[11px] font-mono uppercase tracking-widest text-[#112818]/70 mb-3 font-bold">
+                        What happens in this stage:
+                      </p>
+                      <ul className="space-y-2 sm:space-y-2.5">
+                        {step.deliverables.map((item, dIdx) => (
+                          <li key={dIdx} className="flex items-start gap-2.5 text-xs sm:text-sm text-[#0c140e] font-sans font-medium">
+                            <Check size={16} className="text-[#15803d] shrink-0 mt-0.5" strokeWidth={2.6} />
+                            <span className="leading-snug">{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Spacer for desktop alternating symmetry */}
+                <div className="hidden md:block md:w-[calc(50%-2.5rem)] lg:md:w-[calc(50%-3rem)]" />
               </div>
-            </div>
+            );
+          })}
+        </div>
 
-            {/* Bottom step rail */}
-            <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2">
-              {STEPS.map((_, pi) => (
-                <div
-                  key={pi}
-                  className="h-[3px] rounded-full transition-all duration-500"
-                  style={{
-                    width: pi === i ? '28px' : '10px',
-                    backgroundColor: pi === i ? '#6ee05a' : 'rgba(255,255,255,0.15)',
-                  }}
-                />
-              ))}
-            </div>
+        {/* Journey Arrival Pill */}
+        <div className="mt-12 sm:mt-16 md:mt-20 text-center pl-10 sm:pl-12 md:pl-0">
+          <div className="inline-flex items-center gap-2 sm:gap-3 px-4 py-2 sm:px-5 sm:py-2.5 rounded-full bg-white/95 border border-black/10 shadow-sm text-[11px] sm:text-xs font-mono font-medium text-black/80">
+            <span className="w-2 h-2 rounded-full bg-[#1e4428]" />
+            <span>Ready for launch &bull; Handover &amp; long-term scale</span>
           </div>
-        ))}
+        </div>
+
       </div>
     </section>
   );

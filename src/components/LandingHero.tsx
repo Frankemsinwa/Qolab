@@ -94,6 +94,98 @@ function ChipEye() {
   );
 }
 
+
+interface FloatingGlassNavProps {
+  onViewAllProjects: () => void;
+  onNavigate?: (view: 'about' | 'projects' | 'services' | 'contact') => void;
+}
+
+function FloatingGlassNav({ onViewAllProjects, onNavigate }: FloatingGlassNavProps) {
+  const [slider, setSlider] = useState<{ left: number; width: number; opacity: number }>({
+    left: 0,
+    width: 0,
+    opacity: 0,
+  });
+  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
+
+  const navItems = [
+    { label: 'WORK', action: onViewAllProjects, cursorText: 'Projects' },
+    { label: 'SERVICES', action: () => onNavigate?.('services'), cursorText: 'Services' },
+    { label: 'ABOUT', action: () => onNavigate?.('about'), cursorText: 'About Us' },
+  ];
+
+  const handleMouseEnter = (e: React.MouseEvent<HTMLButtonElement>, idx: number) => {
+    const el = e.currentTarget;
+    setSlider({
+      left: el.offsetLeft,
+      width: el.offsetWidth,
+      opacity: 1,
+    });
+    setHoveredIdx(idx);
+  };
+
+  const handleMouseLeave = () => {
+    setSlider((prev) => ({ ...prev, opacity: 0 }));
+    setHoveredIdx(null);
+  };
+
+  return (
+    <div
+      onMouseLeave={handleMouseLeave}
+      className="relative flex items-center p-1.5 rounded-full bg-black/[0.05] backdrop-blur-xl border border-black/[0.08] shadow-[0_8px_30px_rgba(0,0,0,0.06),inset_0_1px_1px_rgba(255,255,255,0.4)] transition-all duration-300"
+    >
+      {/* Gliding magnetic slider pill */}
+      <div
+        className="absolute top-1.5 bottom-1.5 rounded-full bg-[#111411] transition-all duration-300 ease-out pointer-events-none shadow-sm"
+        style={{
+          left: `${slider.left}px`,
+          width: `${slider.width}px`,
+          opacity: slider.opacity,
+        }}
+      />
+
+      {/* Nav links */}
+      <div className="flex items-center gap-1 relative z-10">
+        {navItems.map((item, idx) => {
+          const isHovered = hoveredIdx === idx;
+          return (
+            <button
+              key={item.label}
+              onClick={item.action}
+              onMouseEnter={(e) => handleMouseEnter(e, idx)}
+              data-cursor="magnetic"
+              data-cursor-text={item.cursorText}
+              className={`relative z-10 px-4 py-2 rounded-full font-grotesk font-medium text-[12px] tracking-[0.06em] uppercase transition-colors duration-200 select-none ${
+                isHovered ? 'text-white' : 'text-[#1a1c1a] hover:text-[#111411]'
+              }`}
+            >
+              {item.label}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Subtle divider */}
+      <div className="w-[1px] h-4 bg-black/15 mx-1.5 relative z-10" />
+
+      {/* Integrated Modern Micro-CTA: Let's Talk ↗ */}
+      <button
+        onClick={() => onNavigate?.('contact')}
+        data-cursor="magnetic"
+        data-cursor-text="Contact"
+        className="relative z-10 group inline-flex items-center gap-1.5 rounded-full bg-[#1e3b26] hover:bg-[#254b31] text-white px-4 py-2 font-grotesk font-medium text-[12px] tracking-[0.06em] uppercase transition-all duration-200 hover:scale-[1.03] active:scale-[0.97] shadow-sm ml-0.5"
+      >
+        <span>Let's Talk</span>
+        <ArrowUpRight
+          size={14}
+          strokeWidth={2.4}
+          className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+        />
+      </button>
+    </div>
+  );
+}
+
 export default function LandingHero({ onSelectProject, onViewAllProjects, onSelectService, onNavigate }: LandingHeroProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const heroTrackRef = useRef<HTMLDivElement>(null);
@@ -260,252 +352,243 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
              pin-spacer DOM mutations can't break React's reconciliation ===== */}
       {createPortal(
         <>
-          <div className="fixed top-0 inset-x-0 z-[90] md:hidden flex items-center justify-between px-5 py-3 bg-black/55 backdrop-blur-xl border-b border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.35)]">
+          {/* Modern Floating Island Header for Mobile */}
+          <div className="fixed top-3 inset-x-3 sm:inset-x-5 z-[90] md:hidden flex items-center justify-between px-4 py-2.5 rounded-full bg-[#111411]/85 backdrop-blur-2xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.35)]">
             <QolabLogo className="w-20" />
             <button
               onClick={() => setMobileMenuOpen(true)}
-              className="flex items-center justify-center w-10 h-10 text-white"
+              className="flex items-center gap-2 pl-3.5 pr-3 py-1.5 rounded-full bg-[#1e3b26] text-white font-grotesk text-[11px] font-medium uppercase tracking-wider shadow-sm hover:scale-105 active:scale-95 transition-all cursor-pointer"
               aria-label="Open menu"
             >
-              <Menu size={24} />
+              <span>Menu</span>
+              <span className="flex flex-col gap-1 w-3.5 justify-center items-center">
+                <span className="w-3.5 h-[1.5px] bg-white rounded-full transition-all" />
+                <span className="w-2.5 h-[1.5px] bg-[#6ee05a] rounded-full transition-all" />
+              </span>
             </button>
           </div>
 
+          {/* Ultra-Modern Fullscreen Studio Menu Drawer */}
           {mobileMenuOpen && (
-            <div className="fixed inset-0 z-[100] bg-[#0a0d0c] text-white flex flex-col px-6 md:hidden">
-              <div className="flex items-center justify-between pt-4">
-                <span className="inline-flex bg-[#0f0f11] rounded-full px-4 py-2.5 border border-white/10 shadow-md">
-                  <QolabLogo className="w-24" />
+            <div className="fixed inset-0 z-[100] bg-[#0c0e0c]/98 backdrop-blur-2xl text-white flex flex-col justify-between p-6 sm:p-8 md:hidden animate-in fade-in duration-200">
+              {/* Menu Top */}
+              <div className="flex items-center justify-between pt-2">
+                <span className="inline-flex bg-white/5 rounded-full px-4 py-2 border border-white/10 shadow-sm">
+                  <QolabLogo className="w-20" />
                 </span>
                 <button
                   onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center justify-center w-10 h-10 text-white"
+                  className="flex items-center justify-center w-10 h-10 rounded-full bg-white/10 border border-white/10 text-white hover:bg-white/20 hover:scale-105 active:scale-95 transition-all cursor-pointer"
                   aria-label="Close menu"
                 >
-                  <X size={24} />
+                  <X size={20} />
                 </button>
               </div>
-              <nav className="flex flex-col gap-8 mt-16">
+
+              {/* Numbered Architectural Nav Links */}
+              <nav className="flex flex-col gap-5 my-auto py-6">
                 {[
-                  { label: 'Home', action: () => { setMobileMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); } },
-                  { label: 'About', action: () => { setMobileMenuOpen(false); onNavigate?.('about'); } },
-                  { label: 'Services', action: () => { setMobileMenuOpen(false); onNavigate?.('services'); } },
-                  { label: 'Works', action: () => { setMobileMenuOpen(false); onNavigate?.('projects'); } },
-                  { label: 'Contact', action: () => { setMobileMenuOpen(false); onNavigate?.('contact'); } },
+                  { num: '01', label: 'Home', action: () => { setMobileMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); } },
+                  { num: '02', label: 'About', action: () => { setMobileMenuOpen(false); onNavigate?.('about'); } },
+                  { num: '03', label: 'Services', action: () => { setMobileMenuOpen(false); onNavigate?.('services'); } },
+                  { num: '04', label: 'Works', action: () => { setMobileMenuOpen(false); onNavigate?.('projects'); } },
+                  { num: '05', label: 'Contact', action: () => { setMobileMenuOpen(false); onNavigate?.('contact'); } },
                 ].map((item) => (
                   <button
                     key={item.label}
                     type="button"
                     onClick={item.action}
-                    className="font-display font-normal tracking-tight text-4xl text-white hover:text-[#6ee05a] transition-colors cursor-pointer"
+                    className="group flex items-center justify-between text-left py-2.5 border-b border-white/[0.06] hover:border-[#6ee05a]/30 transition-all cursor-pointer"
                   >
-                    {item.label}
+                    <span className="font-display font-medium tracking-tight text-3xl sm:text-4xl text-white group-hover:text-[#6ee05a] transition-colors">
+                      {item.label}
+                    </span>
+                    <span className="font-mono text-xs text-white/30 group-hover:text-[#6ee05a] transition-colors">
+                      {item.num}
+                    </span>
                   </button>
                 ))}
               </nav>
+
+              {/* Menu Footer with Availability & CTA */}
+              <div className="pt-4 border-t border-white/10 flex flex-col gap-4">
+                <div className="flex items-center justify-between text-xs text-white/50 font-grotesk">
+                  <span>Future Ready Solutions</span>
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#6ee05a] animate-pulse" />
+                    Available for Q1/Q2
+                  </span>
+                </div>
+                <button
+                  onClick={() => { setMobileMenuOpen(false); onNavigate?.('contact'); }}
+                  className="w-full py-3.5 rounded-full bg-[#1e3b26] hover:bg-[#254b31] text-white font-grotesk text-xs uppercase tracking-widest font-semibold flex items-center justify-center gap-2 shadow-sm hover:scale-[1.01] active:scale-[0.99] transition-all cursor-pointer"
+                >
+                  <span>Start a Project</span>
+                  <ArrowUpRight size={16} />
+                </button>
+              </div>
             </div>
           )}
         </>,
         document.body
       )}
 
-      {/* ===== PINNED HERO SECTION ===== */}
-      <section 
-        ref={heroRef} 
-        className="relative w-full h-screen min-h-[640px] overflow-hidden bg-[#080c01] z-10 select-none"
+      {/* ===== MODERN LIGHT HERO SECTION (OPTION A: CINEMATIC LOOP) ===== */}
+      <section
+        ref={heroRef}
+        className="relative w-full min-h-screen bg-[#cccccb] text-[#111411] flex flex-col justify-between overflow-hidden select-none"
+        style={{
+          background: 'radial-gradient(ellipse 90% 60% at 50% 25%, #e1e1e0 0%, #cccccb 75%)',
+        }}
       >
-        {/* Bottom-left chartreuse/lime flare — placed beneath the grid so grid lines remain subtly visible across it */}
-        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden" aria-hidden="true">
-          {/* Primary intense lime-yellow floor glow under the CTA button */}
+        {/* Subtle architectural atmosphere */}
+        <div className="absolute inset-0 pointer-events-none z-0" aria-hidden="true">
           <div
-            className="absolute pointer-events-none"
+            className="absolute left-1/2 -translate-x-1/2 top-0 pointer-events-none"
             style={{
-              left: '-6%',
-              bottom: '-28%',
-              width: '68%',
-              height: '78%',
-              background: 'radial-gradient(ellipse 68% 62% at 44% 78%, #d2f282 0%, #b5df54 22%, #78b816 44%, #3d6802 66%, rgba(20, 36, 1, 0.45) 82%, transparent 96%)',
-              filter: 'blur(38px)',
-            }}
-          />
-          {/* Secondary upper-left olive-lime atmospheric halo behind subtext */}
-          <div
-            className="absolute pointer-events-none"
-            style={{
-              left: '-4%',
-              bottom: '4%',
-              width: '52%',
-              height: '52%',
-              background: 'radial-gradient(circle at 42% 58%, rgba(112, 178, 12, 0.52) 0%, rgba(62, 104, 2, 0.32) 48%, transparent 78%)',
-              filter: 'blur(50px)',
+              width: '80%',
+              height: '55%',
+              background: 'radial-gradient(ellipse at 50% 10%, rgba(255, 255, 255, 0.45) 0%, rgba(204, 204, 203, 0) 70%)',
+              filter: 'blur(40px)',
             }}
           />
         </div>
 
-        {/* Two-tier architectural blueprint grid layer */}
-        <div 
-          className="cyber-grid-bg absolute inset-0 z-[1] pointer-events-none opacity-95"
-          style={{
-            maskImage: 'radial-gradient(ellipse 96% 92% at 50% 48%, black 68%, transparent 98%)',
-            WebkitMaskImage: 'radial-gradient(ellipse 96% 92% at 50% 48%, black 68%, transparent 98%)',
-          }}
-          aria-hidden="true"
-        />
-
-        {/* 3D Glossy Emerald Puzzle — Positioned right by bottom-right corner edge, unclipped & larger scale */}
-        <div
-          ref={puzzleRef}
-          aria-hidden="true"
-          className="hero-puzzle-wrap block absolute bottom-0 right-0 pointer-events-none z-[12] w-[min(92vw,54vh)] md:w-[min(45vw,84vh)] lg:w-[min(46vw,86vh)] aspect-[490/374]"
-          style={{
-            mixBlendMode: 'screen',
-          }}
-        >
-          <canvas
-            ref={puzzleCanvasRef}
-            width={490}
-            height={374}
-            className="w-full h-full object-contain pointer-events-none select-none"
-          />
-        </div>
-
-        {/* Hero content layer */}
-        <div className="hero-content-layer relative z-20 w-full h-full">
-          {/* Top bar — desktop only (mobile uses the fixed glass bar) */}
-          <div className="hidden md:flex w-full items-center justify-between pl-6 pr-6 md:pl-[9.5%] md:pr-[5.1%] pt-6 md:pt-[9.4vh] relative z-30">
-            {/* Logo */}
-            <div className="hero-topbar-item flex items-center">
-              <QolabLogo className="w-36 sm:w-44 md:w-[min(18.2vw,21.6vh)]" />
-            </div>
-
-            {/* Center rotating badge: FUTURE READY SOLUTION — dead-center horizontally */}
-            <div className="hero-topbar-item hidden md:flex items-center justify-center absolute left-1/2 -translate-x-1/2 top-[9.4vh]">
-              <img
-                src="/circle.png"
-                alt="Future Ready Solution"
-                className="animate-spin-badge select-none pointer-events-none"
-                style={{
-                  width: 'min(10.2vw, 12.1vh)',
-                  height: 'min(10.2vw, 12.1vh)',
-                }}
-              />
-            </div>
-
-            {/* Right: 3 rounded-rectangle gradient nav pills matching referenced design */}
-            <div className="hero-topbar-item hidden md:flex items-center gap-[8px]">
-              <button
-                onClick={onViewAllProjects}
-                data-cursor="magnetic"
-                data-cursor-text="Projects"
-                className="inline-flex items-center justify-center rounded-[9px] text-white font-sans font-normal text-[12px] tracking-[0.03em] uppercase transition-transform duration-200 hover:scale-105 active:scale-95"
-                style={{
-                  width: 'min(5.0vw, 5.9vh)',
-                  minWidth: '58px',
-                  height: 'min(2.9vw, 3.43vh)',
-                  minHeight: '34px',
-                  background: 'linear-gradient(90deg, rgba(48, 8, 8, 0.92) 0%, #680505 42%, #e00405 100%)',
-                }}
-              >
-                WORK
-              </button>
-              <button
-                onClick={() => onNavigate?.('services')}
-                data-cursor="magnetic"
-                data-cursor-text="Services"
-                className="inline-flex items-center justify-center rounded-[9px] text-white font-sans font-normal text-[12px] tracking-[0.03em] uppercase transition-transform duration-200 hover:scale-105 active:scale-95"
-                style={{
-                  width: 'min(7.2vw, 8.5vh)',
-                  minWidth: '84px',
-                  height: 'min(2.9vw, 3.43vh)',
-                  minHeight: '34px',
-                  background: 'linear-gradient(90deg, rgba(5, 39, 4, 0.92) 0%, #0e6b05 42%, #18fc0b 100%)',
-                }}
-              >
-                SERVICES
-              </button>
-              <button
-                onClick={() => onNavigate?.('about')}
-                data-cursor="magnetic"
-                data-cursor-text="About Us"
-                className="inline-flex items-center justify-center rounded-[9px] text-white font-sans font-normal text-[12px] tracking-[0.03em] uppercase transition-transform duration-200 hover:scale-105 active:scale-95"
-                style={{
-                  width: 'min(6.56vw, 7.78vh)',
-                  minWidth: '76px',
-                  height: 'min(2.9vw, 3.43vh)',
-                  minHeight: '34px',
-                  background: 'linear-gradient(90deg, rgba(67, 55, 8, 0.92) 0%, #836204 42%, #ca9d06 100%)',
-                }}
-              >
-                ABOUT
-              </button>
-            </div>
+        {/* Top bar — desktop */}
+        <div className="relative z-30 w-full hidden md:flex items-center justify-between px-8 md:px-[6%] pt-6 md:pt-8">
+          {/* Dark Wordmark Logo */}
+          <div className="hero-topbar-item flex items-center">
+            <QolabLogo theme="dark" className="w-32 sm:w-36 md:w-[min(14vw,17vh)]" />
           </div>
 
-          {/* Main Left-Aligned Hero Composition — positioned at exact design coordinates */}
-          <div className="hero-text-block px-5 sm:px-8 md:px-0 md:pl-[9.5%] pt-24 sm:pt-28 md:pt-0 md:absolute md:top-[33.3vh] md:left-0 w-full z-20">
-            <div className="relative z-10 w-full">
-              {/* Monumental Headline in Zen Dots — larger heroic size covering ample space with rotating synonyms */}
-              <h1
-                className="hero-headline font-zen uppercase font-normal tracking-[0.01em] text-[clamp(1.65rem,7.2vw,2.35rem)] sm:text-[clamp(2.5rem,6.4vw,4.2rem)] md:text-[min(8.9vw,10.2vh)] lg:text-[min(9.5vw,10.8vh)] xl:text-[min(9.9vw,11.2vh)] leading-[1.02] select-none"
-              >
-                <div className="block hero-title-line whitespace-nowrap">
-                  <span className="text-white">SOME</span>{' '}
-                  <span className="text-[#1fff11]">IDEAS</span>
-                </div>
-                <div className="block hero-title-line text-white whitespace-nowrap mt-[0.04em]">
-                  DESERVE TO
-                </div>
-                <div className="block hero-title-line text-[#1fff11] whitespace-nowrap mt-[0.04em]">
-                  <span
-                    className="hero-flip inline-grid overflow-hidden align-baseline"
-                    style={{ lineHeight: 1.05 }}
-                    aria-label="BEGIN"
-                  >
-                    {HERO_FLIP_WORDS.map((word, i) => (
-                      <span
-                        key={word}
-                        aria-hidden="true"
-                        className={`hero-flip-word font-zen font-normal uppercase tracking-normal [grid-area:1/1] ${i === 0 ? '' : 'opacity-0'}`}
-                      >
-                        {word}
-                      </span>
-                    ))}
-                  </span>
-                </div>
-              </h1>
+          {/* Center rotating badge: FUTURE READY SOLUTION — original vibrant green graphic with smooth rotation */}
+          <div className="hero-topbar-item hidden md:flex items-center justify-center absolute left-1/2 -translate-x-1/2 top-6 md:top-8 pointer-events-none">
+            <img
+              src="/circle.png"
+              alt="Future Ready Solution"
+              className="select-none pointer-events-none"
+              style={{
+                width: 'min(8.5vw, 10.2vh)',
+                height: 'min(8.5vw, 10.2vh)',
+                animation: 'spin-badge 14s linear infinite',
+                WebkitAnimation: 'spin-badge 14s linear infinite',
+              }}
+            />
+          </div>
 
-              {/* Editorial Subtext in Clash Grotesk with increased size */}
-              <p
-                className="hero-subtext text-white/90 font-grotesk font-normal text-[17px] sm:text-[19px] md:text-[min(1.6vw,1.9vh)] lg:text-[min(1.7vw,2.05vh)] leading-[1.58] max-w-2xl mt-6 sm:mt-8 md:mt-[4.5vh]"
-              >
-                We don’t follow the future. We engineer it. Uniting brand<br className="hidden sm:inline" />{' '}
-                strategy, computational design,<br className="hidden sm:inline" />{' '}
-                and creative technology into category-defining digital<br className="hidden sm:inline" />{' '}
-                products.
-              </p>
+          {/* Right: Modern Floating Glass Capsule Nav with Gliding Slider & Micro-CTA */}
+          <div className="hero-topbar-item hidden md:flex items-center">
+            <FloatingGlassNav
+              onViewAllProjects={onViewAllProjects}
+              onNavigate={onNavigate}
+            />
+          </div>
+        </div>
 
-              {/* Rounded-rectangle dark CTA button matching mockup */}
-              <div className="hero-cta mt-8 sm:mt-10 md:mt-[5.2vh] flex items-center">
-                <button
-                  onClick={() => onNavigate?.('contact')}
-                  data-cursor="magnetic"
-                  data-cursor-text="Let's Talk"
-                  className="group relative inline-flex items-center gap-4 sm:gap-5 rounded-[16px] bg-[#122103] hover:bg-[#172a05] transition-all duration-300 pl-6 sm:pl-7 pr-2.5 sm:pr-3 py-2.5 sm:py-3 border border-[#6ee05a]/20 shadow-[0_0_24px_rgba(31,255,17,0.12)] hover:shadow-[0_0_32px_rgba(31,255,17,0.25)] hover:border-[#6ee05a]/40"
-                >
-                  <span className="font-grotesk text-[16px] sm:text-[17px] md:text-[18px] font-medium tracking-tight text-white whitespace-nowrap">
-                    Let’s Make it Exist
-                  </span>
-                  <span
-                    className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#1fff11] text-[#0a1402] flex items-center justify-center transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 shrink-0 shadow-[0_0_12px_rgba(31,255,17,0.5)]"
-                  >
-                    <ArrowUpRight size={20} strokeWidth={2.2} />
-                  </span>
-                </button>
-              </div>
+        {/* Hero Content Layer — Centered, Light, Modern & Heartwarming */}
+        <div className="relative z-20 w-full max-w-5xl mx-auto px-6 pt-24 sm:pt-28 md:pt-14 pb-4 text-center">
+          {/* Monumental Headline in Zen Dots */}
+          <h1
+            className="hero-headline font-zen uppercase font-normal tracking-[0.01em] text-[clamp(2.1rem,7.2vw,4.8rem)] md:text-[clamp(3rem,6.4vw,5.6rem)] leading-[1.04] text-[#111411] select-none mx-auto"
+          >
+            <div className="block hero-title-line">
+              <span>YOUR</span> <span>IDEAS</span>
             </div>
+            <div className="block hero-title-line text-[#111411] mt-[0.04em]">
+              DESERVE TO
+            </div>
+            <div className="block hero-title-line text-[#2d5f3e] mt-[0.04em]">
+              <span
+                className="hero-flip inline-grid overflow-hidden align-baseline"
+                style={{ lineHeight: 1.05 }}
+                aria-label="EMERGE"
+              >
+                {HERO_FLIP_WORDS.map((word, i) => (
+                  <span
+                    key={word}
+                    aria-hidden="true"
+                    className={`hero-flip-word font-zen font-normal uppercase tracking-normal [grid-area:1/1] ${i === 0 ? '' : 'opacity-0'}`}
+                  >
+                    {word}
+                  </span>
+                ))}
+              </span>
+            </div>
+          </h1>
+
+          {/* Editorial Subtext in Clash Grotesk */}
+          <p
+            className="hero-subtext text-[#484c48] font-grotesk font-normal text-[16px] sm:text-[18px] md:text-[20px] lg:text-[21px] leading-[1.55] max-w-2xl mx-auto mt-6 sm:mt-8"
+          >
+            We build strategies, create websites, find AI solutions, and develop your ideas into digital products people love.
+          </p>
+
+          {/* Tactile Modern CTA Button */}
+          <div className="hero-cta mt-8 sm:mt-9 flex items-center justify-center">
+            <button
+              onClick={() => onNavigate?.('contact')}
+              data-cursor="magnetic"
+              data-cursor-text="Let’s Talk"
+              className="group relative inline-flex items-center gap-4 sm:gap-5 rounded-full bg-[#193220] hover:bg-[#20402a] transition-all duration-300 pl-7 sm:pl-8 pr-3 sm:pr-3.5 py-3 sm:py-3.5 border border-[#2d5f3e]/40 shadow-[0_12px_36px_rgba(25,50,32,0.22)] hover:shadow-[0_16px_44px_rgba(25,50,32,0.32)] hover:scale-[1.02] active:scale-[0.98]"
+            >
+              <span className="font-grotesk text-[16px] sm:text-[17px] md:text-[18px] font-medium tracking-tight text-white whitespace-nowrap">
+                Let’s Make it Exist
+              </span>
+              <span
+                className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#2d5f3e] text-white flex items-center justify-center transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 shrink-0 shadow-[0_0_12px_rgba(45,95,62,0.4)]"
+              >
+                <ArrowUpRight size={20} strokeWidth={2.4} />
+              </span>
+            </button>
+          </div>
+        </div>
+
+        {/* Video Character Layer — completely fills the full width of the screen */}
+        <div className="hero-character-video relative w-full flex justify-center overflow-hidden z-10 pointer-events-none select-none">
+          <div
+            className="w-full relative"
+            style={{
+              maskImage: 'linear-gradient(to bottom, transparent 0%, black 14%, black 100%)',
+              WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 14%, black 100%)',
+            }}
+          >
+            <video
+              src="/character-typing.mp4"
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="w-full min-w-full h-auto block pointer-events-none select-none"
+              style={{
+                marginBottom: '-2px',
+              }}
+            />
           </div>
         </div>
       </section>
+
+      {/* ===== MODERN HERO TRANSITION TICKER ===== */}
+      <div
+        className="relative w-full overflow-hidden py-4 sm:py-5 bg-[#080a08] border-y border-white/[0.08] select-none z-20"
+        aria-hidden="true"
+      >
+        <div className="flex w-max animate-ticker">
+          {[0, 1].map((setIdx) => (
+            <div key={setIdx} className="flex shrink-0 items-center gap-8 sm:gap-12 md:gap-16 px-4 sm:px-6">
+              {['Creativity', 'Technology', 'Strategy', 'Creativity', 'Technology', 'Strategy'].map((word, wIdx) => (
+                <span key={`${setIdx}-${wIdx}-${word}`} className="flex items-center gap-8 sm:gap-12 md:gap-16">
+                  <span className="font-grotesk font-medium text-lg sm:text-xl md:text-2xl text-white/90 tracking-tight whitespace-nowrap">
+                    {word}
+                  </span>
+                  <span className="text-[#2d5f3e] text-sm sm:text-base md:text-lg select-none">
+                    ✦
+                  </span>
+                </span>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
 
       {/* ===== SECTION 2: WHY QOLAB — giant scroll-reveal statement (reference layout) ===== */}
       <section
@@ -520,18 +603,20 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
           style={{ background: 'radial-gradient(circle, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 45%, transparent 70%)' }}
         />
         <div className="relative max-w-5xl mx-auto">
-          <p className="s2-inner text-xs font-semibold tracking-[0.2em] uppercase text-[#6ee05a] mb-10 md:mb-14 font-display">Why Qolab</p>
+          <p className="s2-inner text-xs font-semibold tracking-[0.2em] uppercase text-[#6ee05a] mb-6 md:mb-8 font-display">Why Qolab</p>
+          <h2 className="s2-inner font-display text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] text-white font-normal tracking-tight mb-8 md:mb-12 leading-[1.1]">
+            Great ideas shouldn't{' '}
+            <span className="text-[#6ee05a]">stop at being ideas.</span>
+          </h2>
           <p
             ref={s2TextRef}
-            className="s2-inner font-sans text-2xl sm:text-3xl md:text-4xl lg:text-[2.6rem] leading-[1.4] text-white font-medium tracking-tight"
+            className="s2-inner font-sans text-xl sm:text-2xl md:text-3xl lg:text-[2.1rem] leading-[1.45] text-white font-normal tracking-tight"
           >
-            <WordRoll text="We don't just design —" />{' '}
-            <span className="font-normal text-[#6ee05a]">we engineer</span>{' '}
-            <WordRoll text="experiences." />{' '}
+            <WordRoll text="Most agencies hand you pretty mockups and leave you to figure out the rest." />{' '}
             <ChipDiamond />{' '}
-            <WordRoll text="Every pixel, every interaction, every line of code is intentional." />{' '}
+            <WordRoll text="We take your vision from a rough spark all the way to a finished product people can touch, use, and love." />{' '}
             <ChipClover />{' '}
-            <WordRoll text="We blend creative direction with technical mastery to build products people genuinely love." />{' '}
+            <WordRoll text="No endless handoffs. No technical guesswork. Just thoughtful design, dependable development, and a dedicated team invested in your growth." />{' '}
             <ChipAsterisk />
           </p>
         </div>
@@ -540,10 +625,22 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
           <p className="s2-inner text-xs font-semibold tracking-[0.2em] uppercase text-gray-500 mb-6 font-display">Who We Build For</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 border-t border-l border-white/10">
             {[
-              { title: 'Founders & Entrepreneurs', desc: 'Early-stage ideas that need shaping, designing, or building.' },
-              { title: 'Established Businesses', desc: 'Teams improving their brand, digital presence, products, or operations.' },
-              { title: 'Marketing & Brand Teams', desc: 'Creative direction, identity systems, websites, campaigns, and strategic support.' },
-              { title: 'Product & Operations Teams', desc: 'Custom software, AI-assisted workflows, and business automation.' },
+              { 
+                title: 'Founders & Startups', 
+                desc: 'Launch faster with confidence. Turn a rough napkin sketch into an investor-ready product that looks and feels like an industry leader.' 
+              },
+              { 
+                title: 'Growing Businesses', 
+                desc: 'Modernize and stand out. Upgrade outdated websites and platforms into high-converting digital storefronts that attract modern customers.' 
+              },
+              { 
+                title: 'Marketing & Brand Teams', 
+                desc: 'Bold visual storytelling. Full brand identity, bespoke web design, and interactive campaigns that capture genuine attention.' 
+              },
+              { 
+                title: 'Product & Tech Teams', 
+                desc: 'Frictionless tools that scale. Clean software architectures and automated workflows designed to save your team hours every week.' 
+              },
             ].map((audience) => (
               <div key={audience.title} className="s2-inner border-r border-b border-white/10 p-5 sm:p-6 md:p-7 hover:bg-white/[0.03] transition-colors">
                 <p className="text-white font-medium text-base sm:text-lg md:text-[1.25rem] font-display leading-snug">{audience.title}</p>
@@ -613,14 +710,12 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-14 lg:gap-20 items-center">
           <div>
             <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[#6ee05a] mb-4 font-sans">Collaboration</p>
-            <h2 className="font-display font-normal text-4xl sm:text-5xl lg:text-6xl text-white leading-[1.05] tracking-tight mb-6">
-              No Great Thing Is Built <span className="text-[#6ee05a]">From One Piece.</span>
+            <h2 className="font-display font-normal text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-white leading-[1.08] tracking-tight mb-6">
+              Different Skills. One Team.{' '}
+              <span className="text-[#6ee05a]">One Goal.</span>
             </h2>
-            <p className="text-gray-400 text-base sm:text-lg leading-relaxed font-sans max-w-xl">
-              Great outcomes come from different disciplines and perspectives working as one. That's why we don't assign you one person — we build you a team around your brand: strategists, designers, engineers, and marketers, aligned on one point of contact and one outcome.
-            </p>
-            <p className="text-sm text-gray-500 font-sans mt-4 max-w-xl">
-              One team, one point of contact, aligned on one outcome.
+            <p className="text-gray-300 text-base sm:text-lg leading-relaxed font-sans max-w-xl">
+              Turning an ambitious idea into reality takes more than one specialty. We bring together strategists, designers, and developers who work as a single unit around your project &mdash; giving you a dedicated team, one direct line of communication, and a shared focus on your growth.
             </p>
           </div>
 
@@ -689,8 +784,8 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
             <br className="hidden sm:block" /> Sport.
           </h2>
           <div className="mt-12 flex flex-col sm:flex-row sm:items-center gap-6">
-            <p className="text-gray-400 text-base sm:text-lg font-display leading-relaxed max-w-xl">
-              We help turn imagination into tangible brands, products, platforms, and smarter ways of working.
+            <p className="text-gray-300 text-base sm:text-lg font-sans leading-relaxed max-w-xl">
+              Great things start with a simple conversation. Tell us what you want to build, and let’s turn that spark into a product that thrives in the real world.
             </p>
           </div>
           <div className="flex flex-col sm:flex-row gap-4 mt-10">

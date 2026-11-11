@@ -3,6 +3,7 @@ import { ArrowLeft, ArrowUpRight } from 'lucide-react';
 import { gsap } from 'gsap';
 import founderImg from '../assets/founder.jpeg';
 import cofounderImg from '../assets/Cofounder.jpeg';
+import qMarkImg from '../assets/Q.webp';
 
 interface AboutPageProps {
   onBack: () => void;
@@ -142,11 +143,13 @@ export default function AboutPage({ onBack, onNavigateToContact }: AboutPageProp
             </p>
           </div>
           <div className="flex items-center justify-center">
-            <div className="relative w-48 h-48 sm:w-60 sm:h-60">
-              <div className="absolute inset-0 rounded-[2.5rem] border-2 border-[#6ee05a]/30 rotate-6" />
-              <div className="absolute inset-0 rounded-[2.5rem] lime-grad shadow-lg flex items-center justify-center">
-                <span className="font-display text-[8rem] sm:text-[10rem] leading-none text-[#0f0f11] font-bold">Q</span>
-              </div>
+            <div className="relative w-56 h-56 sm:w-72 sm:h-72 md:w-80 md:h-80 flex items-center justify-center">
+              <div className="absolute inset-4 rounded-full bg-[#6ee05a]/15 blur-3xl pointer-events-none" />
+              <img
+                src={qMarkImg}
+                alt="Qolab Mark"
+                className="relative z-10 w-full h-full object-contain filter drop-shadow-[0_20px_35px_rgba(0,0,0,0.6)] select-none pointer-events-none"
+              />
             </div>
           </div>
         </div>

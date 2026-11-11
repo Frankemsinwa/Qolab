@@ -375,3 +375,17 @@ html.lenis, html.lenis body {
 .animate-cyber-scan {
   animation: cyberScan 6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
+
+@keyframes ticker {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-ticker {
+  animation: ticker 28s linear infinite;
+  will-change: transform;
+}

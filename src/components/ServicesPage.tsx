@@ -82,11 +82,11 @@ export default function ServicesPage({ onBack, onNavigateToContact, onSelectServ
           <h2 className="service-reveal font-display font-normal tracking-tight text-3xl sm:text-4xl text-white mb-12">How we work.</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8">
             {[
-              { step: '01', title: 'Question Everything', description: 'Understand the challenge and uncover the real problem.' },
-              { step: '02', title: 'Find the Angle', description: 'Define the direction, priorities, and plan.' },
-              { step: '03', title: 'Make It Real', description: 'Design, develop, experiment, and build.' },
-              { step: '04', title: 'Make It Better', description: 'Test, refine, and improve the solution.' },
-              { step: "05", title: "Keep What's Next in Mind", description: 'Identify future opportunities and room to evolve.' },
+              { step: '01', title: 'Understand the Problem', description: 'Uncover the real friction and define measurable success before building.' },
+              { step: '02', title: 'Define the Blueprint', description: 'Map out the product roadmap, technical architecture, and creative direction.' },
+              { step: '03', title: 'Bring It to Life', description: 'Design interactive prototypes and write clean, production-ready code in rapid cycles.' },
+              { step: '04', title: 'Test, Polish & Perfect', description: 'Stress-test usability, optimize performance, and fine-tune every interaction.' },
+              { step: '05', title: 'Launch & Scale Forward', description: 'Deploy seamlessly, hand over complete documentation, and scale with momentum.' },
             ].map((item, i) => (
               <div key={i} className="service-reveal">
                 <span className="font-mono text-xs text-[#6ee05a] font-bold tracking-widest">{item.step}</span>
