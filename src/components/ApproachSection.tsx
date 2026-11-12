@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Check } from 'lucide-react';
+import ArchitecturalGrid from './ArchitecturalGrid';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -168,6 +169,9 @@ export default function ApproachSection() {
 
   return (
     <section ref={sectionRef} className="relative w-full py-20 sm:py-28 md:py-36 px-4 sm:px-8 md:px-12 lg:px-16 bg-[#e4e4e1] text-[#111411] overflow-hidden font-grotesk z-20">
+      {/* Architectural blueprint grid matching the light hero backdrop */}
+      <ArchitecturalGrid />
+
       {/* Subtle organic ambient warmth */}
       <div
         className="absolute top-1/4 -right-40 w-[24rem] sm:w-[36rem] h-[24rem] sm:h-[36rem] rounded-full pointer-events-none opacity-25"

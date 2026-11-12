@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowUpRight } from 'lucide-react';
@@ -17,6 +17,107 @@ interface ArchSlot {
   labelTop?: string;
   labelBottom?: string;
   alt: string;
+}
+
+interface CinemaHoverFrameProps {
+  primaryImg: string;
+  reelImages: string[];
+  alt: string;
+  portraitImg?: string;
+  className?: string;
+  overlayClassName?: string;
+}
+
+/**
+ * Rapid-cut cinema trailer frame: rests cleanly on primaryImg, then plays a 2x-speed
+ * strobe montage through every visual in the project on hover using pre-stacked frames.
+ */
+function CinemaHoverFrame({
+  primaryImg,
+  reelImages,
+  alt,
+  portraitImg,
+  className = '',
+  overlayClassName = 'bg-black/20 group-hover/frame:opacity-0',
+}: CinemaHoverFrameProps) {
+  const [hovered, setHovered] = useState(false);
+  const [frameIdx, setFrameIdx] = useState(0);
+  const timerRef = useRef<number | null>(null);
+
+  const frames = useMemo(() => {
+    const seen = new Set<string>([primaryImg]);
+    const list = [primaryImg];
+    for (const src of reelImages) {
+      if (src && !seen.has(src)) {
+        seen.add(src);
+        list.push(src);
+      }
+    }
+    return list;
+  }, [primaryImg, reelImages]);
+
+  useEffect(() => {
+    return () => {
+      if (timerRef.current !== null) window.clearInterval(timerRef.current);
+    };
+  }, []);
+
+  const handleMouseEnter = () => {
+    setHovered(true);
+    if (frames.length <= 1 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (timerRef.current !== null) window.clearInterval(timerRef.current);
+
+    // Jump immediately on hover for zero-latency trailer punch, then cycle at ~2x cut speed
+    setFrameIdx(1);
+    timerRef.current = window.setInterval(() => {
+      setFrameIdx((prev) => (prev + 1) % frames.length);
+    }, 155);
+  };
+
+  const handleMouseLeave = () => {
+    setHovered(false);
+    if (timerRef.current !== null) {
+      window.clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+    setFrameIdx(0);
+  };
+
+  const activeIndex = hovered ? frameIdx % frames.length : 0;
+
+  return (
+    <div
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      className={`arch-frame group/frame relative overflow-hidden border border-white/20 bg-[#101311] transition-[border-color,box-shadow] duration-300 hover:border-[#6ee05a]/75 hover:shadow-[0_12px_34px_rgba(0,0,0,0.85)] ${className}`}
+    >
+      {frames.map((src, idx) => {
+        const isActive = idx === activeIndex;
+        const isPortrait = portraitImg && src === portraitImg;
+        return (
+          <img
+            key={src}
+            src={src}
+            alt={idx === 0 ? alt : `${alt} — reel frame ${idx + 1}`}
+            loading="eager"
+            decoding="async"
+            className={`absolute inset-0 w-full h-full object-cover will-change-transform ${
+              isPortrait ? 'object-[center_25%]' : ''
+            } ${
+              isActive
+                ? hovered
+                  ? 'opacity-100 scale-[1.06] z-[1] transition-transform duration-300 ease-out'
+                  : 'opacity-100 scale-100 z-[1] transition-transform duration-500 ease-out'
+                : 'opacity-0 scale-100 z-0 pointer-events-none'
+            }`}
+          />
+        );
+      })}
+
+      {/* Subtle resting veil fades away during hover reel */}
+      <div className={`absolute inset-0 z-[2] pointer-events-none transition-opacity duration-200 ${overlayClassName}`} />
+    </div>
+  );
 }
 
 export default function ProjectGrid({ onSelectProject }: ProjectGridProps) {
@@ -279,6 +380,8 @@ export default function ProjectGrid({ onSelectProject }: ProjectGridProps) {
           {projectsData.map((project, idx) => {
             const slots = getArchSlots(project);
             const num = String(idx + 1).padStart(2, '0');
+            const reelImages = [project.heroImage, ...(project.galleryImages ?? [])];
+            const portraitImg = project.id === 'amolo' ? project.heroImage : undefined;
 
             return (
               <div
@@ -331,7 +434,7 @@ export default function ProjectGrid({ onSelectProject }: ProjectGridProps) {
                 >
                   
                   {/* --- Column 1: Lower Left Landscape Anchor --- */}
-                  <div className="arch-col-1 absolute left-[1%] w-[21%] top-[48%] h-[48%] group/c1">
+                  <div className="arch-col-1 absolute left-[1%] w-[21%] top-[48%] h-[48%]">
                     {/* Overshooting Horizontal Hairline (left into margin) */}
                     <div className="arch-line-h absolute top-0 -left-12 lg:-left-20 right-0 h-[1px] bg-white/20 group-hover/project:bg-white/35 transition-colors origin-left" />
                     {/* Micro Typography on Line */}
@@ -342,15 +445,14 @@ export default function ProjectGrid({ onSelectProject }: ProjectGridProps) {
                       {slots.slot1.labelBottom}
                     </span>
 
-                    {/* Image Frame */}
-                    <div className="arch-frame relative w-full h-full overflow-hidden border border-white/20 bg-[#101311] transition-all duration-500 group-hover/c1:border-[#6ee05a]/60 group-hover/c1:shadow-[0_12px_32px_rgba(0,0,0,0.8)]">
-                      <img
-                        src={slots.slot1.img}
-                        alt={slots.slot1.alt}
-                        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover/c1:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-black/25 group-hover/c1:opacity-0 transition-opacity duration-300" />
-                    </div>
+                    <CinemaHoverFrame
+                      primaryImg={slots.slot1.img}
+                      reelImages={reelImages}
+                      alt={slots.slot1.alt}
+                      portraitImg={portraitImg}
+                      className="w-full h-full"
+                      overlayClassName="bg-black/25 group-hover/frame:opacity-0"
+                    />
 
                     {/* Dropping Vertical Line past the bottom */}
                     <div className="arch-line-v absolute top-0 -bottom-12 lg:-bottom-16 right-0 w-[1px] bg-white/20 group-hover/project:bg-white/35 transition-colors origin-top" />
@@ -359,7 +461,7 @@ export default function ProjectGrid({ onSelectProject }: ProjectGridProps) {
                   </div>
 
                   {/* --- Column 2: Taller Portrait Stepping Up --- */}
-                  <div className="arch-col-2 absolute left-[22.5%] w-[19%] top-[22%] h-[74%] group/c2">
+                  <div className="arch-col-2 absolute left-[22.5%] w-[19%] top-[22%] h-[74%]">
                     {/* Overshooting Vertical Hairline (shooting high up) */}
                     <div className="arch-line-v absolute -top-16 lg:-top-24 bottom-0 left-0 w-[1px] bg-white/20 group-hover/project:bg-white/35 transition-colors origin-bottom" />
                     <span className="absolute -top-5 left-2 text-[10px] font-mono tracking-widest uppercase text-white/50">
@@ -369,23 +471,19 @@ export default function ProjectGrid({ onSelectProject }: ProjectGridProps) {
                       {slots.slot2.labelBottom}
                     </span>
 
-                    {/* Image Frame */}
-                    <div className="arch-frame relative w-full h-full overflow-hidden border border-white/20 bg-[#101311] transition-all duration-500 group-hover/c2:border-[#6ee05a]/60 group-hover/c2:shadow-[0_12px_32px_rgba(0,0,0,0.8)]">
-                      <img
-                        src={slots.slot2.img}
-                        alt={slots.slot2.alt}
-                        className={`w-full h-full object-cover transition-transform duration-700 ease-out group-hover/c2:scale-105 ${
-                          project.id === 'amolo' ? 'object-[center_25%]' : ''
-                        }`}
-                      />
-                      <div className="absolute inset-0 bg-black/20 group-hover/c2:opacity-0 transition-opacity duration-300" />
-                    </div>
+                    <CinemaHoverFrame
+                      primaryImg={slots.slot2.img}
+                      reelImages={reelImages}
+                      alt={slots.slot2.alt}
+                      portraitImg={portraitImg}
+                      className="w-full h-full"
+                    />
 
                     <span className="arch-crosshair absolute -top-2 -left-1.5 text-white/40 font-mono text-xs select-none">+</span>
                   </div>
 
                   {/* --- Column 3: Center Elevated Slot --- */}
-                  <div className="arch-col-3 absolute left-[42%] w-[19%] top-[10%] h-[60%] group/c3">
+                  <div className="arch-col-3 absolute left-[42%] w-[19%] top-[10%] h-[60%]">
                     {/* Overshooting Vertical Line (shooting up) */}
                     <div className="arch-line-v absolute -top-20 lg:-top-28 bottom-0 left-0 w-[1px] bg-white/20 group-hover/project:bg-white/35 transition-colors origin-top" />
                     <span className="absolute -top-5 left-2 text-[10px] font-mono tracking-widest uppercase text-white/50">
@@ -398,56 +496,52 @@ export default function ProjectGrid({ onSelectProject }: ProjectGridProps) {
                       {slots.slot3.labelBottom}
                     </span>
 
-                    {/* Image Frame */}
-                    <div className="arch-frame relative w-full h-full overflow-hidden border border-white/20 bg-[#101311] transition-all duration-500 group-hover/c3:border-[#6ee05a]/60 group-hover/c3:shadow-[0_12px_32px_rgba(0,0,0,0.8)]">
-                      <img
-                        src={slots.slot3.img}
-                        alt={slots.slot3.alt}
-                        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover/c3:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-black/20 group-hover/c3:opacity-0 transition-opacity duration-300" />
-                    </div>
+                    <CinemaHoverFrame
+                      primaryImg={slots.slot3.img}
+                      reelImages={reelImages}
+                      alt={slots.slot3.alt}
+                      portraitImg={portraitImg}
+                      className="w-full h-full"
+                    />
 
                     <span className="arch-crosshair absolute -top-2 -left-1.5 text-white/40 font-mono text-xs select-none">+</span>
                     <span className="arch-crosshair absolute -bottom-2 -left-1.5 text-white/40 font-mono text-xs select-none">+</span>
                   </div>
 
                   {/* --- Column 4: Stacked Dual Images --- */}
-                  <div className="arch-col-4 absolute left-[61.5%] w-[21%] top-[4%] h-[92%] flex flex-col justify-between group/c4">
+                  <div className="arch-col-4 absolute left-[61.5%] w-[21%] top-[4%] h-[92%] flex flex-col justify-between">
                     {/* Top Cell (4A) */}
-                    <div className="relative w-full h-[46%] overflow-visible group/c4a">
+                    <div className="relative w-full h-[46%] overflow-visible">
                       {/* Overshooting Horizontal Hairline (running across top of Col 4 & 5 out to right margin) */}
                       <div className="arch-line-h absolute top-0 -left-6 right-[-80px] lg:right-[-120px] h-[1px] bg-white/20 group-hover/project:bg-white/35 transition-colors origin-left" />
                       <span className="absolute -top-5 left-2 text-[10px] font-mono tracking-widest uppercase text-white/50">
                         {slots.slot4A.labelTop}
                       </span>
 
-                      <div className="arch-frame relative w-full h-full overflow-hidden border border-white/20 bg-[#101311] transition-all duration-500 group-hover/c4a:border-[#6ee05a]/60 group-hover/c4a:shadow-[0_12px_32px_rgba(0,0,0,0.8)]">
-                        <img
-                          src={slots.slot4A.img}
-                          alt={slots.slot4A.alt}
-                          className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover/c4a:scale-105"
-                        />
-                        <div className="absolute inset-0 bg-black/20 group-hover/c4a:opacity-0 transition-opacity duration-300" />
-                      </div>
+                      <CinemaHoverFrame
+                        primaryImg={slots.slot4A.img}
+                        reelImages={reelImages}
+                        alt={slots.slot4A.alt}
+                        portraitImg={portraitImg}
+                        className="w-full h-full"
+                      />
                     </div>
 
                     {/* Bottom Cell (4B) */}
-                    <div className="relative w-full h-[48%] overflow-visible group/c4b">
+                    <div className="relative w-full h-[48%] overflow-visible">
                       {/* Dropping Vertical Line past the bottom */}
                       <div className="arch-line-v absolute top-0 -bottom-16 lg:-bottom-24 right-0 w-[1px] bg-white/20 group-hover/project:bg-white/35 transition-colors origin-top" />
                       <span className="absolute -bottom-5 right-2 text-[10px] font-mono tracking-widest uppercase text-white/40">
                         {slots.slot4B.labelBottom}
                       </span>
 
-                      <div className="arch-frame relative w-full h-full overflow-hidden border border-white/20 bg-[#101311] transition-all duration-500 group-hover/c4b:border-[#6ee05a]/60 group-hover/c4b:shadow-[0_12px_32px_rgba(0,0,0,0.8)]">
-                        <img
-                          src={slots.slot4B.img}
-                          alt={slots.slot4B.alt}
-                          className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover/c4b:scale-105"
-                        />
-                        <div className="absolute inset-0 bg-black/20 group-hover/c4b:opacity-0 transition-opacity duration-300" />
-                      </div>
+                      <CinemaHoverFrame
+                        primaryImg={slots.slot4B.img}
+                        reelImages={reelImages}
+                        alt={slots.slot4B.alt}
+                        portraitImg={portraitImg}
+                        className="w-full h-full"
+                      />
 
                       <span className="arch-crosshair absolute -bottom-2 -right-1.5 text-white/40 font-mono text-xs select-none">+</span>
                     </div>
@@ -456,20 +550,18 @@ export default function ProjectGrid({ onSelectProject }: ProjectGridProps) {
                   </div>
 
                   {/* --- Column 5: Right Offset Landscape --- */}
-                  <div className="arch-col-5 absolute left-[83%] w-[16%] top-[20%] h-[42%] group/c5">
+                  <div className="arch-col-5 absolute left-[83%] w-[16%] top-[20%] h-[42%]">
                     <span className="absolute -top-5 left-2 text-[10px] font-mono tracking-widest uppercase text-white/50">
                       {slots.slot5.labelTop}
                     </span>
 
-                    {/* Image Frame */}
-                    <div className="arch-frame relative w-full h-full overflow-hidden border border-white/20 bg-[#101311] transition-all duration-500 group-hover/c5:border-[#6ee05a]/60 group-hover/c5:shadow-[0_12px_32px_rgba(0,0,0,0.8)]">
-                      <img
-                        src={slots.slot5.img}
-                        alt={slots.slot5.alt}
-                        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover/c5:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-black/20 group-hover/c5:opacity-0 transition-opacity duration-300" />
-                    </div>
+                    <CinemaHoverFrame
+                      primaryImg={slots.slot5.img}
+                      reelImages={reelImages}
+                      alt={slots.slot5.alt}
+                      portraitImg={portraitImg}
+                      className="w-full h-full"
+                    />
 
                     {/* Overshooting line extending to the right border */}
                     <div className="arch-line-h absolute top-0 left-0 -right-8 lg:-right-16 h-[1px] bg-white/20 group-hover/project:bg-white/35 transition-colors origin-left" />
@@ -496,9 +588,13 @@ export default function ProjectGrid({ onSelectProject }: ProjectGridProps) {
                       <span className="block text-[9px] font-mono tracking-widest uppercase text-white/50 mb-1">
                         {slots.slot1.labelTop}
                       </span>
-                      <div className="arch-frame aspect-square border border-white/20 overflow-hidden bg-[#101311]">
-                        <img src={slots.slot1.img} alt={slots.slot1.alt} className="w-full h-full object-cover" />
-                      </div>
+                      <CinemaHoverFrame
+                        primaryImg={slots.slot1.img}
+                        reelImages={reelImages}
+                        alt={slots.slot1.alt}
+                        portraitImg={portraitImg}
+                        className="aspect-square"
+                      />
                       <span className="block text-[9px] font-mono tracking-widest uppercase text-white/40 mt-1">
                         {slots.slot1.labelBottom}
                       </span>
@@ -510,9 +606,13 @@ export default function ProjectGrid({ onSelectProject }: ProjectGridProps) {
                       <span className="block text-[9px] font-mono tracking-widest uppercase text-white/50 mb-1 pl-2">
                         {slots.slot2.labelTop}
                       </span>
-                      <div className="arch-frame aspect-[3/4] border border-white/20 overflow-hidden bg-[#101311]">
-                        <img src={slots.slot2.img} alt={slots.slot2.alt} className="w-full h-full object-cover" />
-                      </div>
+                      <CinemaHoverFrame
+                        primaryImg={slots.slot2.img}
+                        reelImages={reelImages}
+                        alt={slots.slot2.alt}
+                        portraitImg={portraitImg}
+                        className="aspect-[3/4]"
+                      />
                     </div>
                   </div>
 
@@ -526,9 +626,13 @@ export default function ProjectGrid({ onSelectProject }: ProjectGridProps) {
                       <span className="block text-[9px] font-mono tracking-widest uppercase text-white/50 mb-1">
                         {slots.slot3.labelTop}
                       </span>
-                      <div className="arch-frame aspect-[4/5] border border-white/20 overflow-hidden bg-[#101311]">
-                        <img src={slots.slot3.img} alt={slots.slot3.alt} className="w-full h-full object-cover" />
-                      </div>
+                      <CinemaHoverFrame
+                        primaryImg={slots.slot3.img}
+                        reelImages={reelImages}
+                        alt={slots.slot3.alt}
+                        portraitImg={portraitImg}
+                        className="aspect-[4/5]"
+                      />
                       <span className="block text-[9px] font-mono tracking-widest uppercase text-white/40 mt-1">
                         {slots.slot3.labelBottom}
                       </span>
@@ -540,9 +644,13 @@ export default function ProjectGrid({ onSelectProject }: ProjectGridProps) {
                       <span className="block text-[9px] font-mono tracking-widest uppercase text-white/50 mb-1">
                         {slots.slot4A.labelTop}
                       </span>
-                      <div className="arch-frame aspect-square border border-white/20 overflow-hidden bg-[#101311]">
-                        <img src={slots.slot4A.img} alt={slots.slot4A.alt} className="w-full h-full object-cover" />
-                      </div>
+                      <CinemaHoverFrame
+                        primaryImg={slots.slot4A.img}
+                        reelImages={reelImages}
+                        alt={slots.slot4A.alt}
+                        portraitImg={portraitImg}
+                        className="aspect-square"
+                      />
                     </div>
                   </div>
 
@@ -553,9 +661,13 @@ export default function ProjectGrid({ onSelectProject }: ProjectGridProps) {
                       <span>{slots.slot4B.labelBottom}</span>
                       <span>{slots.slot5.labelTop}</span>
                     </div>
-                    <div className="arch-frame aspect-[16/9] border border-white/20 overflow-hidden bg-[#101311]">
-                      <img src={slots.slot4B.img} alt={slots.slot4B.alt} className="w-full h-full object-cover" />
-                    </div>
+                    <CinemaHoverFrame
+                      primaryImg={slots.slot4B.img}
+                      reelImages={reelImages}
+                      alt={slots.slot4B.alt}
+                      portraitImg={portraitImg}
+                      className="aspect-[16/9]"
+                    />
                   </div>
                 </div>
 
