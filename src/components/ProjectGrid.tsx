@@ -25,7 +25,86 @@ interface CinemaHoverFrameProps {
   alt: string;
   portraitImg?: string;
   className?: string;
+  frameClassName?: string;
   overlayClassName?: string;
+}
+
+interface ChapterTheme {
+  backgroundImage: string;
+  isLight: boolean;
+  titleText: string;
+  indexText: string;
+  metaText: string;
+  labelPrimary: string;
+  labelSecondary: string;
+  lineBg: string;
+  crosshairText: string;
+  btnText: string;
+  btnUnderline: string;
+  btnCircle: string;
+  frameClass: string;
+  overlayClass: string;
+}
+
+const GRAIN_SVG =
+  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.26'/%3E%3C/svg%3E\")";
+
+function getChapterTheme(projectId: string): ChapterTheme {
+  if (projectId === 'luxel-bookings') {
+    return {
+      backgroundImage: `${GRAIN_SVG}, linear-gradient(125deg, #f4e7bd 0%, #e5be63 52%, #cc9836 100%)`,
+      isLight: true,
+      titleText: 'text-[#090d0b] hover:text-[#2c2105]',
+      indexText: 'text-[#3b2d08]',
+      metaText: 'text-[#090d0b]/70',
+      labelPrimary: 'text-[#090d0b]/70',
+      labelSecondary: 'text-[#090d0b]/55',
+      lineBg: 'bg-[#090d0b]/25 group-hover/project:bg-[#090d0b]/45',
+      crosshairText: 'text-[#090d0b]/50',
+      btnText: 'text-[#090d0b] hover:text-[#2c2105]',
+      btnUnderline: 'decoration-[#090d0b]/35 group-hover/btn:decoration-[#090d0b]',
+      btnCircle: 'border-[#090d0b]/30 text-[#090d0b] group-hover/btn:bg-[#090d0b] group-hover/btn:text-[#f4e7bd]',
+      frameClass: 'border-[#090d0b]/30 bg-[#1a1508] hover:border-[#090d0b] hover:shadow-[0_18px_40px_rgba(32,22,4,0.35)]',
+      overlayClass: 'bg-black/15 group-hover/frame:opacity-0',
+    };
+  }
+
+  if (projectId === 'amolo') {
+    return {
+      backgroundImage: `${GRAIN_SVG}, linear-gradient(125deg, #ea7744 0%, #c2410c 52%, #841f0d 100%)`,
+      isLight: false,
+      titleText: 'text-[#faf7f2] hover:text-[#ffe3cf]',
+      indexText: 'text-[#ffd4b8]',
+      metaText: 'text-[#faf7f2]/75',
+      labelPrimary: 'text-[#faf7f2]/75',
+      labelSecondary: 'text-[#faf7f2]/60',
+      lineBg: 'bg-[#faf7f2]/30 group-hover/project:bg-[#faf7f2]/50',
+      crosshairText: 'text-[#faf7f2]/55',
+      btnText: 'text-[#faf7f2] hover:text-[#ffd4b8]',
+      btnUnderline: 'decoration-[#faf7f2]/40 group-hover/btn:decoration-[#ffd4b8]',
+      btnCircle: 'border-[#faf7f2]/35 text-[#faf7f2] group-hover/btn:bg-[#faf7f2] group-hover/btn:text-[#841f0d]',
+      frameClass: 'border-white/30 bg-[#240a05] hover:border-white hover:shadow-[0_18px_40px_rgba(25,5,2,0.55)]',
+      overlayClass: 'bg-black/15 group-hover/frame:opacity-0',
+    };
+  }
+
+  // Green Valley — Luminous Valley Emerald to Chartreuse
+  return {
+    backgroundImage: `${GRAIN_SVG}, linear-gradient(125deg, #3ee467 0%, #8ced55 52%, #ccf34b 100%)`,
+    isLight: true,
+    titleText: 'text-[#090d0b] hover:text-[#16381e]',
+    indexText: 'text-[#143a1d]',
+    metaText: 'text-[#090d0b]/70',
+    labelPrimary: 'text-[#090d0b]/70',
+    labelSecondary: 'text-[#090d0b]/55',
+    lineBg: 'bg-[#090d0b]/25 group-hover/project:bg-[#090d0b]/45',
+    crosshairText: 'text-[#090d0b]/50',
+    btnText: 'text-[#090d0b] hover:text-[#16381e]',
+    btnUnderline: 'decoration-[#090d0b]/35 group-hover/btn:decoration-[#090d0b]',
+    btnCircle: 'border-[#090d0b]/30 text-[#090d0b] group-hover/btn:bg-[#090d0b] group-hover/btn:text-[#8ced55]',
+    frameClass: 'border-[#090d0b]/30 bg-[#0b1c0e] hover:border-[#090d0b] hover:shadow-[0_18px_40px_rgba(12,35,16,0.35)]',
+    overlayClass: 'bg-black/15 group-hover/frame:opacity-0',
+  };
 }
 
 /**
@@ -38,6 +117,7 @@ function CinemaHoverFrame({
   alt,
   portraitImg,
   className = '',
+  frameClassName = 'border-white/20 bg-[#101311] hover:border-[#6ee05a]/75 hover:shadow-[0_12px_34px_rgba(0,0,0,0.85)]',
   overlayClassName = 'bg-black/20 group-hover/frame:opacity-0',
 }: CinemaHoverFrameProps) {
   const [hovered, setHovered] = useState(false);
@@ -89,7 +169,7 @@ function CinemaHoverFrame({
     <div
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className={`arch-frame group/frame relative overflow-hidden border border-white/20 bg-[#101311] transition-[border-color,box-shadow] duration-300 hover:border-[#6ee05a]/75 hover:shadow-[0_12px_34px_rgba(0,0,0,0.85)] ${className}`}
+      className={`arch-frame group/frame relative overflow-hidden border transition-[border-color,box-shadow] duration-300 ${frameClassName} ${className}`}
     >
       {frames.map((src, idx) => {
         const isActive = idx === activeIndex;
@@ -354,13 +434,12 @@ export default function ProjectGrid({ onSelectProject }: ProjectGridProps) {
   return (
     <section
       ref={sectionRef}
-      className="relative w-full py-28 sm:py-36 md:py-44 px-4 sm:px-8 md:px-12 lg:px-16 bg-[#080a09] text-white z-30 font-grotesk overflow-hidden"
+      className="relative w-full bg-[#080a09] text-white z-30 font-grotesk overflow-hidden"
       id="projects"
     >
-      <div className="max-w-7xl mx-auto">
-        
-        {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-20 md:mb-28 border-b border-white/10 pb-10">
+      {/* Section Header on deep obsidian intro band */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 md:px-12 lg:px-16 pt-24 sm:pt-32 md:pt-36 pb-14 sm:pb-20">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-white/10 pb-10">
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/15 bg-white/[0.04] text-[11px] font-mono tracking-[0.2em] uppercase text-[#6ee05a] mb-4">
               <span className="w-1.5 h-1.5 rounded-full bg-[#6ee05a] animate-pulse" />
@@ -374,51 +453,57 @@ export default function ProjectGrid({ onSelectProject }: ProjectGridProps) {
             Curated through a De Stijl architectural grid — where each discipline, visual asset, and digital interface intersects with intent.
           </p>
         </div>
+      </div>
 
-        {/* Project Blocks */}
-        <div className="space-y-36 md:space-y-48">
-          {projectsData.map((project, idx) => {
-            const slots = getArchSlots(project);
-            const num = String(idx + 1).padStart(2, '0');
-            const reelImages = [project.heroImage, ...(project.galleryImages ?? [])];
-            const portraitImg = project.id === 'amolo' ? project.heroImage : undefined;
+      {/* Full-Bleed Brand Color Chapters */}
+      <div className="w-full">
+        {projectsData.map((project, idx) => {
+          const slots = getArchSlots(project);
+          const theme = getChapterTheme(project.id);
+          const num = String(idx + 1).padStart(2, '0');
+          const reelImages = [project.heroImage, ...(project.galleryImages ?? [])];
+          const portraitImg = project.id === 'amolo' ? project.heroImage : undefined;
 
-            return (
-              <div
-                key={project.id}
-                className="arch-project-block relative group/project"
-              >
+          return (
+            <div
+              key={project.id}
+              className="arch-project-block relative group/project w-full py-20 sm:py-28 md:py-36 px-4 sm:px-8 md:px-12 lg:px-16 overflow-hidden border-t border-black/15"
+              style={{
+                backgroundImage: theme.backgroundImage,
+                backgroundBlendMode: 'overlay',
+              }}
+            >
+              <div className="max-w-7xl mx-auto">
                 {/* Project Header Bar with Overshooting Top Hairline */}
                 <div className="relative mb-12 sm:mb-16">
-                  {/* Subtle Accent Line */}
-                  <div className="arch-line-h w-full h-[1px] bg-white/15 origin-left mb-6" />
+                  <div className={`arch-line-h w-full h-[1px] ${theme.lineBg} origin-left mb-6 transition-colors`} />
 
                   <div className="flex flex-col md:flex-row md:items-baseline justify-between gap-4">
                     <div className="flex items-baseline gap-4 sm:gap-6">
-                      <span className="font-mono text-sm sm:text-base text-[#6ee05a] tracking-widest">
+                      <span className={`font-mono text-sm sm:text-base font-semibold tracking-widest ${theme.indexText}`}>
                         [{num}]
                       </span>
                       <h3
                         onClick={() => onSelectProject(project)}
-                        className="font-display font-normal text-3xl sm:text-5xl md:text-6xl text-white tracking-tight cursor-pointer hover:text-[#6ee05a] transition-colors duration-300"
+                        className={`font-display font-normal text-3xl sm:text-5xl md:text-6xl tracking-tight cursor-pointer transition-colors duration-300 ${theme.titleText}`}
                       >
                         {project.title}
                       </h3>
                     </div>
 
                     <div className="flex items-center gap-4 sm:gap-6">
-                      <span className="text-xs sm:text-sm font-mono uppercase tracking-widest text-gray-400">
+                      <span className={`text-xs sm:text-sm font-mono font-medium uppercase tracking-widest ${theme.metaText}`}>
                         {project.category.split(' & ')[0]} &bull; {project.year}
                       </span>
                       <button
                         onClick={() => onSelectProject(project)}
-                        className="inline-flex items-center gap-2 text-xs sm:text-sm font-mono uppercase tracking-wider text-white hover:text-[#6ee05a] transition-colors group/btn"
+                        className={`inline-flex items-center gap-2 text-xs sm:text-sm font-mono font-semibold uppercase tracking-wider transition-colors group/btn ${theme.btnText}`}
                       >
-                        <span className="underline underline-offset-4 decoration-white/30 group-hover/btn:decoration-[#6ee05a]">
+                        <span className={`underline underline-offset-4 ${theme.btnUnderline}`}>
                           Case Study
                         </span>
-                        <div className="w-7 h-7 rounded-full border border-white/20 flex items-center justify-center group-hover/btn:border-[#6ee05a] group-hover/btn:bg-[#6ee05a]/10 transition-colors">
-                          <ArrowUpRight size={13} className="text-[#6ee05a]" />
+                        <div className={`w-7 h-7 rounded-full border flex items-center justify-center transition-colors ${theme.btnCircle}`}>
+                          <ArrowUpRight size={13} />
                         </div>
                       </button>
                     </div>
@@ -428,20 +513,17 @@ export default function ProjectGrid({ onSelectProject }: ProjectGridProps) {
                 {/* ============================================================== */}
                 {/* DESKTOP ARCHITECTURAL GRID (Exact layout from uploaded reference) */}
                 {/* ============================================================== */}
-                <div 
+                <div
                   onClick={() => onSelectProject(project)}
                   className="hidden md:block relative w-full h-[580px] lg:h-[640px] cursor-pointer"
                 >
-                  
                   {/* --- Column 1: Lower Left Landscape Anchor --- */}
                   <div className="arch-col-1 absolute left-[1%] w-[21%] top-[48%] h-[48%]">
-                    {/* Overshooting Horizontal Hairline (left into margin) */}
-                    <div className="arch-line-h absolute top-0 -left-12 lg:-left-20 right-0 h-[1px] bg-white/20 group-hover/project:bg-white/35 transition-colors origin-left" />
-                    {/* Micro Typography on Line */}
-                    <span className="absolute -top-5 left-0 text-[10px] font-mono tracking-widest uppercase text-white/50">
+                    <div className={`arch-line-h absolute top-0 -left-12 lg:-left-20 right-0 h-[1px] ${theme.lineBg} transition-colors origin-left`} />
+                    <span className={`absolute -top-5 left-0 text-[10px] font-mono font-semibold tracking-widest uppercase ${theme.labelPrimary}`}>
                       {slots.slot1.labelTop}
                     </span>
-                    <span className="absolute -bottom-5 left-0 text-[10px] font-mono tracking-widest uppercase text-white/40">
+                    <span className={`absolute -bottom-5 left-0 text-[10px] font-mono font-medium tracking-widest uppercase ${theme.labelSecondary}`}>
                       {slots.slot1.labelBottom}
                     </span>
 
@@ -451,23 +533,22 @@ export default function ProjectGrid({ onSelectProject }: ProjectGridProps) {
                       alt={slots.slot1.alt}
                       portraitImg={portraitImg}
                       className="w-full h-full"
-                      overlayClassName="bg-black/25 group-hover/frame:opacity-0"
+                      frameClassName={theme.frameClass}
+                      overlayClassName={theme.overlayClass}
                     />
 
-                    {/* Dropping Vertical Line past the bottom */}
-                    <div className="arch-line-v absolute top-0 -bottom-12 lg:-bottom-16 right-0 w-[1px] bg-white/20 group-hover/project:bg-white/35 transition-colors origin-top" />
-                    <span className="arch-crosshair absolute -top-2 -right-1.5 text-white/40 font-mono text-xs select-none">+</span>
-                    <span className="arch-crosshair absolute -bottom-14 right-[-3px] text-white/30 font-mono text-[10px] select-none">+</span>
+                    <div className={`arch-line-v absolute top-0 -bottom-12 lg:-bottom-16 right-0 w-[1px] ${theme.lineBg} transition-colors origin-top`} />
+                    <span className={`arch-crosshair absolute -top-2 -right-1.5 font-mono text-xs select-none ${theme.crosshairText}`}>+</span>
+                    <span className={`arch-crosshair absolute -bottom-14 right-[-3px] font-mono text-[10px] select-none ${theme.crosshairText}`}>+</span>
                   </div>
 
                   {/* --- Column 2: Taller Portrait Stepping Up --- */}
                   <div className="arch-col-2 absolute left-[22.5%] w-[19%] top-[22%] h-[74%]">
-                    {/* Overshooting Vertical Hairline (shooting high up) */}
-                    <div className="arch-line-v absolute -top-16 lg:-top-24 bottom-0 left-0 w-[1px] bg-white/20 group-hover/project:bg-white/35 transition-colors origin-bottom" />
-                    <span className="absolute -top-5 left-2 text-[10px] font-mono tracking-widest uppercase text-white/50">
+                    <div className={`arch-line-v absolute -top-16 lg:-top-24 bottom-0 left-0 w-[1px] ${theme.lineBg} transition-colors origin-bottom`} />
+                    <span className={`absolute -top-5 left-2 text-[10px] font-mono font-semibold tracking-widest uppercase ${theme.labelPrimary}`}>
                       {slots.slot2.labelTop}
                     </span>
-                    <span className="absolute -bottom-5 left-2 text-[10px] font-mono tracking-widest uppercase text-white/40">
+                    <span className={`absolute -bottom-5 left-2 text-[10px] font-mono font-medium tracking-widest uppercase ${theme.labelSecondary}`}>
                       {slots.slot2.labelBottom}
                     </span>
 
@@ -477,22 +558,22 @@ export default function ProjectGrid({ onSelectProject }: ProjectGridProps) {
                       alt={slots.slot2.alt}
                       portraitImg={portraitImg}
                       className="w-full h-full"
+                      frameClassName={theme.frameClass}
+                      overlayClassName={theme.overlayClass}
                     />
 
-                    <span className="arch-crosshair absolute -top-2 -left-1.5 text-white/40 font-mono text-xs select-none">+</span>
+                    <span className={`arch-crosshair absolute -top-2 -left-1.5 font-mono text-xs select-none ${theme.crosshairText}`}>+</span>
                   </div>
 
                   {/* --- Column 3: Center Elevated Slot --- */}
                   <div className="arch-col-3 absolute left-[42%] w-[19%] top-[10%] h-[60%]">
-                    {/* Overshooting Vertical Line (shooting up) */}
-                    <div className="arch-line-v absolute -top-20 lg:-top-28 bottom-0 left-0 w-[1px] bg-white/20 group-hover/project:bg-white/35 transition-colors origin-top" />
-                    <span className="absolute -top-5 left-2 text-[10px] font-mono tracking-widest uppercase text-white/50">
+                    <div className={`arch-line-v absolute -top-20 lg:-top-28 bottom-0 left-0 w-[1px] ${theme.lineBg} transition-colors origin-top`} />
+                    <span className={`absolute -top-5 left-2 text-[10px] font-mono font-semibold tracking-widest uppercase ${theme.labelPrimary}`}>
                       {slots.slot3.labelTop}
                     </span>
 
-                    {/* Overshooting Horizontal Line (cutting across to Col 4 & extending) */}
-                    <div className="arch-line-h absolute bottom-0 left-0 -right-20 lg:-right-32 h-[1px] bg-white/20 group-hover/project:bg-white/35 transition-colors origin-left" />
-                    <span className="absolute -bottom-5 left-2 text-[10px] font-mono tracking-widest uppercase text-white/40">
+                    <div className={`arch-line-h absolute bottom-0 left-0 -right-20 lg:-right-32 h-[1px] ${theme.lineBg} transition-colors origin-left`} />
+                    <span className={`absolute -bottom-5 left-2 text-[10px] font-mono font-medium tracking-widest uppercase ${theme.labelSecondary}`}>
                       {slots.slot3.labelBottom}
                     </span>
 
@@ -502,19 +583,20 @@ export default function ProjectGrid({ onSelectProject }: ProjectGridProps) {
                       alt={slots.slot3.alt}
                       portraitImg={portraitImg}
                       className="w-full h-full"
+                      frameClassName={theme.frameClass}
+                      overlayClassName={theme.overlayClass}
                     />
 
-                    <span className="arch-crosshair absolute -top-2 -left-1.5 text-white/40 font-mono text-xs select-none">+</span>
-                    <span className="arch-crosshair absolute -bottom-2 -left-1.5 text-white/40 font-mono text-xs select-none">+</span>
+                    <span className={`arch-crosshair absolute -top-2 -left-1.5 font-mono text-xs select-none ${theme.crosshairText}`}>+</span>
+                    <span className={`arch-crosshair absolute -bottom-2 -left-1.5 font-mono text-xs select-none ${theme.crosshairText}`}>+</span>
                   </div>
 
                   {/* --- Column 4: Stacked Dual Images --- */}
                   <div className="arch-col-4 absolute left-[61.5%] w-[21%] top-[4%] h-[92%] flex flex-col justify-between">
                     {/* Top Cell (4A) */}
                     <div className="relative w-full h-[46%] overflow-visible">
-                      {/* Overshooting Horizontal Hairline (running across top of Col 4 & 5 out to right margin) */}
-                      <div className="arch-line-h absolute top-0 -left-6 right-[-80px] lg:right-[-120px] h-[1px] bg-white/20 group-hover/project:bg-white/35 transition-colors origin-left" />
-                      <span className="absolute -top-5 left-2 text-[10px] font-mono tracking-widest uppercase text-white/50">
+                      <div className={`arch-line-h absolute top-0 -left-6 right-[-80px] lg:right-[-120px] h-[1px] ${theme.lineBg} transition-colors origin-left`} />
+                      <span className={`absolute -top-5 left-2 text-[10px] font-mono font-semibold tracking-widest uppercase ${theme.labelPrimary}`}>
                         {slots.slot4A.labelTop}
                       </span>
 
@@ -524,14 +606,15 @@ export default function ProjectGrid({ onSelectProject }: ProjectGridProps) {
                         alt={slots.slot4A.alt}
                         portraitImg={portraitImg}
                         className="w-full h-full"
+                        frameClassName={theme.frameClass}
+                        overlayClassName={theme.overlayClass}
                       />
                     </div>
 
                     {/* Bottom Cell (4B) */}
                     <div className="relative w-full h-[48%] overflow-visible">
-                      {/* Dropping Vertical Line past the bottom */}
-                      <div className="arch-line-v absolute top-0 -bottom-16 lg:-bottom-24 right-0 w-[1px] bg-white/20 group-hover/project:bg-white/35 transition-colors origin-top" />
-                      <span className="absolute -bottom-5 right-2 text-[10px] font-mono tracking-widest uppercase text-white/40">
+                      <div className={`arch-line-v absolute top-0 -bottom-16 lg:-bottom-24 right-0 w-[1px] ${theme.lineBg} transition-colors origin-top`} />
+                      <span className={`absolute -bottom-5 right-2 text-[10px] font-mono font-medium tracking-widest uppercase ${theme.labelSecondary}`}>
                         {slots.slot4B.labelBottom}
                       </span>
 
@@ -541,17 +624,19 @@ export default function ProjectGrid({ onSelectProject }: ProjectGridProps) {
                         alt={slots.slot4B.alt}
                         portraitImg={portraitImg}
                         className="w-full h-full"
+                        frameClassName={theme.frameClass}
+                        overlayClassName={theme.overlayClass}
                       />
 
-                      <span className="arch-crosshair absolute -bottom-2 -right-1.5 text-white/40 font-mono text-xs select-none">+</span>
+                      <span className={`arch-crosshair absolute -bottom-2 -right-1.5 font-mono text-xs select-none ${theme.crosshairText}`}>+</span>
                     </div>
 
-                    <span className="arch-crosshair absolute -top-2 -left-1.5 text-white/40 font-mono text-xs select-none">+</span>
+                    <span className={`arch-crosshair absolute -top-2 -left-1.5 font-mono text-xs select-none ${theme.crosshairText}`}>+</span>
                   </div>
 
                   {/* --- Column 5: Right Offset Landscape --- */}
                   <div className="arch-col-5 absolute left-[83%] w-[16%] top-[20%] h-[42%]">
-                    <span className="absolute -top-5 left-2 text-[10px] font-mono tracking-widest uppercase text-white/50">
+                    <span className={`absolute -top-5 left-2 text-[10px] font-mono font-semibold tracking-widest uppercase ${theme.labelPrimary}`}>
                       {slots.slot5.labelTop}
                     </span>
 
@@ -561,31 +646,29 @@ export default function ProjectGrid({ onSelectProject }: ProjectGridProps) {
                       alt={slots.slot5.alt}
                       portraitImg={portraitImg}
                       className="w-full h-full"
+                      frameClassName={theme.frameClass}
+                      overlayClassName={theme.overlayClass}
                     />
 
-                    {/* Overshooting line extending to the right border */}
-                    <div className="arch-line-h absolute top-0 left-0 -right-8 lg:-right-16 h-[1px] bg-white/20 group-hover/project:bg-white/35 transition-colors origin-left" />
-                    <span className="arch-crosshair absolute -top-2 -right-1 text-white/40 font-mono text-xs select-none">+</span>
+                    <div className={`arch-line-h absolute top-0 left-0 -right-8 lg:-right-16 h-[1px] ${theme.lineBg} transition-colors origin-left`} />
+                    <span className={`arch-crosshair absolute -top-2 -right-1 font-mono text-xs select-none ${theme.crosshairText}`}>+</span>
                   </div>
-
                 </div>
 
                 {/* ============================================================== */}
                 {/* MOBILE ARCHITECTURAL GRID (Stepped 2-Column Responsive Matrix) */}
                 {/* ============================================================== */}
-                <div 
+                <div
                   onClick={() => onSelectProject(project)}
                   className="block md:hidden relative w-full space-y-6 pt-4 cursor-pointer"
                 >
-                  {/* Top Hairline crossing the header */}
-                  <div className="arch-line-h w-full h-[1px] bg-white/20 mb-4" />
+                  <div className={`arch-line-h w-full h-[1px] ${theme.lineBg} mb-4`} />
 
-                  {/* Stepped Row 1: Low cell left + Tall cell right */}
+                  {/* Stepped Row 1 */}
                   <div className="grid grid-cols-2 gap-4 items-end relative">
-                    {/* Left Slot 1 */}
                     <div className="relative pt-6">
-                      <div className="arch-line-h absolute top-0 -left-6 right-0 h-[1px] bg-white/20" />
-                      <span className="block text-[9px] font-mono tracking-widest uppercase text-white/50 mb-1">
+                      <div className={`arch-line-h absolute top-0 -left-6 right-0 h-[1px] ${theme.lineBg}`} />
+                      <span className={`block text-[9px] font-mono font-semibold tracking-widest uppercase mb-1 ${theme.labelPrimary}`}>
                         {slots.slot1.labelTop}
                       </span>
                       <CinemaHoverFrame
@@ -594,16 +677,17 @@ export default function ProjectGrid({ onSelectProject }: ProjectGridProps) {
                         alt={slots.slot1.alt}
                         portraitImg={portraitImg}
                         className="aspect-square"
+                        frameClassName={theme.frameClass}
+                        overlayClassName={theme.overlayClass}
                       />
-                      <span className="block text-[9px] font-mono tracking-widest uppercase text-white/40 mt-1">
+                      <span className={`block text-[9px] font-mono font-medium tracking-widest uppercase mt-1 ${theme.labelSecondary}`}>
                         {slots.slot1.labelBottom}
                       </span>
                     </div>
 
-                    {/* Right Slot 2 (Tall) */}
                     <div className="relative">
-                      <div className="arch-line-v absolute -top-6 bottom-0 left-0 w-[1px] bg-white/20" />
-                      <span className="block text-[9px] font-mono tracking-widest uppercase text-white/50 mb-1 pl-2">
+                      <div className={`arch-line-v absolute -top-6 bottom-0 left-0 w-[1px] ${theme.lineBg}`} />
+                      <span className={`block text-[9px] font-mono font-semibold tracking-widest uppercase mb-1 pl-2 ${theme.labelPrimary}`}>
                         {slots.slot2.labelTop}
                       </span>
                       <CinemaHoverFrame
@@ -612,18 +696,18 @@ export default function ProjectGrid({ onSelectProject }: ProjectGridProps) {
                         alt={slots.slot2.alt}
                         portraitImg={portraitImg}
                         className="aspect-[3/4]"
+                        frameClassName={theme.frameClass}
+                        overlayClassName={theme.overlayClass}
                       />
                     </div>
                   </div>
 
-                  {/* Stepped Row 2: Elevated cell left + Stack cell right */}
+                  {/* Stepped Row 2 */}
                   <div className="grid grid-cols-2 gap-4 items-start relative pt-4">
-                    {/* Horizontal divider running between rows */}
-                    <div className="arch-line-h absolute top-0 -left-6 -right-6 h-[1px] bg-white/20" />
+                    <div className={`arch-line-h absolute top-0 -left-6 -right-6 h-[1px] ${theme.lineBg}`} />
 
-                    {/* Left Slot 3 */}
                     <div className="relative">
-                      <span className="block text-[9px] font-mono tracking-widest uppercase text-white/50 mb-1">
+                      <span className={`block text-[9px] font-mono font-semibold tracking-widest uppercase mb-1 ${theme.labelPrimary}`}>
                         {slots.slot3.labelTop}
                       </span>
                       <CinemaHoverFrame
@@ -632,16 +716,17 @@ export default function ProjectGrid({ onSelectProject }: ProjectGridProps) {
                         alt={slots.slot3.alt}
                         portraitImg={portraitImg}
                         className="aspect-[4/5]"
+                        frameClassName={theme.frameClass}
+                        overlayClassName={theme.overlayClass}
                       />
-                      <span className="block text-[9px] font-mono tracking-widest uppercase text-white/40 mt-1">
+                      <span className={`block text-[9px] font-mono font-medium tracking-widest uppercase mt-1 ${theme.labelSecondary}`}>
                         {slots.slot3.labelBottom}
                       </span>
                     </div>
 
-                    {/* Right Slot 4A */}
                     <div className="relative pt-6">
-                      <div className="arch-line-v absolute top-0 -bottom-6 right-0 w-[1px] bg-white/20" />
-                      <span className="block text-[9px] font-mono tracking-widest uppercase text-white/50 mb-1">
+                      <div className={`arch-line-v absolute top-0 -bottom-6 right-0 w-[1px] ${theme.lineBg}`} />
+                      <span className={`block text-[9px] font-mono font-semibold tracking-widest uppercase mb-1 ${theme.labelPrimary}`}>
                         {slots.slot4A.labelTop}
                       </span>
                       <CinemaHoverFrame
@@ -650,14 +735,16 @@ export default function ProjectGrid({ onSelectProject }: ProjectGridProps) {
                         alt={slots.slot4A.alt}
                         portraitImg={portraitImg}
                         className="aspect-square"
+                        frameClassName={theme.frameClass}
+                        overlayClassName={theme.overlayClass}
                       />
                     </div>
                   </div>
 
-                  {/* Wide Anchor Cell (Slot 4B & 5) */}
+                  {/* Wide Anchor Cell */}
                   <div className="relative pt-4">
-                    <div className="arch-line-h absolute top-0 -left-6 -right-6 h-[1px] bg-white/20" />
-                    <div className="flex items-center justify-between text-[9px] font-mono tracking-widest uppercase text-white/50 mb-1">
+                    <div className={`arch-line-h absolute top-0 -left-6 -right-6 h-[1px] ${theme.lineBg}`} />
+                    <div className={`flex items-center justify-between text-[9px] font-mono font-semibold tracking-widest uppercase mb-1 ${theme.labelPrimary}`}>
                       <span>{slots.slot4B.labelBottom}</span>
                       <span>{slots.slot5.labelTop}</span>
                     </div>
@@ -667,15 +754,15 @@ export default function ProjectGrid({ onSelectProject }: ProjectGridProps) {
                       alt={slots.slot4B.alt}
                       portraitImg={portraitImg}
                       className="aspect-[16/9]"
+                      frameClassName={theme.frameClass}
+                      overlayClassName={theme.overlayClass}
                     />
                   </div>
                 </div>
-
               </div>
-            );
-          })}
-        </div>
-
+            </div>
+          );
+        })}
       </div>
     </section>
   );

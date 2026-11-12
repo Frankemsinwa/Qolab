@@ -542,29 +542,15 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
           <CornerLightFlare side="right" />
         </div>
 
-        {/* Upper Hero Wrapper (No z-index so grid stays at z-0 behind video while text/nav sit at z-20/z-30) */}
-        <div className="relative w-full flex-1 flex flex-col justify-between">
-          {/* Premium Architectural Blueprint Grid — terminates smoothly with a feathered blur right at the video horizon */}
-          <ArchitecturalGrid
-            className="hero-grid-bg pointer-events-none absolute inset-x-0 top-0 -bottom-24 z-0 overflow-hidden"
-            verticalMask="linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, black 12%, black calc(100% - 140px), rgba(0,0,0,0.35) calc(100% - 75px), transparent calc(100% - 20px))"
-            radialMask="radial-gradient(ellipse 88% 90% at 50% 40%, black 42%, transparent 100%)"
-          >
-            {/* Bottom Feathered Horizon Blur Band — melts the grid line tips seamlessly into stone sky */}
-            <div
-              className="absolute inset-x-0 bottom-4 h-36 pointer-events-none"
-              style={{
-                background: 'linear-gradient(to bottom, rgba(205, 205, 205, 0) 0%, rgba(205, 205, 205, 0.55) 42%, rgba(205, 205, 205, 0.92) 72%, rgba(205, 205, 205, 0) 100%)',
-                backdropFilter: 'blur(5px)',
-                WebkitBackdropFilter: 'blur(5px)',
-                maskImage: 'linear-gradient(to bottom, transparent 0%, black 38%, black 70%, transparent 100%)',
-                WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 38%, black 70%, transparent 100%)',
-              }}
-            />
-          </ArchitecturalGrid>
+        {/* Full-Hero Architectural Blueprint Grid — runs seamlessly behind the transparent character */}
+        <ArchitecturalGrid
+          className="hero-grid-bg pointer-events-none absolute inset-0 z-0 overflow-hidden"
+          verticalMask="linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, black 12%, black 90%, rgba(0,0,0,0.5) 100%)"
+          radialMask="radial-gradient(ellipse 92% 94% at 50% 45%, black 46%, transparent 100%)"
+        />
 
-          {/* Top bar — desktop */}
-          <div className="relative z-30 w-full hidden md:flex items-center justify-between px-8 md:px-[6%] pt-6 md:pt-8">
+        {/* Top bar — desktop */}
+        <div className="relative z-30 w-full hidden md:flex items-center justify-between px-8 md:px-[6%] pt-6 md:pt-8">
             {/* Dark Wordmark Logo */}
             <div className="hero-topbar-item flex items-center">
               <QolabLogo theme="dark" className="w-32 sm:w-36 md:w-[min(14vw,17vh)]" />
@@ -650,28 +636,12 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
                 </span>
               </button>
             </div>
-          </div>
         </div>
 
-        {/* Video Character Layer — completely fills the full width of the screen */}
-        <div className="hero-character-video relative w-full flex justify-center z-10 pointer-events-none select-none">
-          {/* Atmospheric feather mist bridge right across the video upper horizon (strictly above his head) */}
-          <div
-            className="pointer-events-none absolute -top-8 sm:-top-10 left-0 right-0 h-16 sm:h-20 z-20"
-            style={{
-              background: 'radial-gradient(ellipse 95% 100% at 50% 50%, rgba(205, 205, 205, 0.6) 0%, rgba(205, 205, 205, 0.25) 55%, rgba(205, 205, 205, 0) 100%)',
-              filter: 'blur(10px)',
-            }}
-          />
-          <div
-            className="w-full relative overflow-hidden"
-            style={{
-              maskImage: 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.2) 5%, rgba(0,0,0,0.72) 11%, black 16%, black 100%)',
-              WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.2) 5%, rgba(0,0,0,0.72) 11%, black 16%, black 100%)',
-            }}
-          >
+        {/* Transparent Video Character Layer — sits directly above the architectural grid */}
+        <div className="hero-character-video relative w-full flex justify-center z-10 pointer-events-none select-none overflow-hidden">
+          <div className="w-full relative">
             <video
-              src="/character-typing.mp4"
               poster="/character-typing-poster.webp"
               preload="auto"
               autoPlay
@@ -683,14 +653,17 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
               style={{
                 marginBottom: '-2px',
               }}
-            />
+            >
+              <source src="/character-typing-transparent.webm" type="video/webm" />
+              <source src="/character-typing.mp4" type="video/mp4" />
+            </video>
           </div>
         </div>
       </section>
 
       {/* ===== MODERN HERO TRANSITION TICKER ===== */}
       <div
-        className="relative w-full overflow-hidden py-4 sm:py-5 bg-[#080a08] border-y border-white/[0.08] select-none z-20"
+        className="lime-grad relative w-full overflow-hidden py-4 sm:py-5 border-y border-black/15 select-none z-20"
         aria-hidden="true"
       >
         <div className="flex w-max animate-ticker">
@@ -698,10 +671,10 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
             <div key={setIdx} className="flex shrink-0 items-center gap-8 sm:gap-12 md:gap-16 px-4 sm:px-6">
               {['Creativity', 'Technology', 'Strategy', 'Creativity', 'Technology', 'Strategy'].map((word, wIdx) => (
                 <span key={`${setIdx}-${wIdx}-${word}`} className="flex items-center gap-8 sm:gap-12 md:gap-16">
-                  <span className="font-grotesk font-medium text-lg sm:text-xl md:text-2xl text-white/90 tracking-tight whitespace-nowrap">
+                  <span className="font-grotesk font-semibold text-lg sm:text-xl md:text-2xl text-[#090d0b] tracking-tight whitespace-nowrap">
                     {word}
                   </span>
-                  <span className="text-[#2d5f3e] text-sm sm:text-base md:text-lg select-none">
+                  <span className="text-[#143a1d] text-sm sm:text-base md:text-lg select-none">
                     ✦
                   </span>
                 </span>
