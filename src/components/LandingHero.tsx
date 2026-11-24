@@ -654,7 +654,7 @@ export default function LandingHero({ onSelectProject, onViewAllProjects, onSele
                 marginBottom: '-2px',
               }}
             >
-              <source src="/character-typing-transparent.webm" type="video/webm" />
+              <source src="/character-typing-1080p.webm" type="video/webm" />
               <source src="/character-typing.mp4" type="video/mp4" />
             </video>
           </div>

@@ -51,59 +51,61 @@ const GRAIN_SVG =
 
 function getChapterTheme(projectId: string): ChapterTheme {
   if (projectId === 'luxel-bookings') {
+    // 01: Matte Obsidian -> Deep Pine (Dark Black + Botanical Green mix)
     return {
-      backgroundImage: `${GRAIN_SVG}, linear-gradient(125deg, #f4e7bd 0%, #e5be63 52%, #cc9836 100%)`,
-      isLight: true,
-      titleText: 'text-[#090d0b] hover:text-[#2c2105]',
-      indexText: 'text-[#3b2d08]',
-      metaText: 'text-[#090d0b]/70',
-      labelPrimary: 'text-[#090d0b]/70',
-      labelSecondary: 'text-[#090d0b]/55',
-      lineBg: 'bg-[#090d0b]/25 group-hover/project:bg-[#090d0b]/45',
-      crosshairText: 'text-[#090d0b]/50',
-      btnText: 'text-[#090d0b] hover:text-[#2c2105]',
-      btnUnderline: 'decoration-[#090d0b]/35 group-hover/btn:decoration-[#090d0b]',
-      btnCircle: 'border-[#090d0b]/30 text-[#090d0b] group-hover/btn:bg-[#090d0b] group-hover/btn:text-[#f4e7bd]',
-      frameClass: 'border-[#090d0b]/30 bg-[#1a1508] hover:border-[#090d0b] hover:shadow-[0_18px_40px_rgba(32,22,4,0.35)]',
-      overlayClass: 'bg-black/15 group-hover/frame:opacity-0',
+      backgroundImage: `${GRAIN_SVG}, linear-gradient(125deg, #070a08 0%, #0f2416 55%, #1d4628 100%)`,
+      isLight: false,
+      titleText: 'text-white hover:text-[#6ee05a]',
+      indexText: 'text-[#6ee05a]',
+      metaText: 'text-gray-300/80',
+      labelPrimary: 'text-white/60',
+      labelSecondary: 'text-white/45',
+      lineBg: 'bg-white/25 group-hover/project:bg-[#6ee05a]/45',
+      crosshairText: 'text-[#6ee05a]/65',
+      btnText: 'text-white hover:text-[#6ee05a]',
+      btnUnderline: 'decoration-white/30 group-hover/btn:decoration-[#6ee05a]',
+      btnCircle: 'border-white/25 text-[#6ee05a] group-hover/btn:border-[#6ee05a] group-hover/btn:bg-[#6ee05a]/15',
+      frameClass: 'border-white/25 bg-[#0b130e] hover:border-[#6ee05a]/80 hover:shadow-[0_18px_40px_rgba(0,0,0,0.8)]',
+      overlayClass: 'bg-black/20 group-hover/frame:opacity-0',
     };
   }
 
   if (projectId === 'amolo') {
+    // 02: QOLAB Sharp Rough Lemon-Green (High-contrast center rhythm breaker)
     return {
-      backgroundImage: `${GRAIN_SVG}, linear-gradient(125deg, #ea7744 0%, #c2410c 52%, #841f0d 100%)`,
-      isLight: false,
-      titleText: 'text-[#faf7f2] hover:text-[#ffe3cf]',
-      indexText: 'text-[#ffd4b8]',
-      metaText: 'text-[#faf7f2]/75',
-      labelPrimary: 'text-[#faf7f2]/75',
-      labelSecondary: 'text-[#faf7f2]/60',
-      lineBg: 'bg-[#faf7f2]/30 group-hover/project:bg-[#faf7f2]/50',
-      crosshairText: 'text-[#faf7f2]/55',
-      btnText: 'text-[#faf7f2] hover:text-[#ffd4b8]',
-      btnUnderline: 'decoration-[#faf7f2]/40 group-hover/btn:decoration-[#ffd4b8]',
-      btnCircle: 'border-[#faf7f2]/35 text-[#faf7f2] group-hover/btn:bg-[#faf7f2] group-hover/btn:text-[#841f0d]',
-      frameClass: 'border-white/30 bg-[#240a05] hover:border-white hover:shadow-[0_18px_40px_rgba(25,5,2,0.55)]',
+      backgroundImage: `${GRAIN_SVG}, linear-gradient(115deg, #2fe862 0%, #6ee05a 48%, #d8f34b 100%)`,
+      isLight: true,
+      titleText: 'text-[#090d0b] hover:text-[#16381e]',
+      indexText: 'text-[#143a1d]',
+      metaText: 'text-[#090d0b]/75',
+      labelPrimary: 'text-[#090d0b]/70',
+      labelSecondary: 'text-[#090d0b]/55',
+      lineBg: 'bg-[#090d0b]/25 group-hover/project:bg-[#090d0b]/45',
+      crosshairText: 'text-[#090d0b]/50',
+      btnText: 'text-[#090d0b] hover:text-[#16381e]',
+      btnUnderline: 'decoration-[#090d0b]/35 group-hover/btn:decoration-[#090d0b]',
+      btnCircle: 'border-[#090d0b]/30 text-[#090d0b] group-hover/btn:bg-[#090d0b] group-hover/btn:text-[#6ee05a]',
+      frameClass: 'border-[#090d0b]/30 bg-[#0b1c0e] hover:border-[#090d0b] hover:shadow-[0_18px_40px_rgba(12,35,16,0.35)]',
       overlayClass: 'bg-black/15 group-hover/frame:opacity-0',
     };
   }
 
-  // Green Valley — Luminous Valley Emerald to Chartreuse
+  // 03: Deep Forest Pine -> Matte Obsidian (Inverted dark black-green sweep)
   return {
-    backgroundImage: `${GRAIN_SVG}, linear-gradient(125deg, #3ee467 0%, #8ced55 52%, #ccf34b 100%)`,
-    isLight: true,
-    titleText: 'text-[#090d0b] hover:text-[#16381e]',
-    indexText: 'text-[#143a1d]',
-    metaText: 'text-[#090d0b]/70',
-    labelPrimary: 'text-[#090d0b]/70',
-    labelSecondary: 'text-[#090d0b]/55',
-    lineBg: 'bg-[#090d0b]/25 group-hover/project:bg-[#090d0b]/45',
-    crosshairText: 'text-[#090d0b]/50',
-    btnText: 'text-[#090d0b] hover:text-[#16381e]',
-    btnUnderline: 'decoration-[#090d0b]/35 group-hover/btn:decoration-[#090d0b]',
-    btnCircle: 'border-[#090d0b]/30 text-[#090d0b] group-hover/btn:bg-[#090d0b] group-hover/btn:text-[#8ced55]',
-    frameClass: 'border-[#090d0b]/30 bg-[#0b1c0e] hover:border-[#090d0b] hover:shadow-[0_18px_40px_rgba(12,35,16,0.35)]',
-    overlayClass: 'bg-black/15 group-hover/frame:opacity-0',
+    backgroundImage: `${GRAIN_SVG}, linear-gradient(125deg, #1b4225 0%, #0d1d12 52%, #070908 100%)`,
+    isLight: false,
+    titleText: 'text-white hover:text-[#8ced55]',
+    indexText: 'text-[#8ced55]',
+    metaText: 'text-gray-300/80',
+    labelPrimary: 'text-white/60',
+    labelSecondary: 'text-white/45',
+    lineBg: 'bg-white/25 group-hover/project:bg-[#8ced55]/45',
+    crosshairText: 'text-[#8ced55]/65',
+    btnText: 'text-white hover:text-[#8ced55]',
+    btnUnderline: 'decoration-white/30 group-hover/btn:decoration-[#8ced55]',
+    btnCircle: 'border-white/25 text-[#8ced55] group-hover/btn:border-[#8ced55] group-hover/btn:bg-[#8ced55]/15',
+    frameClass: 'border-white/25 bg-[#0a120c] hover:border-[#8ced55]/80 hover:shadow-[0_18px_40px_rgba(0,0,0,0.8)]',
+    overlayClass: 'bg-black/20 group-hover/frame:opacity-0',
   };
 }
 

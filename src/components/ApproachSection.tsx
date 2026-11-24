@@ -19,6 +19,8 @@ export const STEPS = [
       'Clear problem definition and verifiable success metrics',
     ],
     time: 'Phase 01',
+    gradient: 'linear-gradient(135deg, rgba(84, 232, 108, 0.58) 0%, rgba(164, 240, 82, 0.56) 52%, rgba(215, 246, 94, 0.54) 100%)',
+    glow: 'rgba(110, 224, 90, 0.24)',
   },
   {
     num: '02',
@@ -32,6 +34,8 @@ export const STEPS = [
       'Visual moodboards, user flows, and core design principles',
     ],
     time: 'Phase 02',
+    gradient: 'linear-gradient(135deg, rgba(44, 212, 158, 0.54) 0%, rgba(118, 235, 192, 0.54) 52%, rgba(190, 248, 220, 0.56) 100%)',
+    glow: 'rgba(65, 222, 175, 0.22)',
   },
   {
     num: '03',
@@ -45,6 +49,8 @@ export const STEPS = [
       'Weekly working demos and sprint reviews with your team',
     ],
     time: 'Phase 03',
+    gradient: 'linear-gradient(135deg, rgba(235, 239, 206, 0.68) 0%, rgba(223, 242, 148, 0.62) 52%, rgba(192, 238, 92, 0.58) 100%)',
+    glow: 'rgba(205, 238, 102, 0.24)',
   },
   {
     num: '04',
@@ -58,6 +64,8 @@ export const STEPS = [
       'Micro-animations and interaction refinement for a premium tactile feel',
     ],
     time: 'Phase 04',
+    gradient: 'linear-gradient(135deg, rgba(186, 236, 224, 0.62) 0%, rgba(128, 228, 196, 0.56) 52%, rgba(76, 214, 154, 0.54) 100%)',
+    glow: 'rgba(95, 218, 178, 0.22)',
   },
   {
     num: '05',
@@ -71,6 +79,8 @@ export const STEPS = [
       'Post-launch performance review and roadmap for future iterations',
     ],
     time: 'Phase 05',
+    gradient: 'linear-gradient(135deg, rgba(204, 238, 86, 0.60) 0%, rgba(140, 230, 80, 0.56) 52%, rgba(226, 248, 92, 0.58) 100%)',
+    glow: 'rgba(170, 235, 78, 0.24)',
   },
 ];
 
@@ -249,13 +259,31 @@ export default function ApproachSection() {
                     ref={(el) => { stepCardRefs.current[idx] = el; }}
                     className="group relative rounded-2xl sm:rounded-3xl md:rounded-[2.25rem] p-6 sm:p-8 md:p-10 transition-all duration-500 hover:-translate-y-1.5 will-change-transform overflow-hidden"
                     style={{
-                      background: 'rgba(255, 255, 255, 0.48)',
-                      backdropFilter: 'blur(30px) saturate(190%)',
-                      WebkitBackdropFilter: 'blur(30px) saturate(190%)',
-                      border: '1px solid rgba(255, 255, 255, 0.85)',
-                      boxShadow: 'inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.95), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.04), 0 20px 45px -12px rgba(15, 30, 20, 0.08), 0 2px 6px rgba(0, 0, 0, 0.03)',
+                      background: step.gradient,
+                      backdropFilter: 'blur(28px) saturate(190%)',
+                      WebkitBackdropFilter: 'blur(28px) saturate(190%)',
+                      border: '1px solid rgba(255, 255, 255, 0.78)',
+                      boxShadow: `inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.92), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.06), 0 22px 48px -14px ${step.glow}, 0 4px 12px rgba(0, 0, 0, 0.04)`,
                     }}
                   >
+                    {/* Apple Glass Optical Inner Sheen */}
+                    <div
+                      className="pointer-events-none absolute inset-0"
+                      style={{
+                        background: 'linear-gradient(155deg, rgba(255, 255, 255, 0.42) 0%, rgba(255, 255, 255, 0.08) 42%, rgba(255, 255, 255, 0) 100%)',
+                      }}
+                      aria-hidden="true"
+                    />
+
+                    {/* Noticeable Tactile Studio Micro-Grain Overlay */}
+                    <div
+                      className="pointer-events-none absolute inset-0 opacity-[0.14] mix-blend-overlay"
+                      style={{
+                        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+                      }}
+                      aria-hidden="true"
+                    />
+
                     {/* Apple-grade Specular Highlight Hairline */}
                     <div 
                       className="absolute top-0 inset-x-8 h-[1.5px] pointer-events-none"
@@ -265,7 +293,7 @@ export default function ApproachSection() {
                     />
 
                     {/* Top Row: Crisp Milestone & Phase */}
-                    <div className="flex items-center justify-between gap-3 mb-4 sm:mb-5">
+                    <div className="relative z-10 flex items-center justify-between gap-3 mb-4 sm:mb-5">
                       <span className="font-mono text-xs font-bold px-3 py-1 rounded-full bg-[#112818] text-white shadow-sm">
                         {step.num}
                       </span>
@@ -275,24 +303,24 @@ export default function ApproachSection() {
                     </div>
 
                     {/* Step Title: High-Contrast Obsidian */}
-                    <h3 className="font-display font-medium text-2xl sm:text-3xl md:text-[2rem] text-[#090d0b] mb-3 leading-snug tracking-tight group-hover:text-[#112818] transition-colors duration-300">
+                    <h3 className="relative z-10 font-display font-medium text-2xl sm:text-3xl md:text-[2rem] text-[#090d0b] mb-3 leading-snug tracking-tight group-hover:text-[#112818] transition-colors duration-300">
                       {step.title}
                     </h3>
 
                     {/* Lead Benefit: Razor-Sharp Contrast */}
-                    <p className="text-sm sm:text-base text-[#202923] font-sans leading-relaxed mb-6 font-normal">
+                    <p className="relative z-10 text-sm sm:text-base text-[#17201a] font-sans leading-relaxed mb-6 font-normal">
                       {step.lead}
                     </p>
 
                     {/* Deliverables Checklist with Enhanced Contrast */}
-                    <div className="pt-4 border-t border-black/[0.08]">
-                      <p className="text-[10px] sm:text-[11px] font-mono uppercase tracking-widest text-[#112818]/70 mb-3 font-bold">
+                    <div className="relative z-10 pt-4 border-t border-black/[0.1]">
+                      <p className="text-[10px] sm:text-[11px] font-mono uppercase tracking-widest text-[#112818]/75 mb-3 font-bold">
                         What happens in this stage:
                       </p>
                       <ul className="space-y-2 sm:space-y-2.5">
                         {step.deliverables.map((item, dIdx) => (
-                          <li key={dIdx} className="flex items-start gap-2.5 text-xs sm:text-sm text-[#0c140e] font-sans font-medium">
-                            <Check size={16} className="text-[#15803d] shrink-0 mt-0.5" strokeWidth={2.6} />
+                          <li key={dIdx} className="flex items-start gap-2.5 text-xs sm:text-sm text-[#090d0b] font-sans font-medium">
+                            <Check size={16} className="text-[#114222] shrink-0 mt-0.5" strokeWidth={2.6} />
                             <span className="leading-snug">{item}</span>
                           </li>
                         ))}
